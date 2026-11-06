@@ -22,6 +22,9 @@ local EVERY = {  -- seconds between lines of a kind
     mend = 20 * 3600,  -- healing lines: only inside a ritual you chose, at most once a day
 }
 local STILL, BED_STILL, BED_LEN, BED_EVERY = 90, 60, 300, 1800  -- seconds
+-- Beds are 62 s files: a seamless 60 s loop plus a 2 s crossfade tail (tools/spirit_beds.py). The next copy starts
+-- exactly BED_PERIOD after the last, checked every frame, so the copies overlap by their matching fades.
+local BED_PERIOD = 60
 local REPAIR_DEATHS, REPAIR_WINDOW = 3, 900
 local LONGROAD = 2 * 3600
 local KIND_SPELLS = {  -- cast on someone else: a kindness
@@ -169,10 +172,9 @@ end
 
 local function TickBed(now)
     if bed and (still == 0 or not IsResting() or now > bedUntil) then StopBed() return end
-    if bed and now >= bedNext then  -- the bed is 60 s; start the next copy 2 s before the last one ends
-        bed, bedNext = Sfx(Night() and "inn_night" or "inn_day", "Ambience"), now + 58
+    if bed then  -- still playing: the clock frame below starts each next copy on time
     elseif not bed and IsResting() and still >= BED_STILL and now - lastBed > BED_EVERY and not ShandoOff then
-        lastBed, bedUntil, bedNext = now, now + BED_LEN, now + 58
+        lastBed, bedUntil, bedNext = now, now + BED_LEN, now + BED_PERIOD
         bed = Sfx(Night() and "inn_night" or "inn_day", "Ambience")
     end
 end
@@ -227,7 +229,7 @@ end
 
 local function BeginRitual(name, bedFile, tint)
     EndRitual()
-    ritual = { name = name, file = bedFile, bed = Sfx(bedFile, "Ambience"), nextBed = GetTime() + 58, t0 = GetTime() }
+    ritual = { name = name, file = bedFile, bed = Sfx(bedFile, "Ambience"), nextBed = GetTime() + BED_PERIOD, t0 = GetTime() }
     if tint then
         veil.tex:SetVertexColor(tint[1], tint[2], tint[3])
         Fade(tint[4], 5)
@@ -239,8 +241,18 @@ local function TickRitual(now)  -- keep the bed looping; end it when you move, f
     local moved = GetUnitSpeed("player") > 0
     if ritual.name == "wisp" then moved = not UnitIsGhost("player") end
     if ShandoOff or moved or InCombatLockdown() or now - ritual.t0 > 600 then EndRitual() return end
-    if now >= ritual.nextBed then ritual.bed, ritual.nextBed = Sfx(ritual.file, "Ambience"), now + 58 end
 end
+
+local clock = CreateFrame("Frame")
+clock:SetScript("OnUpdate", function()
+    local now = GetTime()
+    if ritual and now >= ritual.nextBed then
+        ritual.bed, ritual.nextBed = Sfx(ritual.file, "Ambience"), ritual.nextBed + BED_PERIOD
+    end
+    if bed and now >= bedNext then
+        bed, bedNext = Sfx(Night() and "inn_night" or "inn_day", "Ambience"), bedNext + BED_PERIOD
+    end
+end)
 
 local MELD = SpellName(20580) or "Shadowmeld"
 local function Melded()
@@ -253,7 +265,7 @@ local function Melded()
     return false
 end
 
--- The meld's breath: the screen's violet edge brightens on each in-breath and fades on the longer out-breath, in
+-- The meld's breath: the screen's dark violet edge opens a little on each in-breath and closes on the longer out-breath, in
 -- step with the windbreath sound (the same curve as tools/spirit_sfx.py windbreath: 11 breaths a minute slowing to
 -- 6 over 105 s, in-breath 40% of each cycle, 150 s long). When it ends, a bell and a closing word.
 local BREATH_LEN, BREATH_SLOW, IN_FRAC = 150, 105, 0.4
@@ -270,10 +282,10 @@ pulse:SetScript("OnUpdate", function(_, dt)
         if r.phase < IN_FRAC then env = math.sin(r.phase / IN_FRAC * math.pi / 2) ^ 2
         else env = math.cos((r.phase - IN_FRAC) / (1 - IN_FRAC) * math.pi / 2) ^ 2 end
         local edge = math.min(1, t / 4) * math.min(1, (BREATH_LEN - t) / 6)
-        veil:SetAlpha(0.14 + 0.36 * env * edge)
+        veil:SetAlpha(0.3 - 0.12 * env * edge)  -- the edges open a little on the in-breath, close softly on the out
     elseif not r.closed then
         r.closed = true
-        veil:SetAlpha(0.14)
+        veil:SetAlpha(0.3)
         Sfx("kindbell")
         C_Timer.After(2.5, function() if ritual == r then Say("meldend") end end)
     end
@@ -282,7 +294,7 @@ end)
 local function CheckMeld()
     if Melded() and not InCombatLockdown() and not IsInInstance() and not ShandoOff then
         if ritual and ritual.name == "meld" then return end
-        BeginRitual("meld", Night() and "meld" or "meld_day", { 0.55, 0.38, 0.9, 0.14 })
+        BeginRitual("meld", Night() and "meld" or "meld_day", { 0.09, 0.05, 0.16, 0.3 })  -- deep violet
         meldCount = meldCount + 1
         Music(true)
         C_Timer.After(4, function() if ritual and ritual.name == "meld" then Say("meld") end end)
@@ -304,12 +316,12 @@ local function OnEmote(token)
     local want = (token == "SLEEP" and "dream") or ((token == "KNEEL" or token == "PRAY") and "vigil")
     if ritual and ritual.name == want then return end  -- the hook and the chat fallback can both fire
     if token == "SLEEP" and sub:find("Barrow") then
-        BeginRitual("dream", "dream", { 0.35, 0.85, 0.45, 0.55 })
+        BeginRitual("dream", "dream", { 0.03, 0.14, 0.07, 0.45 })  -- a dark green dusk at the edges
         C_Timer.After(8, function()
             if ritual and ritual.name == "dream" and not (math.random() < 0.25 and Say("mend")) then Say("dream") end
         end)
     elseif (token == "KNEEL" or token == "PRAY") and ((IsOutdoors() and Night()) or sub == "Temple of the Moon") then
-        BeginRitual("vigil", "vigil", { 0.75, 0.82, 1.0, 0.45 })
+        BeginRitual("vigil", "vigil", { 0.05, 0.07, 0.2, 0.4 })  -- deep night blue
         C_Timer.After(5, function()
             if ritual and ritual.name == "vigil" and not (math.random() < 0.34 and Say("mend")) then Say("vigil") end
         end)
