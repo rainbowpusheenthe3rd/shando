@@ -1,0 +1,86 @@
+-- The in-game readme: Options > AddOns > Shan'do, or /shando help. Describes what she answers to, never her lines.
+local _, ns = ...
+
+local TEXT = [[
+|cffb8c8ffShan'do|r is a night elf spirit guide. She speaks to you as a teacher (|cffb8c8ffshan'do|r) to a student (|cffb8c8ffthero'shan|r), at quiet moments, and only now and then.
+
+|cffffd100When she speaks|r
+  - Sacred and storied places, the first time you arrive, after a soft swell.
+  - Standing still outdoors for a while: a breath, then a wind that breathes slowly with you.
+  - Resting at an inn: a stream and birds by day, crickets by night.
+  - Night, dawn and dusk; flights; swimming; coming home to Darnassus.
+  - People: joining a group, visiting a trainer, healing or blessing someone else.
+  - Milestones: levels, new forms and great spells, profession milestones, now and then a finished quest.
+  - Hard times: a gentle word when you fall; after several falls, one word about rest, then quiet.
+  - Very late at night, or after a long day's road, a word of care.
+  - The festivals of the year, once each.
+  - At login, a look back at your last journey.
+
+|cffffd100Rituals you can choose|r
+  - |cffb8c8ffShadowmeld|r out of combat: the music softens, the night rises around you, and the wind breathes. Move to return.
+  - |cffb8c8ff/sleep|r in a barrow den: the edges of the world turn green, and the Dream plays until you stand.
+  - |cffb8c8ff/kneel|r or |cffb8c8ff/pray|r outdoors at night, or in the Temple of the Moon: moonlight, a bell, and a word.
+  - If you fall and walk back as a wisp, a soft choir walks with you.
+
+|cffffd100How she speaks|r
+She invites, never instructs. She speaks about the world and what you did, not about what you are. She never speaks in combat or in dungeons, and leaves at least 45 seconds between any two words, shared with Herbalore. Each line rests longer every time you hear it, so nothing repeats through an evening.
+
+|cffffd100Commands|r
+  |cffb8c8ff/shando|r  rest her, or call her back
+  |cffb8c8ff/shando quieter|r  /  |cffb8c8ff/shando nearer|r  speak less or more often
+  |cffb8c8ff/shando help|r  this page
+
+|cffffd100Where it comes from|r
+Her choices follow research on nature, breathing, savouring, kindness, self-compassion, belonging and grief, kept with its sources in the wow-market repository (docs/spirit/RESEARCH.md). She is company, not therapy.
+
+|cff888888Voice: one designed voice, recorded for each line. Sounds: synthesised for her, no samples.|r
+
+Ishnu-alah.
+]]
+
+local panel = CreateFrame("Frame")
+panel.name = "Shan'do"
+local icon = panel:CreateTexture(nil, "ARTWORK")
+icon:SetSize(56, 56)
+icon:SetPoint("TOPLEFT", 16, -16)
+icon:SetTexture("Interface\\AddOns\\Shando\\icon")
+local title = panel:CreateFontString(nil, "ARTWORK", "GameFontNormalHuge")
+title:SetPoint("LEFT", icon, "RIGHT", 12, 6)
+title:SetText("Shan'do")
+local sub = panel:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
+sub:SetPoint("TOPLEFT", title, "BOTTOMLEFT", 0, -4)
+sub:SetText("A night elf spirit guide. Elune-adore.")
+
+local scroll = CreateFrame("ScrollFrame", nil, panel, "UIPanelScrollFrameTemplate")
+scroll:SetPoint("TOPLEFT", icon, "BOTTOMLEFT", 0, -12)
+scroll:SetPoint("BOTTOMRIGHT", -32, 16)
+local body = CreateFrame("Frame", nil, scroll)
+body:SetSize(560, 10)
+scroll:SetScrollChild(body)
+local text = body:CreateFontString(nil, "ARTWORK", "GameFontHighlight")
+text:SetPoint("TOPLEFT")
+text:SetJustifyH("LEFT")
+text:SetSpacing(3)
+text:SetText(TEXT)
+scroll:SetScript("OnSizeChanged", function(_, w)
+    body:SetWidth(w)
+    text:SetWidth(w - 8)
+    body:SetHeight(text:GetStringHeight() + 16)
+end)
+
+local category
+if Settings and Settings.RegisterCanvasLayoutCategory then
+    category = Settings.RegisterCanvasLayoutCategory(panel, panel.name)
+    Settings.RegisterAddOnCategory(category)
+elseif InterfaceOptions_AddCategory then
+    InterfaceOptions_AddCategory(panel)
+end
+
+function ns.ShowReadme()
+    if category and Settings.OpenToCategory then
+        Settings.OpenToCategory(category:GetID())
+    elseif InterfaceOptionsFrame_OpenToCategory then
+        InterfaceOptionsFrame_OpenToCategory(panel)
+        InterfaceOptionsFrame_OpenToCategory(panel)  -- the old client needs it twice
+    end
+end

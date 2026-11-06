@@ -1,0 +1,9 @@
+## Interface: 16001, 120105
+## IconTexture: Interface\AddOns\Shando\icon
+## Title: Shan'do
+## Notes: A night elf spirit guide for quiet moments, sacred places, kin, teachers, milestones and hard times, with a breathing wind and inn soundscapes. /shando help for the guide; /shando toggles; /shando quieter or nearer.
+## SavedVariablesPerCharacter: ShandoOff, ShandoSaid, ShandoOnce, ShandoPace, ShandoMusic, ShandoLast, ShandoMap
+Lines.lua
+Shando.lua
+Readme.lua
+Minimap.lua
