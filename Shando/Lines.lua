@@ -248,6 +248,9 @@ ns.LINES = {
         { "meld1", "Shadowmeld. The forest folds around you, and for a while, nobody needs anything from you." },
         { "meld2", "Hidden in plain sight, as our people always have been. Stay as long as you like." },
         { "meld3", "Still as a Sentinel on watch. Only, just now, there's nothing to watch for. Let the sounds come to you." },
+        { "meld4", "Shadowmeld. The kaldorei learned to be still as the forest itself. Let the breath come and go on its own for a while." },
+        { "meld5", "In the shadow, nobody's looking. There's nothing to do and no one to be. Only this breath, and the next." },
+        { "meld6", "Hidden, and safe. If you like, follow the wind as it rises and falls. The light at the edges will breathe with you." },
     },
     ["dream"] = {
         { "dream1", "The Dream is close here. The druids who slept in these dens walked it for years. A little while is plenty." },
@@ -299,5 +302,11 @@ ns.LINES = {
         { "mend5", "Grief comes and goes, like the tide at Rut'theran. It's all right to feel it, and all right to set it down for a while and simply walk." },
         { "mend6", "Healing is mostly made of ordinary things. Warm food, a friend's voice, sleep, the forest. They add up, slowly, like rings in a tree." },
         { "mend7", "Ande'thoras-ethil. May your troubles be diminished. Old wounds do soften, given care and time. The forest has seen it happen many times." },
+    },
+    ["meldend"] = {
+        { "meldend1", "There. The breath has done its work. Stay as long as you like, and step out when you're ready." },
+        { "meldend2", "Elune-adore. Whatever you brought into the shadow, you can leave a little of it here." },
+        { "meldend3", "The forest kept watch while you rested. It always will." },
+        { "meldend4", "Slower now, and steadier. Carry a little of this stillness with you." },
     },
 }

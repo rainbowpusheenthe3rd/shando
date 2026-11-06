@@ -253,14 +253,44 @@ local function Melded()
     return false
 end
 
+-- The meld's breath: the screen's violet edge brightens on each in-breath and fades on the longer out-breath, in
+-- step with the windbreath sound (the same curve as tools/spirit_sfx.py windbreath: 11 breaths a minute slowing to
+-- 6 over 105 s, in-breath 40% of each cycle, 150 s long). When it ends, a bell and a closing word.
+local BREATH_LEN, BREATH_SLOW, IN_FRAC = 150, 105, 0.4
+local meldCount = 0
+local pulse = CreateFrame("Frame")
+pulse:SetScript("OnUpdate", function(_, dt)
+    local r = ritual
+    if not r or r.name ~= "meld" or not r.breathT0 then return end
+    local t = GetTime() - r.breathT0
+    if t < BREATH_LEN then
+        local bpm = 11 - 5 * math.min(1, t / BREATH_SLOW)
+        r.phase = ((r.phase or 0) + bpm / 60 * dt) % 1
+        local env
+        if r.phase < IN_FRAC then env = math.sin(r.phase / IN_FRAC * math.pi / 2) ^ 2
+        else env = math.cos((r.phase - IN_FRAC) / (1 - IN_FRAC) * math.pi / 2) ^ 2 end
+        local edge = math.min(1, t / 4) * math.min(1, (BREATH_LEN - t) / 6)
+        veil:SetAlpha(0.14 + 0.36 * env * edge)
+    elseif not r.closed then
+        r.closed = true
+        veil:SetAlpha(0.14)
+        Sfx("kindbell")
+        C_Timer.After(2.5, function() if ritual == r then Say("meldend") end end)
+    end
+end)
+
 local function CheckMeld()
     if Melded() and not InCombatLockdown() and not IsInInstance() and not ShandoOff then
         if ritual and ritual.name == "meld" then return end
-        BeginRitual("meld", "meld")
+        BeginRitual("meld", Night() and "meld" or "meld_day", { 0.55, 0.38, 0.9, 0.14 })
+        meldCount = meldCount + 1
         Music(true)
         C_Timer.After(4, function() if ritual and ritual.name == "meld" then Say("meld") end end)
         C_Timer.After(20, function()
-            if ritual and ritual.name == "meld" and not breathing then breathing = Sfx("windbreath", "Ambience") end
+            if ritual and ritual.name == "meld" and not breathing then
+                breathing = Sfx("windbreath", "Ambience")
+                ritual.breathT0, ritual.phase = GetTime(), 0
+            end
         end)
     elseif ritual and ritual.name == "meld" and not Melded() then
         EndRitual()
@@ -312,7 +342,7 @@ end
 
 local function LookBack(l, tries)
     if not l then l, tries = ShandoLast, 0 ShandoLast = nil end
-    if not l or (l.elapsed or 0) < 600 or (l.herbs or 0) + (l.skins or 0) + l.kind + l.quests + l.levels + #l.zones == 0 then return end
+    if not l or (l.elapsed or 0) < 600 or (l.herbs or 0) + (l.skins or 0) + (l.melds or 0) + l.kind + l.quests + l.levels + #l.zones == 0 then return end
     local parts = {}
     if #l.zones > 0 then parts[#parts + 1] = "you walked " .. List(l.zones) end
     if (l.herbs or 0) > 0 then parts[#parts + 1] = ("gathered %d herb%s"):format(l.herbs, l.herbs == 1 and "" or "s") end
@@ -320,6 +350,7 @@ local function LookBack(l, tries)
     if l.kind > 0 then parts[#parts + 1] = ("helped others %d time%s"):format(l.kind, l.kind == 1 and "" or "s") end
     if l.quests > 0 then parts[#parts + 1] = ("saw %d task%s through"):format(l.quests, l.quests == 1 and "" or "s") end
     if l.levels > 0 then parts[#parts + 1] = ("grew %d level%s"):format(l.levels, l.levels == 1 and "" or "s") end
+    if (l.melds or 0) > 0 then parts[#parts + 1] = ("rested in shadow %d time%s"):format(l.melds, l.melds == 1 and "" or "s") end
     local when = l.at and date("%A", l.at) or "last time"
     if Say("recall", { sfx = "chime", delay = 1.8 }) then
         C_Timer.After(4, function()
@@ -384,7 +415,7 @@ f:SetScript("OnEvent", function(_, event, a1, a2, _, a4)
         -- Saved every time, /reload included (live = true), so the session carries across reloads; the look-back
         -- at the next login skips sessions shorter than 10 minutes (elapsed).
         ShandoLast = { zones = session.order, kind = session.kind, quests = session.quests,
-            levels = session.levels, herbs = HerbaloreSession, skins = SkinSession, at = time(),
+            levels = session.levels, herbs = HerbaloreSession, skins = SkinSession, melds = meldCount, at = time(),
             elapsed = GetTime() - started, live = true }
         return
     elseif event == "CALENDAR_UPDATE_EVENT_LIST" then
@@ -396,7 +427,7 @@ f:SetScript("OnEvent", function(_, event, a1, a2, _, a4)
         if a2 and l and l.live and time() - (l.at or 0) < 600 then  -- a /reload: carry the session on
             session.order, session.kind, session.quests, session.levels = l.zones, l.kind, l.quests, l.levels
             for _, z in ipairs(session.order) do session.zones[z] = true end
-            HerbaloreSession, SkinSession, session.live = l.herbs, l.skins, true
+            HerbaloreSession, SkinSession, session.live, meldCount = l.herbs, l.skins, true, l.melds or 0
             started = GetTime() - (l.elapsed or 0)
             ShandoLast = nil
         elseif l and l.live then  -- a real login: the saved session is now the one to look back on
