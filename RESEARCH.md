@@ -133,8 +133,16 @@ seamlessly because noise is shaped on the frequency grid of the whole clip and e
 well below the voice and play on the player's own Ambience and SFX sliders (water about level with the background,
 never above it: Galbrun & Ali, 2013).
 
-**The Shadowmeld breath is also visual:** a violet edge on the screen brightens on each in-breath and fades on the
-out-breath, in step with the wind. Whether a visual pacer helps more than sound alone is a hypothesis.
+**The beds were rebuilt after play-testing found them weak.** Measured, the first versions were mono, 64 kbps, with
+no room, and the Dream and night Shadowmeld beds held 92–99% of their energy below 500 Hz: sine drones that vanish on
+headphones under the game. The second versions are stereo at 160 kbps, with a seamless room reverb, sound across the
+whole range, and natural events placed around you: water dripping in a cave and wind in the tunnels for the barrow
+dens; crickets, an owl and a moonwell for the vigil; frogs, crickets and leaves for Shadowmeld by night; a stirring
+canopy and birds by day. Each is a 60-second loop that crossfades into its next copy exactly on time.
+
+**The Shadowmeld breath is also visual:** a dark violet edge on the screen opens a little on each in-breath and closes
+softly on the out-breath, in step with the wind. The ritual edges darken rather than glow, because bright overlays
+read as glare on a night screen. Whether a visual pacer helps more than sound alone is a hypothesis.
 
 **The voice** is AI-generated with VoxCPM2 (Apache-2.0): designed once from a written description and used as the
 reference for every line, so all lines share one voice, with a soft reverb.
