@@ -109,7 +109,10 @@ f:RegisterEvent("PLAYER_LOGIN")
 f:SetScript("OnEvent", function(_, event)
     if event == "PLAYER_LOGIN" then
         if HerbaloreToo() then
-            print("|cffb8c8ffShan'do|r: Herbalore is now part of Shan'do. You can disable the separate Herbalore addon; until then, it speaks for the herbs.")
+            -- In her voice (chat only, no recording): she steps back so the herbs' other voice can speak. The plain
+            -- note after it, in grey, is the only out-of-world text.
+            DEFAULT_CHAT_FRAME:AddMessage("|cffb8c8ffThe green things already have a voice of their own beside you, thero'shan. I will let them speak, and listen with you.|r")
+            DEFAULT_CHAT_FRAME:AddMessage("|cff888888(Herbalore is built into Shan'do now. Disable the separate Herbalore addon to hear the herbs through her.)|r")
         end
         return
     end
