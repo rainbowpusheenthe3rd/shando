@@ -25,9 +25,14 @@ local TEXT = [[
 |cffffd100How she speaks|r
 She invites, never instructs. She speaks about the world and what you did, not about what you are. She never speaks in combat or in dungeons, and leaves at least 45 seconds between any two words, shared with Herbalore. Each line rests longer every time you hear it, so nothing repeats through an evening.
 
+|cffffd100Settings|r
+Left-click the moon by the minimap (or |cffb8c8ff/shando options|r): on or off, how often she speaks, the quiet gap between any two lines, how strong the ritual screen edges are, and soundscapes on or off. Right-click it to rest her; drag it to move it.
+
 |cffffd100Commands|r
   |cffb8c8ff/shando|r  rest her, or call her back
   |cffb8c8ff/shando quieter|r  /  |cffb8c8ff/shando nearer|r  speak less or more often
+  |cffb8c8ff/shando options|r  settings
+  |cffb8c8ff/shando moonwell|r  mark the moonwell you're standing in, so she knows it
   |cffb8c8ff/shando help|r  this page
 
 |cffffd100Where it comes from|r

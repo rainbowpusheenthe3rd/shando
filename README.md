@@ -1,11 +1,12 @@
-<p align="center"><img src="docs/banner.png" alt="Shan'do"></p>
+<p align="center"><img src="docs/banner.png" alt="Shan'do: A night elf spirit guide for quiet moments."></p>
 
-<h1 align="center"><img src="docs/icon.png" width="56" align="center"> Shan'do</h1>
+<h1 align="center"><img src="docs/icon.png" width="56" align="center" alt="Shan'do icon"> Shan'do</h1>
 <p align="center"><i>A night elf spirit guide for quiet moments.</i></p>
 <p align="center"><b><a href="https://rainbowpusheenthe3rd.github.io/shando/">Listen to it →</a></b></p>
 
-A World of Warcraft addon, voiced in one designed night elf voice. Made for the Forever client (interface 16001,
-also 120105).
+**Shan'do** is a free World of Warcraft addon for **World of Warcraft: Forever** (Classic+): a voiced night elf spirit guide who speaks at quiet moments. She greets storied places, breathes with you when you stand still, keeps rituals for shadowmeld, sleep and prayer, and notices kindness. Made for immersion, roleplay and a calmer evening in Azeroth.
+
+Made for the World of Warcraft: Forever client (interface 16001, also 120105). Free, open source, no adverts.
 
 ## What it does
 

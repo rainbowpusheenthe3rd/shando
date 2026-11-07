@@ -14,7 +14,7 @@
 -- AlbaLast); every line rests longer each time it is said (Ready). /shando toggles.
 local _, ns = ...
 local DIR = "Interface\\AddOns\\Shando\\"
-local GAP = 45
+local GAP = 45  -- default; ShandoGap (the options panel) overrides it, shared with Herbalore
 local EVERY = {  -- seconds between lines of a kind
     night = 3600, breath = 1200, rest = 1800, water = 1200, home = 4 * 3600, wounded = 2 * 3600, kin = 3600,
     teacher = 2 * 3600, kindness = 2700, linger = 2400, dawn = 20 * 3600, dusk = 20 * 3600,
@@ -78,7 +78,7 @@ local function Pick(kind)
 end
 
 local function Quiet()  -- times she never speaks
-    return ShandoOff or InCombatLockdown() or IsInInstance() or GetTime() - (AlbaLast or -GAP) < GAP
+    return ShandoOff or InCombatLockdown() or IsInInstance() or GetTime() - (AlbaLast or -(ShandoGap or GAP)) < (ShandoGap or GAP)
 end
 
 local function Sfx(name, channel)
@@ -120,6 +120,39 @@ end
 local function SpellName(id)  -- C_Spell on newer clients, GetSpellInfo on older ones
     if C_Spell and C_Spell.GetSpellName then return C_Spell.GetSpellName(id) end
     return GetSpellInfo and (GetSpellInfo(id))
+end
+
+-- The moonwell: from full mana to empty, standing in a moonwell, casting nothing but heals. One line, once.
+-- The Temple of the Moon is found by its subzone; other wells by position (zone -> {x, y} as map fractions):
+-- two Ashenvale wells where Warcraft Wiki and a Wowhead coordinate list agree, and any well you mark yourself
+-- with /shando moonwell (ShandoWells, account-wide), since published coordinates for the rest disagree.
+local HEALS = { ["Healing Touch"] = true, ["Regrowth"] = true, ["Rejuvenation"] = true, ["Tranquility"] = true }
+local WELLS = { ["Ashenvale"] = { { 0.5375, 0.4600 }, { 0.6020, 0.7290 } } }
+local WELL_R = 0.008  -- how near counts as in the well, in map fractions
+local wellRun  -- true while every cast since full mana has been a heal at a well
+
+local function Spot()
+    local map = C_Map and C_Map.GetBestMapForUnit("player")
+    local pos = map and C_Map.GetPlayerMapPosition(map, "player")
+    if pos then return pos:GetXY() end
+end
+
+local function AtWell()
+    if GetSubZoneText() == "Temple of the Moon" then return true end
+    local x, y = Spot()
+    if not x then return false end
+    local zone = GetZoneText() or ""
+    for _, list in ipairs({ WELLS[zone] or {}, (ShandoWells or {})[zone] or {} }) do
+        for _, w in ipairs(list) do
+            if (x - w[1]) ^ 2 + (y - w[2]) ^ 2 <= WELL_R ^ 2 then return true end
+        end
+    end
+    return false
+end
+
+local function Mana()
+    local m = UnitPowerMax("player", 0)
+    return m > 0 and UnitPower("player", 0) / m or 0
 end
 
 local function Outdoors()
@@ -173,7 +206,8 @@ end
 local function TickBed(now)
     if bed and (still == 0 or not IsResting() or now > bedUntil) then StopBed() return end
     if bed then  -- still playing: the clock frame below starts each next copy on time
-    elseif not bed and IsResting() and still >= BED_STILL and now - lastBed > BED_EVERY and not ShandoOff then
+    elseif not bed and IsResting() and still >= BED_STILL and now - lastBed > BED_EVERY and not ShandoOff
+        and not ShandoNoBeds then
         lastBed, bedUntil, bedNext = now, now + BED_LEN, now + BED_PERIOD
         bed = Sfx(Night() and "inn_night" or "inn_day", "Ambience")
     end
@@ -229,10 +263,10 @@ end
 
 local function BeginRitual(name, bedFile, tint)
     EndRitual()
-    ritual = { name = name, file = bedFile, bed = Sfx(bedFile, "Ambience"), nextBed = GetTime() + BED_PERIOD, t0 = GetTime() }
+    ritual = { name = name, file = bedFile, bed = not ShandoNoBeds and Sfx(bedFile, "Ambience") or nil, nextBed = GetTime() + BED_PERIOD, t0 = GetTime() }
     if tint then
         veil.tex:SetVertexColor(tint[1], tint[2], tint[3])
-        Fade(tint[4], 5)
+        Fade(tint[4] * (ShandoEdge or 1), 5)  -- ShandoEdge: screen edge strength, 0 to 1
     end
 end
 
@@ -246,7 +280,7 @@ end
 local clock = CreateFrame("Frame")
 clock:SetScript("OnUpdate", function()
     local now = GetTime()
-    if ritual and now >= ritual.nextBed then
+    if ritual and now >= ritual.nextBed and not ShandoNoBeds then
         ritual.bed, ritual.nextBed = Sfx(ritual.file, "Ambience"), ritual.nextBed + BED_PERIOD
     end
     if bed and now >= bedNext then
@@ -282,10 +316,10 @@ pulse:SetScript("OnUpdate", function(_, dt)
         if r.phase < IN_FRAC then env = math.sin(r.phase / IN_FRAC * math.pi / 2) ^ 2
         else env = math.cos((r.phase - IN_FRAC) / (1 - IN_FRAC) * math.pi / 2) ^ 2 end
         local edge = math.min(1, t / 4) * math.min(1, (BREATH_LEN - t) / 6)
-        veil:SetAlpha(0.3 - 0.12 * env * edge)  -- the edges open a little on the in-breath, close softly on the out
+        veil:SetAlpha((0.3 - 0.12 * env * edge) * (ShandoEdge or 1))  -- the edges open a little on the in-breath, close softly on the out
     elseif not r.closed then
         r.closed = true
-        veil:SetAlpha(0.3)
+        veil:SetAlpha(0.3 * (ShandoEdge or 1))
         Sfx("kindbell")
         C_Timer.After(2.5, function() if ritual == r then Say("meldend") end end)
     end
@@ -405,7 +439,8 @@ for _, e in ipairs({ "PLAYER_ENTERING_WORLD", "ZONE_CHANGED_NEW_AREA", "ZONE_CHA
     pcall(f.RegisterEvent, f, e)  -- tolerate an event this client doesn't have
 end
 pcall(f.RegisterUnitEvent, f, "UNIT_AURA", "player")
-f:SetScript("OnEvent", function(_, event, a1, a2, _, a4)
+pcall(f.RegisterUnitEvent, f, "UNIT_SPELLCAST_SUCCEEDED", "player")
+f:SetScript("OnEvent", function(_, event, a1, a2, a3, a4)
     if event == "UNIT_AURA" then
         CheckMeld()
     elseif event == "CHAT_MSG_TEXT_EMOTE" then
@@ -496,8 +531,21 @@ f:SetScript("OnEvent", function(_, event, a1, a2, _, a4)
     elseif event == "QUEST_TURNED_IN" then
         session.quests = session.quests + 1
         if math.random() < 0.2 then C_Timer.After(3, function() Say("linger", { sfx = "chime", delay = 1.8 }) end) end
+    elseif event == "UNIT_SPELLCAST_SUCCEEDED" then
+        local spell = a3 and SpellName(a3)
+        if a1 == "player" and wellRun and spell and HEALS[spell] and Mana() < 0.05 then
+            wellRun = nil
+            C_Timer.After(3, function() Owe("moonwell", { sfx = "swell", delay = 2.5 }) end)
+        end
     elseif event == "UNIT_SPELLCAST_SENT" then
         local target, spell = a2, a4 and SpellName(a4)
+        if a1 == "player" and spell then
+            if HEALS[spell] and AtWell() then
+                wellRun = wellRun or Mana() >= 0.9 or nil
+            else
+                wellRun = nil  -- anything but a heal, or a heal away from the well, starts it over
+            end
+        end
         if a1 == "player" and spell and KIND_SPELLS[spell] and target and target ~= "" and target ~= UnitName("player") then
             session.kind = session.kind + 1
             if math.random() < 0.5 then
@@ -562,6 +610,17 @@ SLASH_SHANDO1 = "/shando"
 SlashCmdList.SHANDO = function(msg)
     msg = (msg or ""):lower()
     if msg == "help" then ns.ShowReadme() return end
+    if msg == "options" then ns.ShowOptions() return end
+    if msg == "moonwell" then  -- mark the moonwell you're standing in, so she knows it
+        local x, y = Spot()
+        if not x then print("|cffb8c8ffShan'do|r: I can't tell where we are just here.") return end
+        local zone = GetZoneText() or ""
+        ShandoWells = ShandoWells or {}
+        ShandoWells[zone] = ShandoWells[zone] or {}
+        table.insert(ShandoWells[zone], { x, y })
+        print(("|cffb8c8ffShan'do|r: a moonwell in %s, at %.1f, %.1f. I'll know it now."):format(zone, x * 100, y * 100))
+        return
+    end
     if msg == "quieter" or msg == "nearer" then
         ShandoPace = math.max(0.25, math.min(4, (ShandoPace or 1) * (msg == "quieter" and 2 or 0.5)))
         print(("|cffb8c8ffShan'do|r: %s (lines of a kind at most every %sx the usual time)"):format(

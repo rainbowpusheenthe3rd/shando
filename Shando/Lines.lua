@@ -309,4 +309,7 @@ ns.LINES = {
         { "meldend3", "The forest kept watch while you rested. It always will." },
         { "meldend4", "Slower now, and steadier. Carry a little of this stillness with you." },
     },
+    ["moonwell"] = {
+        { "moonwell1", "Nothing given in this forest is lost, thero'shan. The leaf falls to feed the root, and the root raises the leaf. What you poured out will return to you, changed, and the same." },
+    },
 }
