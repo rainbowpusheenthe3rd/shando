@@ -7,7 +7,7 @@ local TEXT = [[
 |cffffd100When she speaks|r
   - Sacred and storied places, the first time you arrive, after a soft swell.
   - Standing still outdoors for a while: a breath, then a wind that breathes slowly with you.
-  - Resting at an inn: a stream and birds by day, crickets by night.
+  - Resting at an inn: a Japanese garden by day (water on stones, a water-jar's drops, now and then a bamboo knock), a hearth fire by night.
   - Night, dawn and dusk; flights; swimming; coming home to Darnassus.
   - People: joining a group, visiting a trainer, healing or blessing someone else.
   - Milestones: levels, new forms and great spells, profession milestones, now and then a finished quest.
@@ -20,13 +20,19 @@ local TEXT = [[
   - |cffb8c8ffShadowmeld|r out of combat: the music softens, the night rises around you, and the wind breathes. Move to return.
   - |cffb8c8ff/sleep|r in a barrow den: the edges of the world turn green, and the Dream plays until you stand.
   - |cffb8c8ff/kneel|r or |cffb8c8ff/pray|r outdoors at night, or in the Temple of the Moon: moonlight, a bell, and a word.
-  - If you fall and walk back as a wisp, a soft choir walks with you.
+  - If you fall and walk back as a wisp, the quiet crickets of a night meadow walk with you.
+
+|cffffd100Herbs and skinning|r
+  - Gathering a herb: one of its lines, the ones you haven't heard first. Each line, and each herb, then rests longer every time.
+  - Now and then while gathering, a quiet line instead, about slowing down.
+  - Skinning: a word of thanks the first time each session, then now and then.
+  - Both have their own switch in the settings. (This was the Herbalore addon; it is part of Shan'do now.)
 
 |cffffd100How she speaks|r
-She invites, never instructs. She speaks about the world and what you did, not about what you are. She never speaks in combat or in dungeons, and leaves at least 45 seconds between any two words, shared with Herbalore. Each line rests longer every time you hear it, so nothing repeats through an evening.
+She invites, never instructs. She speaks about the world and what you did, not about what you are. She never speaks in combat or in dungeons, and leaves at least 45 seconds between any two words, herbs included. Each line rests longer every time you hear it, so nothing repeats through an evening.
 
 |cffffd100Settings|r
-Left-click the moon by the minimap (or |cffb8c8ff/shando options|r): on or off, how often she speaks, the quiet gap between any two lines, how strong the ritual screen edges are, and soundscapes on or off. Right-click it to rest her; drag it to move it.
+Left-click the moon by the minimap (or |cffb8c8ff/shando options|r): on or off, how often she speaks, the quiet gap between any two lines, how strong the ritual screen edges are, soundscapes on or off, herb voices and skinning on or off, and how often herbs speak. Right-click it to rest her; drag it to move it.
 
 |cffffd100Commands|r
   |cffb8c8ff/shando|r  rest her, or call her back
@@ -37,6 +43,10 @@ Left-click the moon by the minimap (or |cffb8c8ff/shando options|r): on or off, 
 
 |cffffd100Where it comes from|r
 Her choices follow research on nature, breathing, savouring, kindness, self-compassion, belonging and grief, kept with its sources in the wow-market repository (docs/spirit/RESEARCH.md). She is company, not therapy.
+
+She keeps a small notebook in your saved variables: where each herb was picked, and anything from a herb node that has no line yet. It never leaves your computer.
+
+The soundscapes are real field recordings (Freesound and Wikimedia Commons, CC0 and CC BY; the credits are in the README).
 
 |cff888888Voice: one designed voice, recorded for each line. Sounds: synthesised for her, no samples.|r
 

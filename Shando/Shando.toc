@@ -2,11 +2,14 @@
 ## IconTexture: Interface\AddOns\Shando\icon
 ## Title: Shan'do
 ## Version: 1.0.0
-## Notes: A night elf spirit guide for quiet moments, sacred places, kin, teachers, milestones and hard times, with a breathing wind and inn soundscapes. /shando help for the guide; /shando toggles; /shando quieter or nearer.
-## SavedVariables: ShandoWells
-## SavedVariablesPerCharacter: ShandoOff, ShandoSaid, ShandoOnce, ShandoPace, ShandoMusic, ShandoLast, ShandoMap, ShandoGap, ShandoEdge, ShandoNoBeds
+## Notes: A night elf spirit guide for quiet moments, sacred places, kin, teachers, milestones and hard times, with real field-recording soundscapes and a voice for every herb. /shando help for the guide; /shando toggles; /shando quieter or nearer.
+## SavedVariables: ShandoWells, ShandoHerbPicks, ShandoHerbUnknown
+## SavedVariablesPerCharacter: ShandoOff, ShandoSaid, ShandoOnce, ShandoPace, ShandoMusic, ShandoLast, ShandoMap, ShandoGap, ShandoEdge, ShandoNoBeds, ShandoNoHerbs, ShandoNoSkins, ShandoHerbPace, ShandoHerbSaid
 Lines.lua
+HerbLines.lua
+Ambience.lua
 Shando.lua
+Herbs.lua
 Readme.lua
 Minimap.lua
 Options.lua

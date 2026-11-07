@@ -1,5 +1,6 @@
 -- Settings: left-click the minimap button (or /shando options). On/off, how often she speaks, the quiet gap between
--- any two lines (shared with Herbalore), screen edge strength for the rituals, soundscapes on/off, and the guide.
+-- any two lines, screen edge strength for the rituals, soundscapes on/off, herb voices and skinning lines on/off (from
+-- Herbalore, folded in), how often herbs speak, and the guide.
 local _, ns = ...
 local COLOUR = "|cffb8c8ff"
 
@@ -69,9 +70,16 @@ local PACE = { 4, 2, 1, 0.5, 0.25 }  -- ShandoPace multiplies every rest: higher
 local PACE_NAME = { "rarely", "less often", "as usual", "more often", "often" }
 local function PaceIndex() for i, p in ipairs(PACE) do if math.abs(p - (ShandoPace or 1)) < 0.01 then return i end end return 3 end
 
+local HERB_PACE = { 3, 2, 1, 0.5 }  -- ShandoHerbPace multiplies every herb line's rest: higher is quieter
+local HERB_PACE_NAME = { "rarely", "less often", "as usual", "more often" }
+local function HerbPaceIndex()
+    for i, p in ipairs(HERB_PACE) do if math.abs(p - (ShandoHerbPace or 1)) < 0.01 then return i end end
+    return 3
+end
+
 local f
 local function Build()
-    f = Window("ShandoOptionsFrame", COLOUR .. "Shan'do|r", 330)
+    f = Window("ShandoOptionsFrame", COLOUR .. "Shan'do|r", 440)
     local sub = f:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
     sub:SetPoint("TOPLEFT", 64, -38)
     sub:SetWidth(240)
@@ -88,6 +96,12 @@ local function Build()
             function(v) ShandoEdge = v / 100 end, function(v) return ("Ritual screen edges: %d%%"):format(v) end),
         Check(f, -252, "Soundscapes (inns, rituals, the wisp)", function() return not ShandoNoBeds end,
             function(on) ShandoNoBeds = not on or nil end),
+        Check(f, -282, "Herb voices (a line when you gather)", function() return not ShandoNoHerbs end,
+            function(on) ShandoNoHerbs = not on or nil end),
+        Check(f, -312, "Skinning (a word of thanks)", function() return not ShandoNoSkins end,
+            function(on) ShandoNoSkins = not on or nil end),
+        Slider(f, -346, 1, #HERB_PACE, 1, HerbPaceIndex, function(i) ShandoHerbPace = HERB_PACE[i] end,
+            function(i) return "How often herbs speak: " .. HERB_PACE_NAME[i] end),
     }
     local guide = CreateFrame("Button", nil, f, "UIPanelButtonTemplate")
     guide:SetSize(130, 24)

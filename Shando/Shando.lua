@@ -189,6 +189,8 @@ end
 
 -- Beds and breath ------------------------------------------------------------------------------------------------
 
+local innName  -- the inn bed playing now ("inn_day" or "inn_night"), so its single sounds match it
+
 local function StopBed()
     if bed then StopSound(bed, 3000) bed = nil end
     bedUntil = 0
@@ -209,7 +211,8 @@ local function TickBed(now)
     elseif not bed and IsResting() and still >= BED_STILL and now - lastBed > BED_EVERY and not ShandoOff
         and not ShandoNoBeds then
         lastBed, bedUntil, bedNext = now, now + BED_LEN, now + BED_PERIOD
-        bed = Sfx(Night() and "inn_night" or "inn_day", "Ambience")
+        innName = Night() and "inn_night" or "inn_day"
+        bed = Sfx(innName, "Ambience")
     end
 end
 
@@ -277,6 +280,28 @@ local function TickRitual(now)  -- keep the bed looping; end it when you move, f
     if ShandoOff or moved or InCombatLockdown() or now - ritual.t0 > 600 then EndRitual() return end
 end
 
+-- Single sounds over a bed (Ambience.lua, from tools/spirit_ambience.py): a drop, a crackle, a knock, each at a gap of
+-- min + a random exponential with mean `mean` seconds, never one of the last three again, in one of v pre-rendered
+-- versions (PlaySoundFile has no pitch, pan or volume control). The base loop underneath is real recording too.
+local evName, evNext, evRecent = nil, 0, {}
+local function Gap(a) return a.min - a.mean * math.log(1 - math.random()) end
+local function TickEvents(now, name)
+    local a = name and ns.AMB and ns.AMB[name]
+    if not a or a.n == 0 then evName = nil return end
+    if name ~= evName then evName, evNext, evRecent = name, now + Gap(a), {} return end
+    if now < evNext then return end
+    local pool = {}
+    for i = 1, a.n do
+        local recent = false
+        for k = math.max(1, #evRecent - 2), #evRecent do if evRecent[k] == i then recent = true end end
+        if not recent then pool[#pool + 1] = i end
+    end
+    local i = #pool > 0 and pool[math.random(#pool)] or math.random(a.n)
+    evRecent[#evRecent + 1] = i
+    Sfx(("%s\\e%02d_%d"):format(name, i, math.random(a.v)), "Ambience")
+    evNext = now + Gap(a)
+end
+
 local clock = CreateFrame("Frame")
 clock:SetScript("OnUpdate", function()
     local now = GetTime()
@@ -284,8 +309,9 @@ clock:SetScript("OnUpdate", function()
         ritual.bed, ritual.nextBed = Sfx(ritual.file, "Ambience"), ritual.nextBed + BED_PERIOD
     end
     if bed and now >= bedNext then
-        bed, bedNext = Sfx(Night() and "inn_night" or "inn_day", "Ambience"), bedNext + BED_PERIOD
+        bed, bedNext = Sfx(innName, "Ambience"), bedNext + BED_PERIOD
     end
+    TickEvents(now, (ritual and ritual.bed and ritual.file) or (bed and innName) or nil)
 end)
 
 local MELD = SpellName(20580) or "Shadowmeld"
