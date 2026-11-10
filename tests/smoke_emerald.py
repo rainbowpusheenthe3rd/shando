@@ -112,7 +112,7 @@ assert close(G.cvars.Sound_AmbienceVolume, 0) and close(G.cvars.Sound_MusicVolum
 assert G.ShandoHush.amb == "0.6"
 # the whole script: 23 lines on Dialog, in order, each with its caption; bells and the wind on Master
 lua.execute("t0 = now - 7")
-lua.execute("for i = 1, 490 do advance(now + 1) tick() end")   # to 497 s, just before the frogs (505 s)
+lua.execute("for i = 1, 560 do advance(now + 1) tick() end")   # to 567 s, just before the frogs (572 s)
 assert close(G.cvars.Sound_AmbienceVolume, 0) and close(G.cvars.Sound_MusicVolume, 0)
 assert not any("meld" in p.path for p in G.played.values())
 lua.execute("advance(now + 20)")   # the frogs start on the ambience channel, and it rises from silence
@@ -122,10 +122,14 @@ a = float(G.cvars.Sound_AmbienceVolume)
 assert 0.1 < a < 0.6 and close(G.cvars.Sound_MusicVolume, 0), (a, dict(G.cvars))
 lua.execute("advance(now + 20)")
 assert close(G.cvars.Sound_AmbienceVolume, 0.6) and close(G.cvars.Sound_MusicVolume, 0)
-lua.execute("for i = 1, 600 do advance(now + 1) tick() end")   # past the closing line (594 s) to 1137 s
+assert G.ShandoDreamHeard.clearing, "heard once her last word is said"
+lua.execute("for i = 1, 530 do advance(now + 1) tick() end")   # only frogs now, to 1137 s
+last_voice = max(i for i, p in G.played.items() if "emerald" in p.path)
+assert G.played[last_voice].path.endswith("emerald20.mp3"), "her frog introduction is the last thing she says"
+assert all("emerald" not in p.path for i, p in G.played.items() if i > last_voice)
 assert sum(1 for p in G.played.values() if p.path.endswith("meld.mp3")) >= 9, "the frog bed loops for ten minutes"
 assert G.ShandoHush is not None and close(G.cvars.Sound_MusicVolume, 0), "still with the frogs, music not back yet"
-assert G.ShandoEmerald.reached == "emerald23"
+assert G.ShandoEmerald.reached == "frogs"
 lua.execute("advance(t0 + 1162)")                              # halfway through the 45 s fade (1140 s)
 m = float(G.cvars.Sound_MusicVolume)
 assert 0.1 < m < 0.35, m
@@ -133,7 +137,8 @@ n_frogs = sum(1 for p in G.played.values() if p.path.endswith("meld.mp3"))
 lua.execute("advance(t0 + 1185)")
 assert sum(1 for p in G.played.values() if p.path.endswith("meld.mp3")) == n_frogs, "no new frog copy once fading"
 voices = [p.path for p in G.played.values() if "emerald" in p.path]   # checked inside the Dream, before it ends
-assert [v.split("\\")[-1] for v in voices] == [f"emerald{i:02d}.mp3" for i in range(1, 24)], voices
+order = [*range(1, 20), 21, 22, 23, 20]   # waking and the farewell first, then she introduces the frogs
+assert [v.split("\\")[-1] for v in voices] == [f"emerald{i:02d}.mp3" for i in order], voices
 assert all(p.channel == "Dialog" for p in G.played.values() if "emerald" in p.path)
 assert all(p.channel == "Master" for p in G.played.values() if "kindbell" in p.path or "windbreath" in p.path)
 assert sum(1 for p in G.played.values() if "windbreath" in p.path) == 1
@@ -162,4 +167,19 @@ assert close(G.cvars.Sound_AmbienceVolume, 0.6) and G.ShandoHush is None
 lua.execute("ShandoHush = { amb = '0.6', mus = '0.4' } cvars.Sound_AmbienceVolume = '0' cvars.Sound_MusicVolume = '0'")
 lua.execute("for _, f in ipairs(frames) do if f.scripts.OnEvent then pcall(f.scripts.OnEvent, f, 'PLAYER_ENTERING_WORLD', true, false) end end")
 assert close(G.cvars.Sound_AmbienceVolume, 0.6) and G.ShandoHush is None, dict(G.cvars)
+# picking: a chosen one; on random, unheard first; once all are heard, each in turn after the last
+lua.execute("ShandoDream = nil ShandoDreamHeard = {} ShandoDreamLast = nil")
+fake = lua.eval("function(ns) ns.DREAMS[2] = { id = 'moonwell', name = 'b', kind = 'emerald', steps = {} } "
+                "ns.DREAMS[3] = { id = 'vigil', name = 'c', kind = 'emerald', steps = {} } end")
+fake(ns)
+picks = lua.eval("function(ns) local seen = {} for i = 1, 3 do local d = ns.PickDream() seen[#seen + 1] = d.id "
+                 "ShandoDreamHeard[d.id] = true ShandoDreamLast = d.id end return table.concat(seen, ',') end")(ns)
+assert sorted(picks.split(",")) == ["clearing", "moonwell", "vigil"], picks   # each once before any repeats
+cycle = lua.eval("function(ns) local seen = {} for i = 1, 4 do local d = ns.PickDream() seen[#seen + 1] = d.id "
+                 "ShandoDreamLast = d.id end return table.concat(seen, ',') end")(ns)
+first = cycle.split(",")
+ids = ["clearing", "moonwell", "vigil"]
+assert all(ids.index(first[i + 1]) == (ids.index(first[i]) + 1) % 3 for i in range(3)), cycle   # in turn
+lua.execute("ShandoDream = 'moonwell'")
+assert lua.eval("function(ns) return ns.PickDream().id end")(ns) == "moonwell"
 print("emerald dream checks pass")

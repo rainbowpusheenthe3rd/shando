@@ -475,26 +475,47 @@ end
 -- to the room. The world's ambient sound and music fade out for it, and come straight back in combat. At the end
 -- the frogs rise on the ambience channel with the world's own sounds (a 25 s fade from silence, no sudden start).
 local FROGS = "meld"   -- the frog bed: "meld" (a summer swamp, FS853607) or "vigil" (a Dordogne pond)
-local EMERALD = {   -- seconds from the start: a line key, or what happens (clip lengths 5-17 s; none overlaps the next)
-    { 0, "bell" }, { 4, "emerald01" }, { 24, "emerald02" }, { 46, "emerald03" }, { 66, "emerald04" },
-    { 82, "emerald05" }, { 100, "emerald06" }, { 120, "emerald07" }, { 136, "breath" }, { 146, "emerald08" },
-    { 196, "emerald09" }, { 236, "emerald10" }, { 292, "emerald11" }, { 312, "emerald12" }, { 342, "emerald13" },
-    { 368, "emerald14" }, { 390, "emerald15" }, { 410, "emerald16" }, { 440, "emerald17" }, { 464, "emerald18" },
-    { 492, "emerald19" }, { 505, "frogs" }, { 520, "emerald20" }, { 548, "emerald21" }, { 570, "emerald22" },
-    { 590, "bell" }, { 594, "emerald23" }, { 1140, "fade" }, { 1190, "end" },
+-- The meditations: each a script of lines (lines.tsv, its own kind) on a timeline of seconds from the start. A step
+-- is a line key or what happens. She guides you back to waking first, then introduces the frogs, and from then on
+-- it's only frogs until they fade (clip lengths 5-24 s; none runs into the next).
+ns.DREAMS = {
+    { id = "clearing", name = "The clearing", kind = "emerald", steps = {
+        { 0, "bell" }, { 4, "emerald01" }, { 24, "emerald02" }, { 46, "emerald03" }, { 66, "emerald04" },
+        { 82, "emerald05" }, { 100, "emerald06" }, { 120, "emerald07" }, { 136, "breath" }, { 146, "emerald08" },
+        { 196, "emerald09" }, { 236, "emerald10" }, { 292, "emerald11" }, { 312, "emerald12" }, { 342, "emerald13" },
+        { 368, "emerald14" }, { 390, "emerald15" }, { 410, "emerald16" }, { 440, "emerald17" }, { 464, "emerald18" },
+        { 492, "emerald19" }, { 506, "emerald21" }, { 528, "emerald22" }, { 544, "bell" }, { 548, "emerald23" },
+        { 568, "emerald20" }, { 572, "frogs" }, { 1140, "fade" }, { 1190, "end" },
+    } },
 }
 local FADE = 45   -- seconds: the frogs fade out as the game's music comes back
-local function EmeraldText(key)
-    for _, l in ipairs(ns.LINES.emerald or {}) do if l[1] == key then return l[2] end end
+local function LineText(kind, key)
+    for _, l in ipairs(ns.LINES[kind] or {}) do if l[1] == key then return l[2] end end
 end
 
-local function Emerald()
+-- Which meditation: the one chosen in the options (ShandoDream), or, on "random", one you haven't heard to the end
+-- yet, by dice roll; once you've heard them all, each in turn after the last one played.
+function ns.PickDream()
+    local list = ns.DREAMS
+    for _, d in ipairs(list) do if d.id == ShandoDream then return d end end
+    ShandoDreamHeard = ShandoDreamHeard or {}
+    local unheard = {}
+    for _, d in ipairs(list) do if not ShandoDreamHeard[d.id] then unheard[#unheard + 1] = d end end
+    if #unheard > 0 then return unheard[math.random(#unheard)] end
+    local last = 0
+    for i, d in ipairs(list) do if d.id == ShandoDreamLast then last = i end end
+    return list[last % #list + 1]
+end
+
+local function Emerald(d)
+    d = d or ns.PickDream()
     BeginRitual("emerald", nil, { 0.03, 0.14, 0.07, 0.45 })   -- the Dream's green at the edges
     local r = ritual
     r.base = 0.45
     WorldHush(true, 6)
-    ShandoEmerald = { at = time(), reached = "start", t = 0 }   -- read back to learn the idle-logout limit
-    for _, step in ipairs(EMERALD) do
+    ShandoDreamLast = d.id
+    ShandoEmerald = { at = time(), dream = d.id, reached = "start", t = 0 }   -- read back to learn the idle limit
+    for _, step in ipairs(d.steps) do
         C_Timer.After(step[1], function()
             if ritual ~= r then return end   -- ended (moved, combat, /emerald again)
             local what = step[2]
@@ -505,7 +526,9 @@ local function Emerald()
                 StopBreath()
                 breathing = Sfx("windbreath", "Master")
                 r.breathT0, r.phase = GetTime(), 0
-            elseif what == "frogs" then
+            elseif what == "frogs" then   -- her last word is said: this one counts as heard
+                ShandoDreamHeard = ShandoDreamHeard or {}
+                ShandoDreamHeard[d.id] = true
                 r.file, r.nextBed = FROGS, GetTime() + BED_PERIOD   -- the clock loops it like any ritual bed
                 r.bed = Sfx(FROGS, "Ambience")
                 AmbienceBack(25)
@@ -521,7 +544,7 @@ local function Emerald()
                 AlbaLast = GetTime()   -- Herbalore keeps its distance
                 Mark(what)
                 PlaySoundFile(ns.VoicePath(what, DIR .. "sounds\\" .. what .. ".mp3"), "Dialog")
-                Caption(EmeraldText(what))
+                Caption(LineText(d.kind, what))
             end
         end)
     end
@@ -545,6 +568,9 @@ SlashCmdList.EMERALD = function(msg)
     end
     Emerald()
 end
+
+-- For the options panel: begin the chosen meditation now (or stop the one playing).
+function ns.StartDream() SlashCmdList.EMERALD("dream") end
 
 local function OnEmote(token)
     token = type(token) == "string" and token:upper() or ""

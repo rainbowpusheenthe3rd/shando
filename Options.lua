@@ -1,6 +1,6 @@
 -- Settings: left-click the minimap button (or /shando options). On/off, how often she speaks, the quiet gap between
 -- any two lines, screen edge strength for the rituals, soundscapes on/off, herb voices and skinning lines on/off (from
--- Herbalore, folded in), how often herbs speak, and the guide.
+-- Herbalore, folded in), how often herbs speak, which meditation /emerald dream plays (and Begin), and the guide.
 local _, ns = ...
 local COLOUR = "|cffb8c8ff"
 
@@ -102,11 +102,42 @@ local function Build()
             function(on) ShandoNoSkins = not on or nil end),
         Slider(f, -346, 1, #HERB_PACE, 1, HerbPaceIndex, function(i) ShandoHerbPace = HERB_PACE[i] end,
             function(i) return "How often herbs speak: " .. HERB_PACE_NAME[i] end),
-        Check(f, -392, "My own voice (where recorded)", function() return ShandoMyVoice end,
-            function(on) ShandoMyVoice = on or nil end),
-        Check(f, -420, "...with the night-elf treatment", function() return ShandoMyVoice == "elf" end,
-            function(on) ShandoMyVoice = on and "elf" or (ShandoMyVoice and true) or nil end),
     }
+    -- The meditation (/emerald dream): click the name to step through Random and each one; Begin starts it now.
+    local label = f:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+    label:SetPoint("TOPLEFT", 22, -392)
+    label:SetText("Meditation (/emerald dream)")
+    local pick = CreateFrame("Button", nil, f, "UIPanelButtonTemplate")
+    pick:SetSize(180, 22)
+    pick:SetPoint("TOPLEFT", 20, -412)
+    local function Name()
+        for _, d in ipairs(ns.DREAMS or {}) do if d.id == ShandoDream then return d.name end end
+        return "Random, then in turn"
+    end
+    pick:SetScript("OnClick", function()
+        local ids = { "random" }
+        for _, d in ipairs(ns.DREAMS or {}) do ids[#ids + 1] = d.id end
+        local i = 1
+        for k, id in ipairs(ids) do if id == (ShandoDream or "random") then i = k end end
+        ShandoDream = ids[i % #ids + 1]
+        if ShandoDream == "random" then ShandoDream = nil end
+        pick:SetText(Name())
+    end)
+    pick.Refresh = function() pick:SetText(Name()) end
+    items[#items + 1] = pick
+    local begin = CreateFrame("Button", nil, f, "UIPanelButtonTemplate")
+    begin:SetSize(90, 22)
+    begin:SetPoint("LEFT", pick, "RIGHT", 8, 0)
+    begin:SetText("Begin")
+    begin:SetScript("OnClick", function() f:Hide() ns.StartDream() end)
+    -- The player's own recordings, only when there are some (none ship with the addon)
+    if next(ns.MINE or {}) then
+        items[#items + 1] = Check(f, -446, "My own voice (where recorded)", function() return ShandoMyVoice end,
+            function(on) ShandoMyVoice = on or nil end)
+        items[#items + 1] = Check(f, -472, "...with the night-elf treatment", function() return ShandoMyVoice == "elf" end,
+            function(on) ShandoMyVoice = on and "elf" or (ShandoMyVoice and true) or nil end)
+        f:SetHeight(560)
+    end
     local guide = CreateFrame("Button", nil, f, "UIPanelButtonTemplate")
     guide:SetSize(130, 24)
     guide:SetPoint("BOTTOM", 0, 16)

@@ -332,9 +332,9 @@ ns.LINES = {
         { "emerald17", "You've carried a great deal to get here. It's alright to set some of it down, just for now. It will keep." },
         { "emerald18", "And a kind wish for someone else out there today. Someone you know, or someone you'll never meet. May they rest too. Everyone is carrying something." },
         { "emerald19", "Rest here a little longer. I'll keep watch." },
-        { "emerald20", "Listen. The water's edge is waking around you. Frogs, singing the day gently closed." },
+        { "emerald20", "And now, just listen. The water's edge is waking around you. Frogs, singing the day gently closed. Stay with them as long as you like." },
         { "emerald21", "Slowly now, whenever you're ready, come back towards waking. Feel your hands. Perhaps move your fingers, and your shoulders." },
         { "emerald22", "When you'd like to, open your eyes. Look around, and find one thing you can see." },
-        { "emerald23", "Andu-falah-dor, thero'shan. Balance restored, a little. That was well done. Stay with the frogs as long as you like. The Dream will keep. So will I." },
+        { "emerald23", "Andu-falah-dor, thero'shan. Balance restored, a little. That was well done. The Dream will keep. So will I." },
     },
 }
