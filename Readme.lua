@@ -18,7 +18,7 @@ local TEXT = [[
 
 |cffffd100Rituals you can choose|r
   - |cffb8c8ffShadowmeld|r out of combat: the music softens, the night rises around you, and the wind breathes. Move to return.
-  - |cffb8c8ff/emerald dream|r: a guided meditation of about nine minutes, into the Emerald Dream. The world's sounds and music fade while it lasts. Eyes open or closed; move, fight, or type it again to come back. If it ever leaves you feeling worse rather than better, stop: that happens to some people with meditation, and it's fine to leave it.
+  - |cffb8c8ff/emerald dream|r (or /dreamemerald): a guided meditation of about nine minutes, into the Emerald Dream. The world's sounds and music fade while it lasts. Eyes open or closed; move, fight, or type it again to come back. If it ever leaves you feeling worse rather than better, stop: that happens to some people with meditation, and it's fine to leave it.
   - |cffb8c8ff/sleep|r in a barrow den: the edges of the world turn green, and the Dream plays until you stand.
   - |cffb8c8ff/kneel|r or |cffb8c8ff/pray|r outdoors at night, or in the Temple of the Moon: moonlight, a bell, and a word.
   - If you fall and walk back as a wisp, the quiet crickets of a night meadow walk with you.

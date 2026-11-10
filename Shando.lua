@@ -494,7 +494,9 @@ local function Emerald()
     end
 end
 
-SLASH_EMERALD1 = "/emerald"
+SLASH_EMERALD1 = "/emerald"        -- /emerald dream
+SLASH_EMERALD2 = "/dreamemerald"
+SLASH_EMERALD3 = "/emeralddream"
 SlashCmdList.EMERALD = function(msg)
     msg = (msg or ""):lower():gsub("^%s+", ""):gsub("%s+$", "")
     if msg ~= "" and msg ~= "dream" then print("|cffb8c8ffShan'do|r: /emerald dream, to walk in the Dream a while.") return end
