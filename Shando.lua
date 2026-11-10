@@ -341,7 +341,12 @@ local function EndRitual(now)
     if not ritual then return end
     if ritual.bed then StopSound(ritual.bed, 4000) end
     if ritual.name == "meld" then Music(false) StopBreath() end
-    if ritual.name == "emerald" then StopBreath() Caption(nil) WorldHush(false, now and 0 or 5) end
+    if ritual.name == "emerald" then
+        if ShandoEmerald and not ShandoEmerald.ended then
+            ShandoEmerald.ended, ShandoEmerald.secs = now and "combat" or "stopped", math.floor(GetTime() - ritual.t0)
+        end
+        StopBreath() Caption(nil) WorldHush(false, now and 0 or 5)
+    end
     if veil:IsShown() then Fade(0, 3) end
     ritual = nil
 end
@@ -360,7 +365,7 @@ local function TickRitual(now)  -- keep the bed looping; end it when you move, f
     if not ritual then return end
     local moved = GetUnitSpeed("player") > 0
     if ritual.name == "wisp" then moved = not UnitIsGhost("player") end
-    local limit = ritual.name == "emerald" and 1100 or 600
+    local limit = ritual.name == "emerald" and 1300 or 600
     if ShandoOff or moved or InCombatLockdown() or now - ritual.t0 > limit then EndRitual(InCombatLockdown()) return end
 end
 
@@ -455,9 +460,12 @@ local function CheckMeld()
     end
 end
 
--- The Emerald Dream: a guided meditation of about fifteen minutes, then two of frogs at the water's edge, chosen with
--- /emerald dream (again to stop). Written to be as gentle as it can be: long silences, invitations only, mild
--- affirmation ("you're doing it", "that was well done"), never a demand.
+-- The Emerald Dream: about ten minutes of guided meditation, then about ten of frogs at the water's edge, fading slowly
+-- back to the game's own sound: twenty minutes in all, chosen with /emerald dream (again to stop). Written to be as
+-- gentle as it can be: long silences, invitations only, mild affirmation ("you're doing it", "that was well done").
+-- Idle logout: no official figure; reports run from 15-20 to 30 minutes (10 Nov 2026), and a 17-minute session on
+-- Forever was not logged out. ShandoEmerald records how far each session got and whether it ended in a logout,
+-- so the real limit can be read back.
 -- Shaped by the research record (docs/RESEARCH.md in spirit-studio) and its cautions: meditation can bring on anxiety
 -- or low mood in some people (adverse events 8.3% overall; Farias et al., 2020), so it is opt-in and short, says at
 -- the start that moving ends it, offers eyes open, and anchors attention outside the body first (sounds, the
@@ -467,14 +475,15 @@ end
 -- to the room. The world's ambient sound and music fade out for it, and come straight back in combat. At the end
 -- the frogs rise on the ambience channel with the world's own sounds (a 25 s fade from silence, no sudden start).
 local FROGS = "meld"   -- the frog bed: "meld" (a summer swamp, FS853607) or "vigil" (a Dordogne pond)
-local EMERALD = {   -- seconds from the start: a line key, or what happens
-    { 0, "bell" }, { 5, "emerald01" }, { 30, "emerald02" }, { 62, "emerald03" }, { 98, "emerald04" },
-    { 132, "emerald05" }, { 166, "emerald06" }, { 206, "emerald07" }, { 224, "breath" }, { 242, "emerald08" },
-    { 300, "emerald09" }, { 344, "emerald10" }, { 400, "emerald11" }, { 446, "emerald12" }, { 500, "emerald13" },
-    { 552, "emerald14" }, { 600, "emerald15" }, { 642, "emerald16" }, { 690, "emerald17" }, { 736, "emerald18" },
-    { 760, "emerald19" }, { 780, "frogs" }, { 806, "emerald20" }, { 840, "emerald21" }, { 870, "emerald22" },
-    { 895, "bell" }, { 900, "emerald23" }, { 1020, "end" },
+local EMERALD = {   -- seconds from the start: a line key, or what happens (clip lengths 5-17 s; none overlaps the next)
+    { 0, "bell" }, { 4, "emerald01" }, { 24, "emerald02" }, { 46, "emerald03" }, { 66, "emerald04" },
+    { 82, "emerald05" }, { 100, "emerald06" }, { 120, "emerald07" }, { 136, "breath" }, { 146, "emerald08" },
+    { 196, "emerald09" }, { 236, "emerald10" }, { 292, "emerald11" }, { 312, "emerald12" }, { 336, "emerald13" },
+    { 362, "emerald14" }, { 390, "emerald15" }, { 410, "emerald16" }, { 440, "emerald17" }, { 464, "emerald18" },
+    { 492, "emerald19" }, { 505, "frogs" }, { 520, "emerald20" }, { 548, "emerald21" }, { 570, "emerald22" },
+    { 590, "bell" }, { 594, "emerald23" }, { 1140, "fade" }, { 1190, "end" },
 }
+local FADE = 45   -- seconds: the frogs fade out as the game's music comes back
 local function EmeraldText(key)
     for _, l in ipairs(ns.LINES.emerald or {}) do if l[1] == key then return l[2] end end
 end
@@ -484,10 +493,12 @@ local function Emerald()
     local r = ritual
     r.base = 0.45
     WorldHush(true, 6)
+    ShandoEmerald = { at = time(), reached = "start", t = 0 }   -- read back to learn the idle-logout limit
     for _, step in ipairs(EMERALD) do
         C_Timer.After(step[1], function()
             if ritual ~= r then return end   -- ended (moved, combat, /emerald again)
             local what = step[2]
+            if ShandoEmerald then ShandoEmerald.reached, ShandoEmerald.t = what, step[1] end
             if what == "bell" then
                 Sfx("kindbell", "Master")
             elseif what == "breath" then
@@ -498,7 +509,13 @@ local function Emerald()
                 r.file, r.nextBed = FROGS, GetTime() + BED_PERIOD   -- the clock loops it like any ritual bed
                 r.bed = Sfx(FROGS, "Ambience")
                 AmbienceBack(25)
+            elseif what == "fade" then   -- the last copy of the frogs fades out; the music rises to meet the world
+                r.file = nil
+                if r.bed then StopSound(r.bed, FADE * 1000) r.bed = nil end
+                local h = ShandoHush
+                if h then Ramp(nil, tonumber(h.mus) or 0.4, FADE) end
             elseif what == "end" then
+                if ShandoEmerald then ShandoEmerald.ended = "finished" end
                 EndRitual()
             else
                 AlbaLast = GetTime()   -- Herbalore keeps its distance
@@ -649,9 +666,16 @@ f:SetScript("OnEvent", function(_, event, a1, a2, a3, a4)
         MineralsHint()
         return
     elseif event == "PLAYER_CAMPING" then
+        if ritual and ritual.name == "emerald" and ShandoEmerald then   -- the logout countdown began mid-Dream
+            ShandoEmerald.camping = math.floor(GetTime() - ritual.t0)
+            return
+        end
         Say("farewell")
         return
     elseif event == "PLAYER_LOGOUT" then
+        if ritual and ritual.name == "emerald" and ShandoEmerald and not ShandoEmerald.ended then
+            ShandoEmerald.ended, ShandoEmerald.secs = "logout", math.floor(GetTime() - ritual.t0)
+        end
         Music(false)
         WorldHush(false, 0)   -- never leave the game's sound faded
         -- Saved every time, /reload included (live = true), so the session carries across reloads; the look-back

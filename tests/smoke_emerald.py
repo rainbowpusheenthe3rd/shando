@@ -112,7 +112,7 @@ assert close(G.cvars.Sound_AmbienceVolume, 0) and close(G.cvars.Sound_MusicVolum
 assert G.ShandoHush.amb == "0.6"
 # the whole script: 23 lines on Dialog, in order, each with its caption; bells and the wind on Master
 lua.execute("t0 = now - 7")
-lua.execute("for i = 1, 765 do advance(now + 1) tick() end")   # to 772 s, just before the frogs (780 s)
+lua.execute("for i = 1, 490 do advance(now + 1) tick() end")   # to 497 s, just before the frogs (505 s)
 assert close(G.cvars.Sound_AmbienceVolume, 0) and close(G.cvars.Sound_MusicVolume, 0)
 assert not any("meld" in p.path for p in G.played.values())
 lua.execute("advance(now + 20)")   # the frogs start on the ambience channel, and it rises from silence
@@ -122,18 +122,26 @@ a = float(G.cvars.Sound_AmbienceVolume)
 assert 0.1 < a < 0.6 and close(G.cvars.Sound_MusicVolume, 0), (a, dict(G.cvars))
 lua.execute("advance(now + 20)")
 assert close(G.cvars.Sound_AmbienceVolume, 0.6) and close(G.cvars.Sound_MusicVolume, 0)
-lua.execute("for i = 1, 200 do advance(now + 1) tick() end")   # to the closing line at 900 s and the frogs after
-assert sum(1 for p in G.played.values() if p.path.endswith("meld.mp3")) >= 3, "the frog bed loops"
-assert G.ShandoHush is not None, "still in the Dream with the frogs"
+lua.execute("for i = 1, 600 do advance(now + 1) tick() end")   # past the closing line (594 s) to 1137 s
+assert sum(1 for p in G.played.values() if p.path.endswith("meld.mp3")) >= 9, "the frog bed loops for ten minutes"
+assert G.ShandoHush is not None and close(G.cvars.Sound_MusicVolume, 0), "still with the frogs, music not back yet"
+assert G.ShandoEmerald.reached == "emerald23"
+lua.execute("advance(t0 + 1162)")                              # halfway through the 45 s fade (1140 s)
+m = float(G.cvars.Sound_MusicVolume)
+assert 0.1 < m < 0.35, m
+n_frogs = sum(1 for p in G.played.values() if p.path.endswith("meld.mp3"))
+lua.execute("advance(t0 + 1185)")
+assert sum(1 for p in G.played.values() if p.path.endswith("meld.mp3")) == n_frogs, "no new frog copy once fading"
 voices = [p.path for p in G.played.values() if "emerald" in p.path]   # checked inside the Dream, before it ends
 assert [v.split("\\")[-1] for v in voices] == [f"emerald{i:02d}.mp3" for i in range(1, 24)], voices
 assert all(p.channel == "Dialog" for p in G.played.values() if "emerald" in p.path)
 assert all(p.channel == "Master" for p in G.played.values() if "kindbell" in p.path or "windbreath" in p.path)
 assert sum(1 for p in G.played.values() if "windbreath" in p.path) == 1
 assert len(list(G.captions.values())) == 23
-lua.execute("advance(t0 + 1030) tick()")                       # it ends at 1020 s
-# it ended by itself and the world's sound came back
+lua.execute("advance(t0 + 1200) tick()")                       # it ends at 1190 s
+# it ended by itself, the world's sound is back, and the record says so
 assert close(G.cvars.Sound_AmbienceVolume, 0.6) and close(G.cvars.Sound_MusicVolume, 0.4) and G.ShandoHush is None
+assert G.ShandoEmerald.ended == "finished" and G.ShandoEmerald.reached == "end"
 
 # combat: straight back, at once, and no more lines
 lua.execute("played = {} SlashCmdList.EMERALD('dream') advance(now + 30)")
