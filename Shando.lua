@@ -515,6 +515,15 @@ ns.DREAMS = {
         { 492, "emerald19" }, { 506, "emerald21" }, { 528, "emerald22" }, { 544, "bell" }, { 548, "emerald23" },
         { 568, "emerald20" }, { 572, "frogs" }, { 1140, "fade" }, { 1190, "end" },
     } },
+    -- Grounding by touch, a breath you shape yourself, then savouring one small good moment and a word of thanks,
+    -- by a moonwell; it ends with the other frogs, the Dordogne pond.
+    { id = "well", name = "The moonwell", kind = "well", frogs = "vigil", steps = {
+        { 0, "bell" }, { 4, "well01" }, { 26, "well02" }, { 48, "well03" }, { 80, "well04" }, { 112, "well05" },
+        { 150, "well06" }, { 196, "well07" }, { 240, "well08" }, { 282, "well09" }, { 324, "well10" },
+        { 362, "well11" }, { 404, "well12" }, { 444, "well13" }, { 486, "well14" }, { 528, "well15" },
+        { 556, "well16" }, { 600, "well17" }, { 624, "well18" }, { 644, "bell" }, { 648, "well19" },
+        { 666, "well20" }, { 670, "frogs" }, { 1150, "fade" }, { 1200, "end" },
+    } },
 }
 local FADE = 45   -- seconds: the frogs fade out as the game's music comes back
 local function LineText(kind, key)   -- its own kind first; a line shared with another meditation is found anyway
@@ -561,8 +570,8 @@ local function Emerald(d)
             elseif what == "frogs" then   -- her last word is said: this one counts as heard
                 ShandoDreamHeard = ShandoDreamHeard or {}
                 ShandoDreamHeard[d.id] = true
-                r.file, r.nextBed = FROGS, GetTime() + BED_PERIOD   -- the clock loops it like any ritual bed
-                r.bed = Sfx(FROGS, "Ambience")
+                r.file, r.nextBed = d.frogs or FROGS, GetTime() + BED_PERIOD   -- the clock loops it like any bed
+                r.bed = Sfx(r.file, "Ambience")
                 AmbienceBack(25)
             elseif what == "fade" then   -- the last copy of the frogs fades out; the music rises to meet the world
                 r.file = nil

@@ -171,6 +171,17 @@ assert any(c.startswith("You moved, so we've come back") for c in G.captions.val
 lua.execute("advance(now + 10)")
 assert close(G.cvars.Sound_AmbienceVolume, 0.6) and G.ShandoHush is None
 
+# The moonwell: its own twenty lines in order, captioned, then the pond frogs (vigil), not the swamp
+lua.execute("played = {} captions = {} ShandoDream = 'well' SlashCmdList.EMERALD('dream')")
+lua.execute("for i = 1, 700 do advance(now + 1) tick() end")
+spoken = [p.path.split("\\")[-1] for p in G.played.values() if "sounds" in p.path]
+assert spoken == [f"well{i:02d}.mp3" for i in range(1, 21)], spoken
+assert len([c for c in G.captions.values() if c != HINT]) == 20
+beds = [p.path.split("\\")[-1] for p in G.played.values() if p.path.endswith(("vigil.mp3", "meld.mp3"))]
+assert beds and set(beds) == {"vigil.mp3"}, beds
+lua.execute("SlashCmdList.EMERALD('dream') advance(now + 10)")
+lua.execute("ShandoDream = 'clearing'")
+
 # a second /emerald stops it, fading the sound back
 lua.execute("SlashCmdList.EMERALD('dream') advance(now + 10) SlashCmdList.EMERALD('dream') advance(now + 10)")
 assert close(G.cvars.Sound_AmbienceVolume, 0.6) and G.ShandoHush is None
