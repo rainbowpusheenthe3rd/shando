@@ -171,15 +171,6 @@ assert any(c.startswith("You moved, so we've come back") for c in G.captions.val
 lua.execute("advance(now + 10)")
 assert close(G.cvars.Sound_AmbienceVolume, 0.6) and G.ShandoHush is None
 
-# The short walk: its own sixteen lines in order, then the frog introduction it shares, captioned
-lua.execute("played = {} captions = {} ShandoDream = 'walk' SlashCmdList.EMERALD('dream')")
-lua.execute("for i = 1, 545 do advance(now + 1) tick() end")
-spoken = [p.path.split("\\")[-1] for p in G.played.values() if "walk" in p.path or "emerald20" in p.path]
-assert spoken == [f"walk{i:02d}.mp3" for i in range(1, 17)] + ["emerald20.mp3"], spoken
-assert any(c.startswith("And now, just listen") for c in G.captions.values()), "the shared line has its caption"
-lua.execute("SlashCmdList.EMERALD('dream') advance(now + 10)")
-lua.execute("ShandoDream = 'clearing'")
-
 # a second /emerald stops it, fading the sound back
 lua.execute("SlashCmdList.EMERALD('dream') advance(now + 10) SlashCmdList.EMERALD('dream') advance(now + 10)")
 assert close(G.cvars.Sound_AmbienceVolume, 0.6) and G.ShandoHush is None

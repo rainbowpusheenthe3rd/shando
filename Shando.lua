@@ -515,14 +515,6 @@ ns.DREAMS = {
         { 492, "emerald19" }, { 506, "emerald21" }, { 528, "emerald22" }, { 544, "bell" }, { 548, "emerald23" },
         { 568, "emerald20" }, { 572, "frogs" }, { 1140, "fade" }, { 1190, "end" },
     } },
-    -- The first version: its own words throughout, the clearing-and-moth line in place of its old line 9.
-    { id = "walk", name = "The short walk", kind = "walk", steps = {
-        { 0, "bell" }, { 4, "walk01" }, { 24, "walk02" }, { 44, "walk03" }, { 74, "walk04" }, { 106, "walk05" },
-        { 124, "breath" }, { 142, "walk06" }, { 188, "walk07" }, { 234, "walk08" }, { 282, "walk09" },
-        { 318, "walk10" }, { 356, "walk11" }, { 396, "walk12" }, { 432, "walk13" }, { 470, "walk14" },
-        { 492, "walk15" }, { 512, "bell" }, { 515, "walk16" }, { 534, "emerald20" }, { 538, "frogs" },
-        { 1100, "fade" }, { 1150, "end" },
-    } },
 }
 local FADE = 45   -- seconds: the frogs fade out as the game's music comes back
 local function LineText(kind, key)   -- its own kind first; a line shared with another meditation is found anyway
