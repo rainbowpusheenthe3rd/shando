@@ -72,3 +72,15 @@ description and used for every line, with a soft moonwell reverb. The soundscape
 The icon and the banner are
 drawn in code. Not affiliated with or endorsed by Blizzard Entertainment; World of Warcraft and its names belong to
 Blizzard. Code and the voice files are MIT licensed; the sound files keep their sources' licences, in the table above.
+
+## Talks to
+
+Shares the herb session with Herbalore (`HerbaloreSession`, `ShandoGap`).
+
+## Releasing
+
+```sh
+git tag -a v1.2.0 -m "1.2.0" && git push origin v1.2.0      # builds the zip, makes the GitHub Release
+```
+
+CurseForge uploads are by hand for now, from the zip on the GitHub Release; nothing uploads there automatically.

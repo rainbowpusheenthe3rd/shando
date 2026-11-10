@@ -85,6 +85,27 @@ local function Sfx(name, channel)
     return select(2, PlaySoundFile(DIR .. "sfx\\" .. name .. ".mp3", channel or "SFX"))
 end
 
+-- 8 Nov 2026: the player's own recordings (voices\mine\<key>.mp3, listed in Mine.lua) replace the designed voice
+-- line by line when ShandoMyVoice is on; any line not yet recorded keeps the designed voice.
+-- ShandoMyVoice = "elf" plays the same recordings with the night-elf treatment (voices\elf, tools/spirit_nightelf.py).
+function ns.VoicePath(key, default)
+    if ShandoMyVoice and ns.MINE and ns.MINE[key] then
+        return DIR .. "voices\\" .. (ShandoMyVoice == "elf" and "elf" or "mine") .. "\\" .. key .. ".mp3"
+    end
+    return default
+end
+
+-- On Forever, Find Minerals switches itself off at every death (wow-professions.com's Forever mining guide, read
+-- 9 Nov 2026). A miner coming back gets a quiet nudge in chat, at most once every 10 minutes.
+local FIND_MINERALS, hinted = 2580, 0
+local function MineralsHint()
+    if ShandoOff or GetTime() - hinted < 600 then return end
+    local known = (IsPlayerSpell and IsPlayerSpell(FIND_MINERALS)) or (IsSpellKnown and IsSpellKnown(FIND_MINERALS))
+    if not known then return end
+    hinted = GetTime()
+    print("|cffb8c8ffShan'do|r: the stones hide themselves again after a fall. Find Minerals, when you're ready.")
+end
+
 -- Say a line of `kind`. opts.sfx plays first and the voice follows opts.delay seconds later.
 local function Say(kind, opts)
     if Quiet() then return end
@@ -94,7 +115,7 @@ local function Say(kind, opts)
     AlbaLast, said[kind] = GetTime(), GetTime()
     Mark(l[1])
     local function Voice()
-        PlaySoundFile(DIR .. "sounds\\" .. l[1] .. ".mp3", "Dialog")
+        PlaySoundFile(ns.VoicePath(l[1], DIR .. "sounds\\" .. l[1] .. ".mp3"), "Dialog")
         DEFAULT_CHAT_FRAME:AddMessage("|cffb8c8ff" .. l[2] .. "|r")
     end
     if opts and opts.sfx then
@@ -476,9 +497,13 @@ f:SetScript("OnEvent", function(_, event, a1, a2, a3, a4)
         if UnitIsGhost("player") and not ShandoOff and not (ritual and ritual.name == "wisp") then
             BeginRitual("wisp", "wisp")
         end
-        if event == "PLAYER_ALIVE" then return end
+        if event == "PLAYER_ALIVE" then
+            if not UnitIsGhost("player") then MineralsHint() end  -- raised where she fell
+            return
+        end
     elseif event == "PLAYER_UNGHOST" then
         if ritual and ritual.name == "wisp" then EndRitual() end
+        MineralsHint()
         return
     elseif event == "PLAYER_CAMPING" then
         Say("farewell")
@@ -631,6 +656,8 @@ C_Timer.NewTicker(5, function()
 end)
 
 -- /shando: on or off. /shando quieter, /shando nearer: halve or double how often she speaks (between 1/4 and 4x).
+-- /shando voice: her designed voice, your own recordings, or those with the night-elf treatment (in turn).
+-- /shando listen: play your recordings, in whichever of yours is chosen.
 -- Being able to choose matters in itself (Glass, Reim & Singer, 1971; Ryan & Deci, 2000).
 SLASH_SHANDO1 = "/shando"
 SlashCmdList.SHANDO = function(msg)
@@ -645,6 +672,28 @@ SlashCmdList.SHANDO = function(msg)
         ShandoWells[zone] = ShandoWells[zone] or {}
         table.insert(ShandoWells[zone], { x, y })
         print(("|cffb8c8ffShan'do|r: a moonwell in %s, at %.1f, %.1f. I'll know it now."):format(zone, x * 100, y * 100))
+        return
+    end
+    if msg == "voice" then  -- cycle: her designed voice, the player's own recordings, those with the night-elf treatment
+        ShandoMyVoice = (not ShandoMyVoice and true) or (ShandoMyVoice == true and "elf") or nil
+        local n = 0
+        for _ in pairs(ns.MINE or {}) do n = n + 1 end
+        print(("|cffb8c8ffShan'do|r: %s"):format(not ShandoMyVoice and "her own voice again"
+            or ("your own voice%s, for the %d line%s you've recorded; the rest stay as they were"):format(
+                ShandoMyVoice == "elf" and ", night-elf" or "", n, n == 1 and "" or "s")))
+        return
+    end
+    if msg == "listen" then  -- play the player's own recordings one after another, to hear how they sit
+        local keys = {}
+        for k in pairs(ns.MINE or {}) do keys[#keys + 1] = k end
+        table.sort(keys)
+        if #keys == 0 then print("|cffb8c8ffShan'do|r: you haven't recorded any lines yet.") return end
+        print(("|cffb8c8ffShan'do|r: your %d recorded lines, about 12 seconds apart."):format(#keys))
+        for i, k in ipairs(keys) do
+            C_Timer.After((i - 1) * 12, function()
+                PlaySoundFile(ns.VoicePath(k, DIR .. "voices\\mine\\" .. k .. ".mp3"), "Dialog")
+            end)
+        end
         return
     end
     if msg == "quieter" or msg == "nearer" then

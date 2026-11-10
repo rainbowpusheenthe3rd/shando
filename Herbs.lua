@@ -39,7 +39,7 @@ end
 local function Say(k, text)
     AlbaLast = GetTime()
     Mark(k)
-    PlaySoundFile(DIR .. k .. ".mp3", "Dialog")
+    PlaySoundFile(ns.VoicePath(k, DIR .. k .. ".mp3"), "Dialog")
     DEFAULT_CHAT_FRAME:AddMessage("|cff9fd3a8" .. text .. "|r")
 end
 
@@ -103,10 +103,27 @@ local function HerbaloreToo()  -- the separate addon still enabled: let it speak
     return loaded and loaded("Herbalore")
 end
 
+-- Mineral nodes go in the notebook by the node's own name ("Copper Vein", and Forever's Teldrassil-only "Chunk of
+-- Amber" and "Large Chunk of Amber", which carry its copper), from the target of the Mining cast just before the loot.
+local MINE_TARGET = { "Vein$", "Deposit$", "Amber$" }
+local mined, minedAt
+local function Mineral(target)
+    for _, p in ipairs(MINE_TARGET) do if target:find(p) then return true end end
+end
+
 local f = CreateFrame("Frame")
 f:RegisterEvent("LOOT_OPENED")
 f:RegisterEvent("PLAYER_LOGIN")
-f:SetScript("OnEvent", function(_, event)
+f:RegisterEvent("UNIT_SPELLCAST_SENT")
+f:SetScript("OnEvent", function(_, event, unit, target)
+    if event == "UNIT_SPELLCAST_SENT" then
+        if unit == "player" and type(target) == "string" and Mineral(target) then mined, minedAt = target, GetTime() end
+        return
+    end
+    if event == "LOOT_OPENED" and mined and GetTime() - minedAt < 15 and FromNode() then
+        Note(mined)  -- ShandoHerbPicks["Large Chunk of Amber"] and so on; tools/forever_runs.py reads them
+        mined = nil
+    end
     if event == "PLAYER_LOGIN" then
         if HerbaloreToo() then
             -- In her voice (chat only, no recording): she steps back so the herbs' other voice can speak. The plain

@@ -38,6 +38,8 @@ Left-click the moon by the minimap (or |cffb8c8ff/shando options|r): on or off, 
   |cffb8c8ff/shando|r  rest her, or call her back
   |cffb8c8ff/shando quieter|r  /  |cffb8c8ff/shando nearer|r  speak less or more often
   |cffb8c8ff/shando options|r  settings
+  |cffb8c8ff/shando voice|r  her voice, your own recordings, or yours with a night-elf treatment, in turn
+  |cffb8c8ff/shando listen|r  play your own recordings, one after another
   |cffb8c8ff/shando moonwell|r  mark the moonwell you're standing in, so she knows it
   |cffb8c8ff/shando help|r  this page
 

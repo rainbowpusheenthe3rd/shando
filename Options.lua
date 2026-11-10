@@ -79,7 +79,7 @@ end
 
 local f
 local function Build()
-    f = Window("ShandoOptionsFrame", COLOUR .. "Shan'do|r", 440)
+    f = Window("ShandoOptionsFrame", COLOUR .. "Shan'do|r", 510)
     local sub = f:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
     sub:SetPoint("TOPLEFT", 64, -38)
     sub:SetWidth(240)
@@ -102,6 +102,10 @@ local function Build()
             function(on) ShandoNoSkins = not on or nil end),
         Slider(f, -346, 1, #HERB_PACE, 1, HerbPaceIndex, function(i) ShandoHerbPace = HERB_PACE[i] end,
             function(i) return "How often herbs speak: " .. HERB_PACE_NAME[i] end),
+        Check(f, -392, "My own voice (where recorded)", function() return ShandoMyVoice end,
+            function(on) ShandoMyVoice = on or nil end),
+        Check(f, -420, "...with the night-elf treatment", function() return ShandoMyVoice == "elf" end,
+            function(on) ShandoMyVoice = on and "elf" or (ShandoMyVoice and true) or nil end),
     }
     local guide = CreateFrame("Button", nil, f, "UIPanelButtonTemplate")
     guide:SetSize(130, 24)
