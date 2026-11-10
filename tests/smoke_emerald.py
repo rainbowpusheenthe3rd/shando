@@ -106,6 +106,7 @@ for name in ("Lines.lua", "Mine.lua", "Ambience.lua", "Shando.lua"):   # the UI 
 
 G = lua.globals()
 close = lambda a, b: abs(float(a) - float(b)) < 1e-6
+lua.execute("ShandoDream = 'clearing'")   # pinned: the random pick is tested at the end
 lua.execute("SlashCmdList.EMERALD('dream')")
 lua.execute("advance(now + 7)")
 assert close(G.cvars.Sound_AmbienceVolume, 0) and close(G.cvars.Sound_MusicVolume, 0), dict(G.cvars)
@@ -142,7 +143,8 @@ assert [v.split("\\")[-1] for v in voices] == [f"emerald{i:02d}.mp3" for i in or
 assert all(p.channel == "Dialog" for p in G.played.values() if "emerald" in p.path)
 assert all(p.channel == "Master" for p in G.played.values() if "kindbell" in p.path or "windbreath" in p.path)
 assert sum(1 for p in G.played.values() if "windbreath" in p.path) == 1
-assert len(list(G.captions.values())) == 23
+HINT = "stay still to remain in the Dream; moving brings you back"
+assert len([c for c in G.captions.values() if c != HINT]) == 23
 lua.execute("advance(t0 + 1200) tick()")                       # it ends at 1190 s
 # it ended by itself, the world's sound is back, and the record says so
 assert close(G.cvars.Sound_AmbienceVolume, 0.6) and close(G.cvars.Sound_MusicVolume, 0.4) and G.ShandoHush is None
@@ -158,6 +160,25 @@ dream = lambda: sum(1 for p in G.played.values() if "emerald" in p.path)
 n = dream()
 lua.execute("combat = false advance(now + 400)")   # her ordinary lines may come back; the Dream's may not
 assert dream() == n, "Dream lines after combat ended it"
+
+# moving: it stops at once (every frame), she says why, and the sound comes back
+lua.execute("played = {} captions = {} SlashCmdList.EMERALD('dream') advance(now + 60)")
+lua.execute("speed = 1; tick(); speed = 0")
+assert G.ShandoEmerald.ended == "moved", G.ShandoEmerald.ended
+lua.execute("advance(now + 2)")
+assert any(p.path.endswith("dreamstop1.mp3") and p.channel == "Dialog" for p in G.played.values())
+assert any(c.startswith("You moved, so we've come back") for c in G.captions.values())
+lua.execute("advance(now + 10)")
+assert close(G.cvars.Sound_AmbienceVolume, 0.6) and G.ShandoHush is None
+
+# The short walk: its own sixteen lines in order, then the frog introduction it shares, captioned
+lua.execute("played = {} captions = {} ShandoDream = 'walk' SlashCmdList.EMERALD('dream')")
+lua.execute("for i = 1, 545 do advance(now + 1) tick() end")
+spoken = [p.path.split("\\")[-1] for p in G.played.values() if "walk" in p.path or "emerald20" in p.path]
+assert spoken == [f"walk{i:02d}.mp3" for i in range(1, 17)] + ["emerald20.mp3"], spoken
+assert any(c.startswith("And now, just listen") for c in G.captions.values()), "the shared line has its caption"
+lua.execute("SlashCmdList.EMERALD('dream') advance(now + 10)")
+lua.execute("ShandoDream = 'clearing'")
 
 # a second /emerald stops it, fading the sound back
 lua.execute("SlashCmdList.EMERALD('dream') advance(now + 10) SlashCmdList.EMERALD('dream') advance(now + 10)")

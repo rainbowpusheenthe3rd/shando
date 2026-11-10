@@ -325,15 +325,37 @@ caption.text:SetAllPoints()
 caption.text:SetTextColor(0.80, 0.94, 0.84)
 caption.text:SetJustifyH("CENTER")
 caption:SetAlpha(0)
+-- Under it, faint all the while: moving ends the Dream, so nobody is left wondering why it stopped.
+caption.hint = caption:CreateFontString(nil, "OVERLAY")
+caption.hint:SetFont(STANDARD_TEXT_FONT, 12, "")
+caption.hint:SetShadowOffset(1, -1)
+caption.hint:SetPoint("TOP", caption, "BOTTOM", 0, -4)
+caption.hint:SetTextColor(0.70, 0.82, 0.74)
+caption.hint:SetText("stay still to remain in the Dream; moving brings you back")
+caption.hint:SetIgnoreParentAlpha(true)
+caption.hint:SetAlpha(0)
+local IN, OUT = 2.5, 4   -- seconds: captions come and go gradually, on an eased curve
+local function Ease(p) p = math.max(0, math.min(1, p)) return p * p * (3 - 2 * p) end
+local function FadeTo(region, to, secs)   -- from wherever it is now
+    local from, t0 = region:GetAlpha(), GetTime()
+    region.fading = t0
+    local tk
+    tk = C_Timer.NewTicker(0.05, function()
+        if region.fading ~= t0 then tk:Cancel() return end
+        local p = Ease((GetTime() - t0) / secs)
+        region:SetAlpha(from + (to - from) * p)
+        if p >= 1 then tk:Cancel() end
+    end)
+end
 local function Caption(text)
-    caption.text:SetText(text or "")
-    if not text then caption:SetScript("OnUpdate", nil) caption:SetAlpha(0) return end
-    local t0, hold = GetTime(), 3 + #text / 15   -- about as long as it takes to say
+    if not text then caption:SetScript("OnUpdate", nil) FadeTo(caption, 0, OUT) return end
+    caption.fading = nil
+    caption.text:SetText(text)
+    local t0, hold = GetTime(), 2 + #text / 15   -- about as long as it takes to say
     caption:SetScript("OnUpdate", function()
         local t = GetTime() - t0
-        local a = math.min(1, t / 1.2) * math.max(0, math.min(1, (hold + 1.5 - t) / 1.5))
-        caption:SetAlpha(a * 0.9)
-        if t > hold + 1.5 then caption:SetScript("OnUpdate", nil) end
+        caption:SetAlpha(0.9 * Ease(t / IN) * (1 - Ease((t - IN - hold) / OUT)))
+        if t > IN + hold + OUT then caption:SetScript("OnUpdate", nil) end
     end)
 end
 
@@ -345,7 +367,7 @@ local function EndRitual(now)
         if ShandoEmerald and not ShandoEmerald.ended then
             ShandoEmerald.ended, ShandoEmerald.secs = now and "combat" or "stopped", math.floor(GetTime() - ritual.t0)
         end
-        StopBreath() Caption(nil) WorldHush(false, now and 0 or 5)
+        StopBreath() Caption(nil) FadeTo(caption.hint, 0, OUT) WorldHush(false, now and 0 or 5)
     end
     if veil:IsShown() then Fade(0, 3) end
     ritual = nil
@@ -365,6 +387,9 @@ local function TickRitual(now)  -- keep the bed looping; end it when you move, f
     if not ritual then return end
     local moved = GetUnitSpeed("player") > 0
     if ritual.name == "wisp" then moved = not UnitIsGhost("player") end
+    if ritual.name == "emerald" and (moved or InCombatLockdown()) and ns.DreamStop then
+        return ns.DreamStop(InCombatLockdown() and "combat" or "moved")
+    end
     local limit = ritual.name == "emerald" and 1300 or 600
     if ShandoOff or moved or InCombatLockdown() or now - ritual.t0 > limit then EndRitual(InCombatLockdown()) return end
 end
@@ -401,6 +426,9 @@ clock:SetScript("OnUpdate", function()
         bed, bedNext = Sfx(innName, "Ambience"), bedNext + BED_PERIOD
     end
     TickEvents(now, (ritual and ritual.bed and ritual.file) or (bed and innName) or nil)
+    if ritual and ritual.name == "emerald" and GetUnitSpeed("player") > 0 and ns.DreamStop then
+        ns.DreamStop("moved")   -- every frame, so she answers the moment you move
+    end
 end)
 
 local MELD = SpellName(20580) or "Shadowmeld"
@@ -487,10 +515,19 @@ ns.DREAMS = {
         { 492, "emerald19" }, { 506, "emerald21" }, { 528, "emerald22" }, { 544, "bell" }, { 548, "emerald23" },
         { 568, "emerald20" }, { 572, "frogs" }, { 1140, "fade" }, { 1190, "end" },
     } },
+    -- The first version: its own words throughout, the clearing-and-moth line in place of its old line 9.
+    { id = "walk", name = "The short walk", kind = "walk", steps = {
+        { 0, "bell" }, { 4, "walk01" }, { 24, "walk02" }, { 44, "walk03" }, { 74, "walk04" }, { 106, "walk05" },
+        { 124, "breath" }, { 142, "walk06" }, { 188, "walk07" }, { 234, "walk08" }, { 282, "walk09" },
+        { 318, "walk10" }, { 356, "walk11" }, { 396, "walk12" }, { 432, "walk13" }, { 470, "walk14" },
+        { 492, "walk15" }, { 512, "bell" }, { 515, "walk16" }, { 534, "emerald20" }, { 538, "frogs" },
+        { 1100, "fade" }, { 1150, "end" },
+    } },
 }
 local FADE = 45   -- seconds: the frogs fade out as the game's music comes back
-local function LineText(kind, key)
+local function LineText(kind, key)   -- its own kind first; a line shared with another meditation is found anyway
     for _, l in ipairs(ns.LINES[kind] or {}) do if l[1] == key then return l[2] end end
+    for _, lines in pairs(ns.LINES) do for _, l in ipairs(lines) do if l[1] == key then return l[2] end end end
 end
 
 -- Which meditation: the one chosen in the options (ShandoDream), or, on "random", one you haven't heard to the end
@@ -513,6 +550,9 @@ local function Emerald(d)
     local r = ritual
     r.base = 0.45
     WorldHush(true, 6)
+    caption.hint.fading = nil
+    FadeTo(caption.hint, 0.55, 3)
+    print("|cffb8c8ffShan'do|r: " .. d.name .. ". Stay still to remain in the Dream; moving brings you back.")
     ShandoDreamLast = d.id
     ShandoEmerald = { at = time(), dream = d.id, reached = "start", t = 0 }   -- read back to learn the idle limit
     for _, step in ipairs(d.steps) do
@@ -567,6 +607,23 @@ SlashCmdList.EMERALD = function(msg)
         return
     end
     Emerald()
+end
+
+-- Moving or combat ends the Dream, and she says so, so nobody is left wondering why it stopped.
+function ns.DreamStop(reason)
+    if not (ritual and ritual.name == "emerald") then return end
+    if ShandoEmerald and not ShandoEmerald.ended then
+        ShandoEmerald.ended, ShandoEmerald.secs = reason, math.floor(GetTime() - ritual.t0)
+    end
+    EndRitual(reason == "combat")
+    local key = reason == "combat" and "dreamstop2" or "dreamstop1"
+    C_Timer.After(reason == "combat" and 0.3 or 1, function()
+        local text = LineText("dreamstop", key)
+        AlbaLast = GetTime()
+        PlaySoundFile(DIR .. "sounds\\" .. key .. ".mp3", "Dialog")
+        Caption(text)
+        print("|cffb8c8ffShan'do|r: " .. (text or "we're back."))
+    end)
 end
 
 -- For the options panel: begin the chosen meditation now (or stop the one playing).
@@ -672,7 +729,7 @@ pcall(f.RegisterUnitEvent, f, "UNIT_AURA", "player")
 pcall(f.RegisterUnitEvent, f, "UNIT_SPELLCAST_SUCCEEDED", "player")
 f:SetScript("OnEvent", function(_, event, a1, a2, a3, a4)
     if event == "PLAYER_REGEN_DISABLED" then   -- combat: the world's sound comes straight back
-        if ritual and ritual.name == "emerald" then EndRitual(true) end
+        if ritual and ritual.name == "emerald" then ns.DreamStop("combat") end
         return
     elseif event == "UNIT_AURA" then
         CheckMeld()
