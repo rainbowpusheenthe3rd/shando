@@ -281,30 +281,35 @@ end
 -- seconds and come back when it ends. The old levels are saved (ShandoHush) so a closed game or a /reload mid-way
 -- still gets them back at the next login or logout. Its own sounds play on the Master and Dialog channels.
 local hushTicker
-local function WorldHush(on, secs)
+local function Ramp(amb, mus, secs)   -- ambience and music volume from where they are now to amb, mus (nil: leave it)
     if hushTicker then hushTicker:Cancel() hushTicker = nil end
-    if on and not ShandoHush then
-        ShandoHush = { amb = GetCVar("Sound_AmbienceVolume"), mus = GetCVar("Sound_MusicVolume") }
+    local a0, m0 = tonumber(GetCVar("Sound_AmbienceVolume")) or 0, tonumber(GetCVar("Sound_MusicVolume")) or 0
+    local function set(p)
+        if amb then SetCVar("Sound_AmbienceVolume", tostring(a0 + (amb - a0) * p)) end
+        if mus then SetCVar("Sound_MusicVolume", tostring(m0 + (mus - m0) * p)) end
+    end
+    if (secs or 0) <= 0 then set(1) return end
+    local steps, i = math.max(1, math.floor(secs / 0.2)), 0
+    hushTicker = C_Timer.NewTicker(0.2, function()
+        i = i + 1
+        set(i / steps)
+        if i >= steps then hushTicker:Cancel() hushTicker = nil end
+    end, steps)
+end
+local function WorldHush(on, secs)    -- on: fade both out, keeping the old levels; off: back to them (secs 0: at once)
+    if on then
+        ShandoHush = ShandoHush or { amb = GetCVar("Sound_AmbienceVolume"), mus = GetCVar("Sound_MusicVolume") }
+        Ramp(0, 0, secs or 6)
+        return
     end
     local h = ShandoHush
     if not h then return end
-    local amb, mus = tonumber(h.amb) or 0.6, tonumber(h.mus) or 0.4
-    if not on and (secs or 0) <= 0 then  -- straight back (combat, logout)
-        SetCVar("Sound_AmbienceVolume", h.amb) SetCVar("Sound_MusicVolume", h.mus)
-        ShandoHush = nil
-        return
-    end
-    local steps, i = math.max(1, math.floor((secs or 6) / 0.2)), 0
-    hushTicker = C_Timer.NewTicker(0.2, function()
-        i = i + 1
-        local p = on and (1 - i / steps) or (i / steps)
-        SetCVar("Sound_AmbienceVolume", tostring(amb * p))
-        SetCVar("Sound_MusicVolume", tostring(mus * p))
-        if i >= steps then
-            hushTicker:Cancel() hushTicker = nil
-            if not on then SetCVar("Sound_AmbienceVolume", h.amb) SetCVar("Sound_MusicVolume", h.mus) ShandoHush = nil end
-        end
-    end, steps)
+    ShandoHush = nil
+    Ramp(tonumber(h.amb) or 0.6, tonumber(h.mus) or 0.4, secs or 0)
+end
+local function AmbienceBack(secs)     -- the world's own sounds rise again (the frogs play on that channel); music waits
+    local h = ShandoHush
+    if h then Ramp(tonumber(h.amb) or 0.6, nil, secs) end
 end
 
 -- A soft caption under the character for each spoken line, for eyes left open (and before the voice is rendered).
@@ -355,7 +360,8 @@ local function TickRitual(now)  -- keep the bed looping; end it when you move, f
     if not ritual then return end
     local moved = GetUnitSpeed("player") > 0
     if ritual.name == "wisp" then moved = not UnitIsGhost("player") end
-    if ShandoOff or moved or InCombatLockdown() or now - ritual.t0 > 600 then EndRitual(InCombatLockdown()) return end
+    local limit = ritual.name == "emerald" and 1100 or 600
+    if ShandoOff or moved or InCombatLockdown() or now - ritual.t0 > limit then EndRitual(InCombatLockdown()) return end
 end
 
 -- Single sounds over a bed (Ambience.lua, from tools/spirit_ambience.py): a drop, a crackle, a knock, each at a gap of
@@ -449,19 +455,25 @@ local function CheckMeld()
     end
 end
 
--- The Emerald Dream: a guided meditation of about nine minutes, chosen with /emerald dream (again to stop).
+-- The Emerald Dream: a guided meditation of about fifteen minutes, then two of frogs at the water's edge, chosen with
+-- /emerald dream (again to stop). Written to be as gentle as it can be: long silences, invitations only, mild
+-- affirmation ("you're doing it", "that was well done"), never a demand.
 -- Shaped by the research record (docs/RESEARCH.md in spirit-studio) and its cautions: meditation can bring on anxiety
 -- or low mood in some people (adverse events 8.3% overall; Farias et al., 2020), so it is opt-in and short, says at
 -- the start that moving ends it, offers eyes open, and anchors attention outside the body first (sounds, the
 -- ground) before the breath (trauma-sensitive practice: Treleaven, 2018). The breath is slow and exhale-led, the
 -- windbreath slowing towards 6 a minute (slow breathing: Zaccaro et al., 2018; one cyclic sigh: Balban et al.,
 -- 2023), then imagery of the Dream, a kindness wish for yourself and for others (Kirby et al., 2017), and a return
--- to the room. The world's ambient sound and music fade out for it, and come straight back in combat.
+-- to the room. The world's ambient sound and music fade out for it, and come straight back in combat. At the end
+-- the frogs rise on the ambience channel with the world's own sounds (a 25 s fade from silence, no sudden start).
+local FROGS = "meld"   -- the frog bed: "meld" (a summer swamp, FS853607) or "vigil" (a Dordogne pond)
 local EMERALD = {   -- seconds from the start: a line key, or what happens
-    { 0, "bell" }, { 4, "emerald01" }, { 24, "emerald02" }, { 44, "emerald03" }, { 74, "emerald04" },
-    { 106, "emerald05" }, { 124, "breath" }, { 142, "emerald06" }, { 188, "emerald07" }, { 234, "emerald08" },
-    { 282, "emerald09" }, { 318, "emerald10" }, { 356, "emerald11" }, { 396, "emerald12" }, { 432, "emerald13" },
-    { 470, "emerald14" }, { 492, "emerald15" }, { 512, "bell" }, { 515, "emerald16" }, { 538, "end" },
+    { 0, "bell" }, { 5, "emerald01" }, { 30, "emerald02" }, { 62, "emerald03" }, { 98, "emerald04" },
+    { 132, "emerald05" }, { 166, "emerald06" }, { 206, "emerald07" }, { 224, "breath" }, { 242, "emerald08" },
+    { 300, "emerald09" }, { 344, "emerald10" }, { 400, "emerald11" }, { 446, "emerald12" }, { 500, "emerald13" },
+    { 552, "emerald14" }, { 600, "emerald15" }, { 642, "emerald16" }, { 690, "emerald17" }, { 736, "emerald18" },
+    { 760, "emerald19" }, { 780, "frogs" }, { 806, "emerald20" }, { 840, "emerald21" }, { 870, "emerald22" },
+    { 895, "bell" }, { 900, "emerald23" }, { 1020, "end" },
 }
 local function EmeraldText(key)
     for _, l in ipairs(ns.LINES.emerald or {}) do if l[1] == key then return l[2] end end
@@ -482,6 +494,10 @@ local function Emerald()
                 StopBreath()
                 breathing = Sfx("windbreath", "Master")
                 r.breathT0, r.phase = GetTime(), 0
+            elseif what == "frogs" then
+                r.file, r.nextBed = FROGS, GetTime() + BED_PERIOD   -- the clock loops it like any ritual bed
+                r.bed = Sfx(FROGS, "Ambience")
+                AmbienceBack(25)
             elseif what == "end" then
                 EndRitual()
             else

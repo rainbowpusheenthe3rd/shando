@@ -110,14 +110,28 @@ lua.execute("SlashCmdList.EMERALD('dream')")
 lua.execute("advance(now + 7)")
 assert close(G.cvars.Sound_AmbienceVolume, 0) and close(G.cvars.Sound_MusicVolume, 0), dict(G.cvars)
 assert G.ShandoHush.amb == "0.6"
-# the whole script: 16 lines on Dialog, in order, each with its caption; bells and the wind on Master
-lua.execute("for i = 1, 540 do advance(now + 1) tick() end")   # the session ends at 538 s
-voices = [p.path for p in G.played.values() if "emerald" in p.path]
-assert [v.split("\\")[-1] for v in voices] == [f"emerald{i:02d}.mp3" for i in range(1, 17)], voices
+# the whole script: 23 lines on Dialog, in order, each with its caption; bells and the wind on Master
+lua.execute("t0 = now - 7")
+lua.execute("for i = 1, 765 do advance(now + 1) tick() end")   # to 772 s, just before the frogs (780 s)
+assert close(G.cvars.Sound_AmbienceVolume, 0) and close(G.cvars.Sound_MusicVolume, 0)
+assert not any("meld" in p.path for p in G.played.values())
+lua.execute("advance(now + 20)")   # the frogs start on the ambience channel, and it rises from silence
+frogs = [p for p in G.played.values() if p.path.endswith("meld.mp3")]
+assert frogs and frogs[0].channel == "Ambience"
+a = float(G.cvars.Sound_AmbienceVolume)
+assert 0.1 < a < 0.6 and close(G.cvars.Sound_MusicVolume, 0), (a, dict(G.cvars))
+lua.execute("advance(now + 20)")
+assert close(G.cvars.Sound_AmbienceVolume, 0.6) and close(G.cvars.Sound_MusicVolume, 0)
+lua.execute("for i = 1, 200 do advance(now + 1) tick() end")   # to the closing line at 900 s and the frogs after
+assert sum(1 for p in G.played.values() if p.path.endswith("meld.mp3")) >= 3, "the frog bed loops"
+assert G.ShandoHush is not None, "still in the Dream with the frogs"
+voices = [p.path for p in G.played.values() if "emerald" in p.path]   # checked inside the Dream, before it ends
+assert [v.split("\\")[-1] for v in voices] == [f"emerald{i:02d}.mp3" for i in range(1, 24)], voices
 assert all(p.channel == "Dialog" for p in G.played.values() if "emerald" in p.path)
 assert all(p.channel == "Master" for p in G.played.values() if "kindbell" in p.path or "windbreath" in p.path)
 assert sum(1 for p in G.played.values() if "windbreath" in p.path) == 1
-assert len(list(G.captions.values())) == 16
+assert len(list(G.captions.values())) == 23
+lua.execute("advance(t0 + 1030) tick()")                       # it ends at 1020 s
 # it ended by itself and the world's sound came back
 assert close(G.cvars.Sound_AmbienceVolume, 0.6) and close(G.cvars.Sound_MusicVolume, 0.4) and G.ShandoHush is None
 
