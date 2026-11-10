@@ -6,3 +6,4 @@ ignore:
   - docs
   - README.md
   - RESEARCH.md
+  - sounds/walk*.mp3
