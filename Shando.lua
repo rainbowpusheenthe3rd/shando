@@ -277,17 +277,74 @@ local function Music(dip)  -- dip the game's music while melded; the old level i
     end
 end
 
-local function EndRitual()
+-- The Emerald Dream (/emerald dream) quietens the world: the game's ambient sounds and music fade out over a few
+-- seconds and come back when it ends. The old levels are saved (ShandoHush) so a closed game or a /reload mid-way
+-- still gets them back at the next login or logout. Its own sounds play on the Master and Dialog channels.
+local hushTicker
+local function WorldHush(on, secs)
+    if hushTicker then hushTicker:Cancel() hushTicker = nil end
+    if on and not ShandoHush then
+        ShandoHush = { amb = GetCVar("Sound_AmbienceVolume"), mus = GetCVar("Sound_MusicVolume") }
+    end
+    local h = ShandoHush
+    if not h then return end
+    local amb, mus = tonumber(h.amb) or 0.6, tonumber(h.mus) or 0.4
+    if not on and (secs or 0) <= 0 then  -- straight back (combat, logout)
+        SetCVar("Sound_AmbienceVolume", h.amb) SetCVar("Sound_MusicVolume", h.mus)
+        ShandoHush = nil
+        return
+    end
+    local steps, i = math.max(1, math.floor((secs or 6) / 0.2)), 0
+    hushTicker = C_Timer.NewTicker(0.2, function()
+        i = i + 1
+        local p = on and (1 - i / steps) or (i / steps)
+        SetCVar("Sound_AmbienceVolume", tostring(amb * p))
+        SetCVar("Sound_MusicVolume", tostring(mus * p))
+        if i >= steps then
+            hushTicker:Cancel() hushTicker = nil
+            if not on then SetCVar("Sound_AmbienceVolume", h.amb) SetCVar("Sound_MusicVolume", h.mus) ShandoHush = nil end
+        end
+    end, steps)
+end
+
+-- A soft caption under the character for each spoken line, for eyes left open (and before the voice is rendered).
+local caption = CreateFrame("Frame", nil, UIParent)
+caption:SetSize(760, 80)
+caption:SetPoint("CENTER", UIParent, "CENTER", 0, -170)
+caption:SetFrameStrata("BACKGROUND")
+caption:EnableMouse(false)
+caption.text = caption:CreateFontString(nil, "OVERLAY")
+caption.text:SetFont(STANDARD_TEXT_FONT, 17, "")
+caption.text:SetShadowOffset(1, -1)
+caption.text:SetAllPoints()
+caption.text:SetTextColor(0.80, 0.94, 0.84)
+caption.text:SetJustifyH("CENTER")
+caption:SetAlpha(0)
+local function Caption(text)
+    caption.text:SetText(text or "")
+    if not text then caption:SetScript("OnUpdate", nil) caption:SetAlpha(0) return end
+    local t0, hold = GetTime(), 3 + #text / 15   -- about as long as it takes to say
+    caption:SetScript("OnUpdate", function()
+        local t = GetTime() - t0
+        local a = math.min(1, t / 1.2) * math.max(0, math.min(1, (hold + 1.5 - t) / 1.5))
+        caption:SetAlpha(a * 0.9)
+        if t > hold + 1.5 then caption:SetScript("OnUpdate", nil) end
+    end)
+end
+
+local function EndRitual(now)
     if not ritual then return end
     if ritual.bed then StopSound(ritual.bed, 4000) end
     if ritual.name == "meld" then Music(false) StopBreath() end
+    if ritual.name == "emerald" then StopBreath() Caption(nil) WorldHush(false, now and 0 or 5) end
     if veil:IsShown() then Fade(0, 3) end
     ritual = nil
 end
 
 local function BeginRitual(name, bedFile, tint)
     EndRitual()
-    ritual = { name = name, file = bedFile, bed = not ShandoNoBeds and Sfx(bedFile, "Ambience") or nil, nextBed = GetTime() + BED_PERIOD, t0 = GetTime() }
+    ritual = { name = name, file = bedFile, bed = bedFile and not ShandoNoBeds and Sfx(bedFile, "Ambience") or nil,
+               nextBed = GetTime() + BED_PERIOD, t0 = GetTime() }
     if tint then
         veil.tex:SetVertexColor(tint[1], tint[2], tint[3])
         Fade(tint[4] * (ShandoEdge or 1), 5)  -- ShandoEdge: screen edge strength, 0 to 1
@@ -298,7 +355,7 @@ local function TickRitual(now)  -- keep the bed looping; end it when you move, f
     if not ritual then return end
     local moved = GetUnitSpeed("player") > 0
     if ritual.name == "wisp" then moved = not UnitIsGhost("player") end
-    if ShandoOff or moved or InCombatLockdown() or now - ritual.t0 > 600 then EndRitual() return end
+    if ShandoOff or moved or InCombatLockdown() or now - ritual.t0 > 600 then EndRitual(InCombatLockdown()) return end
 end
 
 -- Single sounds over a bed (Ambience.lua, from tools/spirit_ambience.py): a drop, a crackle, a knock, each at a gap of
@@ -326,7 +383,7 @@ end
 local clock = CreateFrame("Frame")
 clock:SetScript("OnUpdate", function()
     local now = GetTime()
-    if ritual and now >= ritual.nextBed and not ShandoNoBeds then
+    if ritual and ritual.file and now >= ritual.nextBed and not ShandoNoBeds then
         ritual.bed, ritual.nextBed = Sfx(ritual.file, "Ambience"), ritual.nextBed + BED_PERIOD
     end
     if bed and now >= bedNext then
@@ -354,7 +411,7 @@ local meldCount = 0
 local pulse = CreateFrame("Frame")
 pulse:SetScript("OnUpdate", function(_, dt)
     local r = ritual
-    if not r or r.name ~= "meld" or not r.breathT0 then return end
+    if not r or (r.name ~= "meld" and r.name ~= "emerald") or not r.breathT0 then return end
     local t = GetTime() - r.breathT0
     if t < BREATH_LEN then
         local bpm = 11 - 5 * math.min(1, t / BREATH_SLOW)
@@ -363,10 +420,12 @@ pulse:SetScript("OnUpdate", function(_, dt)
         if r.phase < IN_FRAC then env = math.sin(r.phase / IN_FRAC * math.pi / 2) ^ 2
         else env = math.cos((r.phase - IN_FRAC) / (1 - IN_FRAC) * math.pi / 2) ^ 2 end
         local edge = math.min(1, t / 4) * math.min(1, (BREATH_LEN - t) / 6)
-        veil:SetAlpha((0.3 - 0.12 * env * edge) * (ShandoEdge or 1))  -- the edges open a little on the in-breath, close softly on the out
+        local base = r.base or 0.3
+        veil:SetAlpha((base - 0.4 * base * env * edge) * (ShandoEdge or 1))  -- the edges open a little on the in-breath, close softly on the out
     elseif not r.closed then
         r.closed = true
-        veil:SetAlpha(0.3 * (ShandoEdge or 1))
+        veil:SetAlpha((r.base or 0.3) * (ShandoEdge or 1))
+        if r.name == "emerald" then return end  -- the Dream goes on: its own script says what comes next
         Sfx("kindbell")
         C_Timer.After(2.5, function() if ritual == r then Say("meldend") end end)
     end
@@ -388,6 +447,68 @@ local function CheckMeld()
     elseif ritual and ritual.name == "meld" and not Melded() then
         EndRitual()
     end
+end
+
+-- The Emerald Dream: a guided meditation of about nine minutes, chosen with /emerald dream (again to stop).
+-- Shaped by the research record (docs/RESEARCH.md in spirit-studio) and its cautions: meditation can bring on anxiety
+-- or low mood in some people (adverse events 8.3% overall; Farias et al., 2020), so it is opt-in and short, says at
+-- the start that moving ends it, offers eyes open, and anchors attention outside the body first (sounds, the
+-- ground) before the breath (trauma-sensitive practice: Treleaven, 2018). The breath is slow and exhale-led, the
+-- windbreath slowing towards 6 a minute (slow breathing: Zaccaro et al., 2018; one cyclic sigh: Balban et al.,
+-- 2023), then imagery of the Dream, a kindness wish for yourself and for others (Kirby et al., 2017), and a return
+-- to the room. The world's ambient sound and music fade out for it, and come straight back in combat.
+local EMERALD = {   -- seconds from the start: a line key, or what happens
+    { 0, "bell" }, { 4, "emerald01" }, { 24, "emerald02" }, { 44, "emerald03" }, { 74, "emerald04" },
+    { 106, "emerald05" }, { 124, "breath" }, { 142, "emerald06" }, { 188, "emerald07" }, { 234, "emerald08" },
+    { 282, "emerald09" }, { 318, "emerald10" }, { 356, "emerald11" }, { 396, "emerald12" }, { 432, "emerald13" },
+    { 470, "emerald14" }, { 492, "emerald15" }, { 512, "bell" }, { 515, "emerald16" }, { 538, "end" },
+}
+local function EmeraldText(key)
+    for _, l in ipairs(ns.LINES.emerald or {}) do if l[1] == key then return l[2] end end
+end
+
+local function Emerald()
+    BeginRitual("emerald", nil, { 0.03, 0.14, 0.07, 0.45 })   -- the Dream's green at the edges
+    local r = ritual
+    r.base = 0.45
+    WorldHush(true, 6)
+    for _, step in ipairs(EMERALD) do
+        C_Timer.After(step[1], function()
+            if ritual ~= r then return end   -- ended (moved, combat, /emerald again)
+            local what = step[2]
+            if what == "bell" then
+                Sfx("kindbell", "Master")
+            elseif what == "breath" then
+                StopBreath()
+                breathing = Sfx("windbreath", "Master")
+                r.breathT0, r.phase = GetTime(), 0
+            elseif what == "end" then
+                EndRitual()
+            else
+                AlbaLast = GetTime()   -- Herbalore keeps its distance
+                Mark(what)
+                PlaySoundFile(ns.VoicePath(what, DIR .. "sounds\\" .. what .. ".mp3"), "Dialog")
+                Caption(EmeraldText(what))
+            end
+        end)
+    end
+end
+
+SLASH_EMERALD1 = "/emerald"
+SlashCmdList.EMERALD = function(msg)
+    msg = (msg or ""):lower():gsub("^%s+", ""):gsub("%s+$", "")
+    if msg ~= "" and msg ~= "dream" then print("|cffb8c8ffShan'do|r: /emerald dream, to walk in the Dream a while.") return end
+    if ritual and ritual.name == "emerald" then
+        EndRitual()
+        print("|cffb8c8ffShan'do|r: we're back. Gently does it.")
+        return
+    end
+    if ShandoOff then print("|cffb8c8ffShan'do|r: I'm resting just now. /shando to wake me, and we'll go.") return end
+    if InCombatLockdown() or IsInInstance() or UnitIsDeadOrGhost("player") then
+        print("|cffb8c8ffShan'do|r: not here, not now. Somewhere quiet, when the fighting's done.")
+        return
+    end
+    Emerald()
 end
 
 local function OnEmote(token)
@@ -482,13 +603,17 @@ local f = CreateFrame("Frame")
 for _, e in ipairs({ "PLAYER_ENTERING_WORLD", "ZONE_CHANGED_NEW_AREA", "ZONE_CHANGED", "ZONE_CHANGED_INDOORS",
     "PLAYER_UPDATE_RESTING", "PLAYER_LEVEL_UP", "PLAYER_DEAD", "PLAYER_CONTROL_LOST", "GROUP_JOINED", "TRAINER_SHOW",
     "LEARNED_SPELL_IN_TAB", "CHAT_MSG_SKILL", "QUEST_TURNED_IN", "UNIT_SPELLCAST_SENT", "PLAYER_ALIVE",
-    "PLAYER_UNGHOST", "PLAYER_CAMPING", "PLAYER_LOGOUT", "CALENDAR_UPDATE_EVENT_LIST", "CHAT_MSG_TEXT_EMOTE" }) do
+    "PLAYER_UNGHOST", "PLAYER_CAMPING", "PLAYER_LOGOUT", "CALENDAR_UPDATE_EVENT_LIST", "CHAT_MSG_TEXT_EMOTE",
+    "PLAYER_REGEN_DISABLED" }) do
     pcall(f.RegisterEvent, f, e)  -- tolerate an event this client doesn't have
 end
 pcall(f.RegisterUnitEvent, f, "UNIT_AURA", "player")
 pcall(f.RegisterUnitEvent, f, "UNIT_SPELLCAST_SUCCEEDED", "player")
 f:SetScript("OnEvent", function(_, event, a1, a2, a3, a4)
-    if event == "UNIT_AURA" then
+    if event == "PLAYER_REGEN_DISABLED" then   -- combat: the world's sound comes straight back
+        if ritual and ritual.name == "emerald" then EndRitual(true) end
+        return
+    elseif event == "UNIT_AURA" then
         CheckMeld()
     elseif event == "CHAT_MSG_TEXT_EMOTE" then
         FromChat(a1, a2)
@@ -510,6 +635,7 @@ f:SetScript("OnEvent", function(_, event, a1, a2, a3, a4)
         return
     elseif event == "PLAYER_LOGOUT" then
         Music(false)
+        WorldHush(false, 0)   -- never leave the game's sound faded
         -- Saved every time, /reload included (live = true), so the session carries across reloads; the look-back
         -- at the next login skips sessions shorter than 10 minutes (elapsed).
         ShandoLast = { zones = session.order, kind = session.kind, quests = session.quests,
@@ -521,6 +647,7 @@ f:SetScript("OnEvent", function(_, event, a1, a2, a3, a4)
         return
     end
     if event == "PLAYER_ENTERING_WORLD" then
+        if ShandoHush and not (ritual and ritual.name == "emerald") then WorldHush(false, 0) end  -- left faded last time
         local l = ShandoLast
         if a2 and l and l.live and time() - (l.at or 0) < 600 then  -- a /reload: carry the session on
             session.order, session.kind, session.quests, session.levels = l.zones, l.kind, l.quests, l.levels

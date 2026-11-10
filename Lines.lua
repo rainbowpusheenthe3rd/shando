@@ -312,4 +312,22 @@ ns.LINES = {
     ["moonwell"] = {
         { "moonwell1", "Nothing given in this forest is lost, thero'shan. The leaf falls to feed the root, and the root raises the leaf. What you poured out will return to you, changed, and the same." },
     },
+    ["emerald"] = {
+        { "emerald01", "Ishnu-alah, thero'shan. Come, let's walk into the Dream together for a little while. Eight minutes or so. Close your eyes, or let them rest on something low and still. Whichever feels kinder." },
+        { "emerald02", "If anything feels wrong at any point, simply move, and we'll come back. You're always free to." },
+        { "emerald03", "Let the waking world go quiet. Listen for the furthest sound in your own room. And then the nearest one." },
+        { "emerald04", "Notice what's holding you up. The chair, the floor beneath it. You don't have to hold yourself up just now. It's being done for you." },
+        { "emerald05", "Now the breath, if you like. Nothing to force. Let it come in on its own, and leave a little more slowly than it came." },
+        { "emerald06", "In, as the wind rises. Out, longer, as it falls. Let the breath out be the longest part." },
+        { "emerald07", "If your mind wanders, that's what minds do. Noticing is the practice. Come back to the wind, gently, as many times as it takes." },
+        { "emerald08", "Once, if you'd like: breathe in, then take one more small sip of air on top. And let it all go, slowly." },
+        { "emerald09", "The druids say the Emerald Dream is the world as it would be, left to grow on its own. Green, unhurried, untouched. Let it be green behind your eyes." },
+        { "emerald10", "Nothing grows faster for being pulled. With each breath out, let something in you settle, the way leaves settle on still water." },
+        { "emerald11", "Nothing to fix here. Nothing to earn. The Dream asks nothing of you, only that you rest in it." },
+        { "emerald12", "If it's welcome, a wish for yourself. Perhaps: may I rest. May I be at peace. Or whatever words fit better." },
+        { "emerald13", "And one for someone else out there today. Someone you know, or someone you'll never meet. May they rest too. Everyone is carrying something." },
+        { "emerald14", "Slowly now, back towards waking. Feel your hands. Perhaps move your fingers, and your shoulders." },
+        { "emerald15", "When you're ready, open your eyes. Look around, and name one thing you can see." },
+        { "emerald16", "Andu-falah-dor, thero'shan. Balance restored, a little. The Dream will keep. So will I." },
+    },
 }
