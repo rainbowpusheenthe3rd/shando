@@ -478,8 +478,8 @@ local FROGS = "meld"   -- the frog bed: "meld" (a summer swamp, FS853607) or "vi
 local EMERALD = {   -- seconds from the start: a line key, or what happens (clip lengths 5-17 s; none overlaps the next)
     { 0, "bell" }, { 4, "emerald01" }, { 24, "emerald02" }, { 46, "emerald03" }, { 66, "emerald04" },
     { 82, "emerald05" }, { 100, "emerald06" }, { 120, "emerald07" }, { 136, "breath" }, { 146, "emerald08" },
-    { 196, "emerald09" }, { 236, "emerald10" }, { 292, "emerald11" }, { 312, "emerald12" }, { 336, "emerald13" },
-    { 362, "emerald14" }, { 390, "emerald15" }, { 410, "emerald16" }, { 440, "emerald17" }, { 464, "emerald18" },
+    { 196, "emerald09" }, { 236, "emerald10" }, { 292, "emerald11" }, { 312, "emerald12" }, { 342, "emerald13" },
+    { 368, "emerald14" }, { 390, "emerald15" }, { 410, "emerald16" }, { 440, "emerald17" }, { 464, "emerald18" },
     { 492, "emerald19" }, { 505, "frogs" }, { 520, "emerald20" }, { 548, "emerald21" }, { 570, "emerald22" },
     { 590, "bell" }, { 594, "emerald23" }, { 1140, "fade" }, { 1190, "end" },
 }

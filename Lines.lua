@@ -324,7 +324,7 @@ ns.LINES = {
         { "emerald09", "If your mind wanders, that's alright. Minds wander. Each time you notice and come back, that's the practice, and you're doing it." },
         { "emerald10", "Once, only if you'd like: breathe in, then one more small sip of air on top. And let it all go, slowly, like a long sigh." },
         { "emerald11", "You can let the breath find its own pace now. It knows the way." },
-        { "emerald12", "The druids say the Emerald Dream is the world as it would be, left to grow on its own. Picture a clearing there, if you like. Soft moss underfoot. Cool night air. Moonlight through tall trees." },
+        { "emerald12", "The druids say the Emerald Dream is the world as it would be, left to grow on its own. Picture a clearing there, if you like. Soft moss underfoot. Cool night air. Moonlight through tall trees. A silver moth landing on your hand, gentle and forgiving, like the breeze." },
         { "emerald13", "Tall grass, moving in a gentle wind. Somewhere close, still water, holding the stars. Everything here grows at its own pace, and so can you." },
         { "emerald14", "Nothing grows faster for being pulled. With each breath out, let something in you settle, the way leaves settle on still water." },
         { "emerald15", "Nothing to fix here. Nothing to earn. You're allowed to simply rest." },
