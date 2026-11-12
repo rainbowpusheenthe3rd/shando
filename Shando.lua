@@ -584,7 +584,8 @@ local function Emerald(d)
             else
                 AlbaLast = GetTime()   -- Herbalore keeps its distance
                 Mark(what)
-                PlaySoundFile(ns.VoicePath(what, DIR .. "sounds\\" .. what .. ".mp3"), "Dialog")
+                -- keep the handle: moving fades this line out before she says you've come back (DreamStop)
+                r.voice = select(2, PlaySoundFile(ns.VoicePath(what, DIR .. "sounds\\" .. what .. ".mp3"), "Dialog"))
                 Caption(LineText(d.kind, what))
             end
         end)
@@ -610,15 +611,22 @@ SlashCmdList.EMERALD = function(msg)
     Emerald()
 end
 
--- Moving or combat ends the Dream, and she says so, so nobody is left wondering why it stopped.
+-- Moving or combat ends the Dream, and she says so, so nobody is left wondering why it stopped. A line she's still
+-- speaking fades out first (moving: DREAM_VOICE_FADE; combat: quicker), and the exit line follows once it's quiet,
+-- instead of the two voices overlapping (12 Nov 2026).
+local DREAM_VOICE_FADE = 1.5          -- seconds her current line takes to fade when you move
+local DREAM_VOICE_FADE_COMBAT = 0.4   -- ... and when combat ends it
+local DREAM_EXIT_GAP = 0.4            -- quiet between the fade and the exit line
 function ns.DreamStop(reason)
     if not (ritual and ritual.name == "emerald") then return end
     if ShandoEmerald and not ShandoEmerald.ended then
         ShandoEmerald.ended, ShandoEmerald.secs = reason, math.floor(GetTime() - ritual.t0)
     end
+    local fade = reason == "combat" and DREAM_VOICE_FADE_COMBAT or DREAM_VOICE_FADE
+    if ritual.voice then StopSound(ritual.voice, fade * 1000) end   -- a line that's already ended ignores this
     EndRitual(reason == "combat")
     local key = reason == "combat" and "dreamstop2" or "dreamstop1"
-    C_Timer.After(reason == "combat" and 0.3 or 1, function()
+    C_Timer.After(fade + DREAM_EXIT_GAP, function()
         local text = LineText("dreamstop", key)
         AlbaLast = GetTime()
         PlaySoundFile(DIR .. "sounds\\" .. key .. ".mp3", "Dialog")

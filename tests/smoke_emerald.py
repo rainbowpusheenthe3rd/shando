@@ -52,7 +52,8 @@ function advance(to)
 end
 played, captions = {}, {}
 function PlaySoundFile(path, channel) played[#played + 1] = { path = path, channel = channel } return true, #played end
-function StopSound() end
+stopped = {}
+function StopSound(h, ms) stopped[#stopped + 1] = { h = h, ms = ms, at = now } end
 speed, combat = 0, false
 function GetUnitSpeed() return speed end
 function InCombatLockdown() return combat end
@@ -163,9 +164,15 @@ assert dream() == n, "Dream lines after combat ended it"
 
 # moving: it stops at once (every frame), she says why, and the sound comes back
 lua.execute("played = {} captions = {} SlashCmdList.EMERALD('dream') advance(now + 60)")
-lua.execute("speed = 1; tick(); speed = 0")
+# her line playing when you move fades out over 1.5 s, and the exit line starts only after that (no overlap)
+spoken = [i for i, p in G.played.items() if "emerald" in p.path]
+lua.execute("stopped = {}; speed = 1; tick(); speed = 0; moved_at = now")
 assert G.ShandoEmerald.ended == "moved", G.ShandoEmerald.ended
-lua.execute("advance(now + 2)")
+fades = [s for s in G.stopped.values() if s.h == spoken[-1]]
+assert fades and fades[0].ms == 1500, [(s.h, s.ms) for s in G.stopped.values()]
+lua.execute("advance(now + 1.5)")
+assert not any(p.path.endswith("dreamstop1.mp3") for p in G.played.values()), "exit line waits for the fade"
+lua.execute("advance(now + 0.5)")
 assert any(p.path.endswith("dreamstop1.mp3") and p.channel == "Dialog" for p in G.played.values())
 assert any(c.startswith("You moved, so we've come back") for c in G.captions.values())
 lua.execute("advance(now + 10)")
