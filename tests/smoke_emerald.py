@@ -257,9 +257,13 @@ assert all(a != b for a, b in zip(picks[:15], picks[1:15])), "never twice in a r
 assert picks[15] == "inn10", picks[15]
 assert lua.eval("function(ns) return ns.PickLeast({}, 'none') end")(ns) is None
 
-# ambient lines get quieter over a cycle of three sessions, then start again: gaps 1x, 2x, 4x, 1x
-backoff = lua.eval("function(ns, s) ShandoSession = s return ns.Backoff() end")
-assert [backoff(ns, s) for s in (0, 1, 2, 3, 4, 7)] == [1, 1, 2, 4, 1, 1]
+# backoff by repeat round, across sessions: the nine inn lines above, after 15 visits, are in round 1 (every line
+# heard once, six twice), so their gap is 1.6x; first time through it's 1x; after three full rounds, 1.6^3
+inn = lua.eval("function() local l = {} for i = 1, 9 do l[i] = { 'inn' .. i, '' } end return l end")()
+assert lua.eval("function(ns, l) return ns.Round(l), ns.Backoff(l) end")(ns, inn) == (1, 1.6)
+assert lua.eval("function(ns) return ns.Backoff({ { 'never', '' } }), ns.Backoff({}) end")(ns) == (1, 1)
+lua.execute("for i = 1, 9 do ShandoHeard['inn' .. i] = { 3, 0, 0 } end")
+assert abs(lua.eval("function(ns, l) return ns.Backoff(l) end")(ns, inn) - 1.6 ** 3) < 1e-9
 
 # botany: a herb's group opens level 1 at the first gather, level 2 at 10, level 3 at 30; unknown herbs have none
 pool = lua.eval("""function(ns, herb, n)

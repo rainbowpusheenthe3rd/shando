@@ -106,12 +106,21 @@ function ns.PickLeast(list, id)
 end
 local function Pick(kind) return ns.PickLeast(ns.LINES[kind], kind) end
 
--- Ambient lines (spoken unprompted, not on an event) get quieter over a cycle of sessions: their gaps are 1x in the
--- first session, 2x in the second, 4x in the third, then back to 1x. A session is a login; /reload carries it on.
-local AMBIENT = { breath = true, water = true, night = true }
-local CYCLE = 3
-ShandoSession = 0  -- replaced by the saved value when it loads
-function ns.Backoff() return 2 ^ ((math.max(ShandoSession or 1, 1) - 1) % CYCLE) end
+-- Backoff by repeat round (13 Nov 2026, Luke): a list's round is the fewest times any of its lines has been heard
+-- (ShandoHeard, lifetime, so it runs across sessions). The first time through, a kind's gap is as set; each round of
+-- repeats after that waits REPEAT_BACKOFF times longer (1, 1.6, 2.56, 4.1...), so repetition slows chatter, and more
+-- lines in a kind mean fewer repeats to slow.
+local REPEAT_BACKOFF = 1.6
+function ns.Round(list)
+    local fewest
+    for _, l in ipairs(list or {}) do
+        local h = ShandoHeard[l[1]]
+        local n = h and h[1] or 0
+        if not fewest or n < fewest then fewest = n end
+    end
+    return fewest or 0
+end
+function ns.Backoff(list) return REPEAT_BACKOFF ^ ns.Round(list) end
 
 local function Quiet()  -- times she never speaks
     return ShandoOff or InCombatLockdown() or IsInInstance() or GetTime() - (AlbaLast or -(ShandoGap or GAP)) < (ShandoGap or GAP)
@@ -145,7 +154,7 @@ end
 -- Say a line of `kind`. opts.sfx plays first and the voice follows opts.delay seconds later.
 local function Say(kind, opts)
     if Quiet() then return end
-    local gap = EVERY[kind] and EVERY[kind] * (ShandoPace or 1) * (AMBIENT[kind] and ns.Backoff() or 1)
+    local gap = EVERY[kind] and EVERY[kind] * (ShandoPace or 1) * ns.Backoff(ns.LINES[kind])
     if gap and said[kind] and GetTime() - said[kind] < gap then return end
     local l = Pick(kind)
     if not l then return end
@@ -832,9 +841,7 @@ f:SetScript("OnEvent", function(_, event, a1, a2, a3, a4)
             l.live = nil
         end
         if a1 then  -- login
-            started = GetTime()
-            ShandoSession = (ShandoSession or 0) + 1  -- the ambient lines' cycle (ns.Backoff)
-            Music(false)  -- if the game closed mid-meld, put the music back
+            started = GetTime()            Music(false)  -- if the game closed mid-meld, put the music back
             C_Timer.After(8, function() Say("login") end)
             C_Timer.After(75, function() LookBack() end)
             C_Timer.After(40, function()

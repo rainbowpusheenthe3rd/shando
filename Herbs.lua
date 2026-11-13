@@ -88,8 +88,9 @@ end
 -- Say a botany line for the herb's group, if it's time and one is open to you. Its sound is with Shan'do's own
 -- lines (sounds\<key>.mp3), not the herbs'. True if said.
 local function SayBotany(herb)
-    if GetTime() - lastBotany <= BOTANY_EVERY then return false end
-    local l = ns.PickLeast(ns.BotanyPool(herb), "botany")
+    local pool = ns.BotanyPool(herb)
+    if GetTime() - lastBotany <= BOTANY_EVERY * ns.Backoff(pool) then return false end
+    local l = ns.PickLeast(pool, "botany")
     if not l then return false end
     AlbaLast = GetTime()
     Mark(l[1])
@@ -202,13 +203,13 @@ f:SetScript("OnEvent", function(_, event, unit, target)
             Mark(gate)
         elseif SayBotany(herb) then
             lastBotany = GetTime()
-        elseif GetTime() - lastCalm > CALM * ns.Backoff() and math.random() < 0.3 and SayOne(ns.HERB_CALM) then
+        elseif GetTime() - lastCalm > CALM * ns.Backoff(ns.HERB_CALM) and math.random() < 0.3 and SayOne(ns.HERB_CALM) then
             lastCalm = GetTime()
         end
     elseif skin and not ShandoNoSkins and ns.SKIN and #ns.SKIN > 0 then
         if not skinned then
             skinned = SayOne(ns.SKIN)
-        elseif GetTime() - lastCalm > CALM and math.random() < 0.25 and SayOne(ns.SKIN) then
+        elseif GetTime() - lastCalm > CALM * ns.Backoff(ns.SKIN) and math.random() < 0.25 and SayOne(ns.SKIN) then
             lastCalm = GetTime()
         end
     end
