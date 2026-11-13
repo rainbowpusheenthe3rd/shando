@@ -241,7 +241,7 @@ assert lua.eval("#ShandoKindLog") == 6 and lua.eval("ShandoKindLog[1]").endswith
 # which line (ns.PickLeast): nine inn lines, five visits a session for three sessions. Every line once before any
 # twice, so after 15 visits all nine are heard and exactly six twice; never the same line twice in a row; and
 # lifetime counts carry over, so a new line is said first
-lua.execute("ShandoHeard, ShandoHeardLog = {}, {}")
+lua.execute("ShandoHeard, ShandoHeardLog, ShandoRepeat = {}, {}, nil")
 picks = lua.eval("""function(ns)
   local list, out = {}, {}
   for i = 1, 9 do list[i] = { "inn" .. i, "" } end
@@ -257,13 +257,23 @@ assert all(a != b for a, b in zip(picks[:15], picks[1:15])), "never twice in a r
 assert picks[15] == "inn10", picks[15]
 assert lua.eval("function(ns) return ns.PickLeast({}, 'none') end")(ns) is None
 
-# backoff by repeat round, across sessions: the nine inn lines above, after 15 visits, are in round 1 (every line
+# backoff by repeat round, within the window: the nine inn lines above, after 15 visits, are in round 1 (every line
 # heard once, six twice), so their gap is 1.6x; first time through it's 1x; after three full rounds, 1.6^3
 inn = lua.eval("function() local l = {} for i = 1, 9 do l[i] = { 'inn' .. i, '' } end return l end")()
 assert lua.eval("function(ns, l) return ns.Round(l), ns.Backoff(l) end")(ns, inn) == (1, 1.6)
 assert lua.eval("function(ns) return ns.Backoff({ { 'never', '' } }), ns.Backoff({}) end")(ns) == (1, 1)
-lua.execute("for i = 1, 9 do ShandoHeard['inn' .. i] = { 3, 0, 0 } end")
+lua.execute("for i = 1, 9 do ShandoRepeat.n['inn' .. i] = 3 end")
 assert abs(lua.eval("function(ns, l) return ns.Backoff(l) end")(ns, inn) - 1.6 ** 3) < 1e-9
+
+# the repeat counter starts again every three sessions: logins 1-3 share a window, the 4th begins a new one
+win = lua.eval("""function(ns)
+  ShandoSession, ShandoRepeat = 0, nil
+  local out = {}
+  for s = 1, 7 do ns.NewSession() ns.Heard("w") out[s] = ShandoRepeat.n.w end
+  return table.concat(out, ",")
+end""")(ns)
+assert win == "1,2,3,1,2,3,1", win
+assert lua.eval("ShandoHeard.w[1]") == 7, "the lifetime tally keeps counting"
 
 # botany: a herb's group opens level 1 at the first gather, level 2 at 10, level 3 at 30; unknown herbs have none
 pool = lua.eval("""function(ns, herb, n)

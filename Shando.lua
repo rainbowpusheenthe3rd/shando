@@ -82,18 +82,38 @@ function ns.Heard(k)
     local log = ShandoHeardLog
     log[#log + 1] = k .. " " .. now
     if #log > HEARD_LOG then table.remove(log, 1) end
+    local r = ns.Repeats()
+    r[k] = (r[k] or 0) + 1
 end
 
--- 13 Nov 2026: which line. Of a list, a line heard the fewest times in your whole life with Shan'do (ShandoHeard,
--- across sessions), dice for ties; so every line is heard once before any is heard twice, all twice before any
--- three times, and new lines come first. The line said last time from this list isn't said again straight away.
+-- The repeat counter (13 Nov 2026, Luke): how many times each line has been heard in the current window of
+-- WINDOW sessions (ShandoRepeat = { from = session it began, n = { key = count } }). It drives which line is said and
+-- the backoff below, and starts again from nothing every WINDOW sessions. A session is a login; /reload carries on.
+local WINDOW = 3
+ShandoSession, ShandoRepeat = 0, { from = 0, n = {} }  -- replaced by the saved values when they load
+function ns.NewSession()
+    ShandoSession = (ShandoSession or 0) + 1
+    if type(ShandoRepeat) ~= "table" or ShandoSession - (ShandoRepeat.from or 0) >= WINDOW then
+        ShandoRepeat = { from = ShandoSession, n = {} }
+    end
+end
+function ns.Repeats()  -- the window's counts, made if a save from before 13 Nov has none
+    if type(ShandoRepeat) ~= "table" or type(ShandoRepeat.n) ~= "table" then
+        ShandoRepeat = { from = ShandoSession or 0, n = {} }
+    end
+    return ShandoRepeat.n
+end
+local function Count(k) return ns.Repeats()[k] or 0 end
+
+-- 13 Nov 2026: which line. Of a list, a line heard the fewest times in this window of sessions (the repeat counter),
+-- dice for ties; so every line is heard once before any is heard twice, all twice before any three times, and new
+-- lines come first. The line said last time from this list isn't said again straight away.
 -- Shared with Herbs.lua. Returns the line, or nil for an empty list.
 local lastOf = {}
 function ns.PickLeast(list, id)
     local best, fewest = {}, math.huge
     for _, l in ipairs(list or {}) do
-        local h = ShandoHeard[l[1]]
-        local n = h and h[1] or 0
+        local n = Count(l[1])
         if n < fewest then best, fewest = { l }, n elseif n == fewest then best[#best + 1] = l end
     end
     if #best > 1 then  -- not the one just said, when there's a choice
@@ -106,16 +126,14 @@ function ns.PickLeast(list, id)
 end
 local function Pick(kind) return ns.PickLeast(ns.LINES[kind], kind) end
 
--- Backoff by repeat round (13 Nov 2026, Luke): a list's round is the fewest times any of its lines has been heard
--- (ShandoHeard, lifetime, so it runs across sessions). The first time through, a kind's gap is as set; each round of
--- repeats after that waits REPEAT_BACKOFF times longer (1, 1.6, 2.56, 4.1...), so repetition slows chatter, and more
--- lines in a kind mean fewer repeats to slow.
+-- Backoff by repeat round (13 Nov 2026, Luke): a list's round is the fewest times any of its lines has been heard in
+-- this window (the repeat counter). The first time through, a kind's gap is as set; once every line of that kind has
+-- been heard, each round of repeats waits REPEAT_BACKOFF times longer (1, 1.6, 2.56, 4.1...). Resets with the window.
 local REPEAT_BACKOFF = 1.6
 function ns.Round(list)
     local fewest
     for _, l in ipairs(list or {}) do
-        local h = ShandoHeard[l[1]]
-        local n = h and h[1] or 0
+        local n = Count(l[1])
         if not fewest or n < fewest then fewest = n end
     end
     return fewest or 0
@@ -841,7 +859,8 @@ f:SetScript("OnEvent", function(_, event, a1, a2, a3, a4)
             l.live = nil
         end
         if a1 then  -- login
-            started = GetTime()            Music(false)  -- if the game closed mid-meld, put the music back
+            started = GetTime()
+            ns.NewSession()  -- the repeat counter's window            Music(false)  -- if the game closed mid-meld, put the music back
             C_Timer.After(8, function() Say("login") end)
             C_Timer.After(75, function() LookBack() end)
             C_Timer.After(40, function()
