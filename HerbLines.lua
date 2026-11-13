@@ -61,6 +61,13 @@ ns.HERB_CALM = {
     { "calm14", "You're one of the forest's gatherers now. Take only what you need, and say thank you." },
     { "calm15", "Every plant you pass is doing something quiet and remarkable, simply by being alive." },
     { "calm16", "When the gathering's done, rest your hands. They've worked well today." },
+    { "calm17", "Slow down a little. The best herbs are found by those who look carefully." },
+    { "calm18", "The herbalist's walk is a slow one. That's half the pleasure." },
+    { "calm19", "Each plant has its own place in the world. You're visiting each one." },
+    { "calm20", "Look at the ground as you walk. There's a whole world down there." },
+    { "calm21", "Every herb has a story: where it grows, what it needs, what it gives." },
+    { "calm22", "Leave a few behind because the next traveller might need them, and so might the bees." },
+    { "calm23", "Look up between herbs, sometimes. The sky's worth a glance too." },
 }
 ns.SKIN = {
     { "skin1", "Thank you, little one. Nothing of you will be wasted." },
@@ -69,4 +76,11 @@ ns.SKIN = {
     { "skin4", "In a few days this will be a cloak, or a quiver. And still, somehow, a little bit wild." },
     { "skin5", "The kaldorei never took more than the forest could spare. Neither do you." },
     { "skin6", "Rest now, friend. The forest will take back what's left." },
+    { "skin7", "Gently now. Every hide was once a living thing." },
+    { "skin8", "Take only what you need, and thank what gave it." },
+    { "skin9", "Rest now, little one. Your part in the forest is done." },
+    { "skin10", "The kaldorei hunt with respect. Every creature is part of the balance." },
+    { "skin11", "Nothing wasted. That's the old way." },
+    { "skin12", "A quiet thanks, before you move on." },
+    { "skin13", "Every life feeds another. That's the forest's way." },
 }
