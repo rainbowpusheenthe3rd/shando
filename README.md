@@ -4,41 +4,65 @@
 <p align="center"><i>A night elf spirit guide for quiet moments.</i></p>
 <p align="center"><b><a href="https://rainbowpusheenthe3rd.github.io/shando/">Listen to it →</a></b></p>
 
-**Shan'do** is a free World of Warcraft addon for **World of Warcraft: Forever** (Classic+): a voiced night elf spirit guide who speaks at quiet moments. She greets storied places, breathes with you when you stand still, keeps rituals for shadowmeld, sleep and prayer, notices kindness, and gives every herb a voice. Made for immersion, roleplay and a calmer evening in Azeroth.
+<p align="center"><img src="docs/emerald/curseforge_main.jpg" alt="The moonwell meditation at Auberdine, in the rain, with its caption" width="720"></p>
 
-Made for the World of Warcraft: Forever client (interface 16001, also 120105). Free, open source, no adverts.
+### A night elf spirit guide for the quiet moments: she breathes with you, greets the old places, and teaches you the plants you gather.
 
-## What it does
+A free addon for **World of Warcraft: Forever** (Classic+; interface 16001, also 120105), with around 1,100 lines in one
+voiced night elf voice. Open source, no adverts.
 
-- **Places.** The first visit to a sacred or storied place (Shadowglen to Winterspring, 25 of them) gets a soft swell and one line. Felwood is *wounded, not wicked*: corruption belongs to places, never to you.
-- **Stillness.** Stand still outdoors for a while and she offers a breath; then a wind that breathes with you, out-breath longer than in-breath. Moving ends it.
-- **Inns.** Rest a minute at an inn: a Japanese garden by day (water on stones, a water-jar's drops, now and then a bamboo knock), a hearth fire by night, for five minutes.
-- **People.** Joining a group (kin), visiting a trainer (teacher), healing or blessing someone else (kindness, with a bell).
-- **Milestones.** Levels name a strength you showed; new forms and great spells; herbalism and skinning at 75, 150, 225 and 300; now and then a finished quest gets a chime and a moment to savour it.
-- **Hard times.** One gentle word when you fall. After three falls in fifteen minutes, one word about rest, then quiet about dying.
-- **Time.** Night, dawn and dusk on the server clock; very late at night, and after a long day's road, a word of care.
-- **Rituals you choose.** Shadowmeld meditation (the music dips, the night rises, the wind breathes); /sleep in a barrow den (the screen's edges turn green and the Dream plays); /kneel or /pray at night (moonlight at the edges, a bell); the walk back as a wisp, with night crickets.
-- **Healing lines.** Inside a ritual you chose, at most once a day, a line about loss or old hurts: always with hope, grounded in research on self-compassion, earned security, compassion-focused therapy, grief and resilience.
-- **The look-back.** At your next login, a chime and one sentence recalling your last journey: where you walked, what you gathered, who you helped.
-- **Festivals.** Each calendar festival is greeted once a year.
-- **Herbs and skinning.** Every herb, rare find and seed has its own lines, the unheard ones first; skinning gets a word of thanks. Each has its own switch in the settings. (This was the Herbalore addon; it is part of Shan'do now.)
-- **Real sound.** The soundscapes are real field recordings, with single drops, crackles and knocks laid over them at random gaps, so they never loop the same way twice.
-- **Minimap button** at half opacity: left-click for the guide, right-click to rest her, drag to move.
+## What you get
 
-## Install
+- **A companion, not a quest tracker.** She speaks at quiet moments only: never in combat or dungeons, and never
+  closer than 45 seconds apart (adjustable in the settings).
+- **Rarely the same thing twice.** She always says the line you've heard least, so you hear every line of a kind
+  before any repeats. If you do run through a kind, it waits longer before it speaks again.
+- **A breath when you stop.** Stand still outdoors for a minute and a half and she offers a breath, then a wind
+  that breathes with you, the out-breath longer than the in-breath. Moving ends it.
+- **Botany as you gather.** Every herb belongs to a real plant family: kelp, moss, lichen, mushrooms, grasses,
+  lilies, lotuses, the daisy family, roots, thorns or flowering plants in general. Gather a family and she teaches
+  it in three levels, opening at 1, 10 and 30 gathers: what you can see, how it lives, and where it sits in the long
+  history of plants. Every herb, rare find and seed also has its own lines.
+- **The places that matter.** The first visit to each of 25 sacred or storied places, from Shadowglen to
+  Winterspring, gets a soft swell and one line. Felwood is *wounded, not wicked*.
+- **Rituals you choose.** Shadowmeld meditation, /sleep in a barrow den, /kneel or /pray under the moon, and
+  **/emerald dream**: two guided meditations of about ten minutes each that end beside a pond of frogs.
+- **The good you do, noticed.** Healing or blessing a stranger (not yourself) gets a bell and a word. Groups,
+  trainers, levels, new forms and finished quests each have their own lines.
+- **Gentle on hard days.** One word when you fall, one about rest after several falls, then quiet. Late at night,
+  and after a long day's road, a word of care.
+- **Real places to rest.** Inns play a Japanese garden by day and a hearth fire by night, built from real field
+  recordings that never loop the same way twice.
 
-Download this repository (Code → Download ZIP), and copy the `Shando` folder into
-`World of Warcraft\_<flavour>_\Interface\AddOns`. Restart the game fully the first time, so its saved variables
-are created.
+## Why
 
-## Commands
+The world of Azeroth is full of quiet beauty that the game itself never points at: moonwells in the rain, the
+barrow dens, the herbs you pull up by the hundred without a second look. Night elves are the race of the druids, the
+Sentinels and Elune's priestesses, and the game gives them no voice for any of it. Shan'do is that voice: a
+druid's spirit who notices the world with you, keeps you company in the slow parts, and leaves you a little calmer
+than you were.
+
+## Download
+
+1. Get **[the latest release](https://github.com/rainbowpusheenthe3rd/shando/releases/latest)** (the
+   `Shando-vX.Y.Z.zip` under Assets), or install it from CurseForge.
+2. Unzip it into `World of Warcraft\_<flavour>_\Interface\AddOns`, so you have `AddOns\Shando\Shando.toc`.
+3. Restart the game fully the first time, so its saved settings are created. Listen to some of her first:
+   **[the sound page](https://rainbowpusheenthe3rd.github.io/shando/)**.
 
 | Command | |
 |---|---|
 | `/shando` | rest her, or call her back |
 | `/shando quieter` | speak less often (down to a quarter) |
 | `/shando nearer` | speak more often (up to four times) |
+| `/emerald dream` | a guided meditation (choose which in the options) |
 | `/shando help` | the in-game guide |
+| `/shando options` | the settings: herbs, skinning, beds and more |
+
+The minimap button sits at half opacity: left-click for the guide, right-click to rest her, drag to move it.
+
+<details>
+<summary><b>Research, credits and development</b></summary>
 
 ## The research
 
@@ -84,3 +108,7 @@ git tag -a v1.2.0 -m "1.2.0" && git push origin v1.2.0      # builds the zip, ma
 ```
 
 CurseForge uploads are by hand for now, from the zip on the GitHub Release; nothing uploads there automatically.
+
+</details>
+
+<p align="center"><img src="docs/icon.png" width="140" alt="Shan'do"></p>
