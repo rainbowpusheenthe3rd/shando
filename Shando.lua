@@ -32,7 +32,23 @@ local KIND_SPELLS = {  -- cast on someone else: a kindness
     ["Healing Touch"] = true, ["Rebirth"] = true, ["Remove Curse"] = true, ["Cure Poison"] = true,
     ["Abolish Poison"] = true, ["Innervate"] = true, ["Gift of the Wild"] = true,
 }
-local SKILL_MILESTONES = { [75] = true, [150] = true, [225] = true, [300] = true }
+-- Whether a spell the player just sent went to someone else (12 Nov 2026: a self-buff had counted as a kindness).
+-- `target` is UNIT_SPELLCAST_SENT's target name. It can carry a realm ("Name-Realm"), so names are compared without
+-- one; and with a hostile target selected, a buff goes to the caster though the event may still name the target, so
+-- a hostile or attackable target never counts. Each decision is kept in ShandoKindLog (the last 30) to check in game.
+function ns.CastOnOther(target)
+    local me = UnitName("player")
+    local short = target and target ~= "" and (Ambiguate and Ambiguate(target, "short") or target:match("^[^-]+"))
+    local hostile = short and UnitExists("target") and UnitName("target") == short and UnitCanAttack("player", "target")
+    local other = short and short ~= me and not hostile or false
+    ShandoKindLog = ShandoKindLog or {}
+    local log = ShandoKindLog
+    log[#log + 1] = ("%d %s -> %s"):format(time(), tostring(target), other and "other" or "self")
+    if #log > 30 then table.remove(log, 1) end
+    return other
+end
+
+local SKILL_MILESTONES ={ [75] = true, [150] = true, [225] = true, [300] = true }
 
 local said, zones, still = {}, {}, 0
 local bag = {}  -- per kind, the lines not yet said, so none repeats until all have been
@@ -873,7 +889,7 @@ f:SetScript("OnEvent", function(_, event, a1, a2, a3, a4)
                 wellRun = nil  -- anything but a heal, or a heal away from the well, starts it over
             end
         end
-        if a1 == "player" and spell and KIND_SPELLS[spell] and target and target ~= "" and target ~= UnitName("player") then
+        if a1 == "player" and spell and KIND_SPELLS[spell] and ns.CastOnOther(target) then
             session.kind = session.kind + 1
             if math.random() < 0.5 then
                 C_Timer.After(4, function() Say("kindness", { sfx = "kindbell", delay = 2.5 }) end)

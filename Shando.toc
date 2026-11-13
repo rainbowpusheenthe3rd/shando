@@ -4,7 +4,7 @@
 ## Version: 1.1.0
 ## Notes: A night elf spirit guide for quiet moments, sacred places, kin, teachers, milestones and hard times, with real field-recording soundscapes and a voice for every herb. /shando help for the guide; /shando toggles; /shando quieter or nearer.
 ## SavedVariables: ShandoWells, ShandoHerbPicks, ShandoHerbUnknown
-## SavedVariablesPerCharacter: ShandoOff, ShandoSaid, ShandoOnce, ShandoPace, ShandoMusic, ShandoLast, ShandoMap, ShandoGap, ShandoEdge, ShandoNoBeds, ShandoNoHerbs, ShandoNoSkins, ShandoHerbPace, ShandoHerbSaid, ShandoMyVoice, ShandoHush, ShandoEmerald, ShandoDream, ShandoDreamHeard, ShandoDreamLast, ShandoHeard, ShandoHeardLog
+## SavedVariablesPerCharacter: ShandoOff, ShandoSaid, ShandoOnce, ShandoPace, ShandoMusic, ShandoLast, ShandoMap, ShandoGap, ShandoEdge, ShandoNoBeds, ShandoNoHerbs, ShandoNoSkins, ShandoHerbPace, ShandoHerbSaid, ShandoMyVoice, ShandoHush, ShandoEmerald, ShandoDream, ShandoDreamHeard, ShandoDreamLast, ShandoHeard, ShandoHeardLog, ShandoKindLog
 Lines.lua
 Mine.lua
 HerbLines.lua

@@ -220,4 +220,20 @@ heard = lua.eval("function(ns) now = now + 5 ns.Heard('a') now = now + 5 ns.Hear
 assert tuple(heard)[:4] == (2, 5, 1, 3) and tuple(heard)[4].startswith("b "), tuple(heard)
 lua.eval("function(ns) for i = 1, 2100 do ns.Heard('x') end end")(ns)
 assert lua.eval("#ShandoHeardLog") == 2000 and lua.eval("ShandoHeard.x[1]") == 2100
+
+# a kindness needs the spell to go to someone else: not yourself, with or without a realm, nor with an enemy targeted
+lua.execute("""
+  function UnitName(u) if u == "player" then return "Chalice" end return tgt end
+  function UnitExists(u) return u == "target" and tgt ~= nil end
+  function UnitCanAttack() return enemy end
+  function Ambiguate(n) return (n:gsub("%-.*", "")) end
+  ShandoKindLog = nil
+""")
+other = lua.eval("function(ns, target, t, e) tgt, enemy = t, e return ns.CastOnOther(target) end")
+assert other(ns, "Thrall", "Thrall", False) is True                       # a friend, targeted
+assert other(ns, "Chalice", None, False) is False                         # yourself
+assert other(ns, "Chalice-Moonwater", None, False) is False               # yourself, with a realm
+assert other(ns, "", None, False) is False and other(ns, None, None, False) is False
+assert other(ns, "Kobold Miner", "Kobold Miner", True) is False           # an enemy targeted: the buff went to you
+assert lua.eval("#ShandoKindLog") == 6 and lua.eval("ShandoKindLog[1]").endswith("Thrall -> other")
 print("emerald dream checks pass")
