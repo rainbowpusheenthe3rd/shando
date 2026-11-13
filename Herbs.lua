@@ -39,6 +39,7 @@ end
 local function Say(k, text)
     AlbaLast = GetTime()
     Mark(k)
+    ns.Heard(k)
     PlaySoundFile(ns.VoicePath(k, DIR .. k .. ".mp3"), "Dialog")
     DEFAULT_CHAT_FRAME:AddMessage("|cff9fd3a8" .. text .. "|r")
 end

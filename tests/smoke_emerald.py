@@ -212,4 +212,12 @@ ids = ["clearing", "moonwell", "vigil"]
 assert all(ids.index(first[i + 1]) == (ids.index(first[i]) + 1) % 3 for i in range(3)), cycle   # in turn
 lua.execute("ShandoDream = 'moonwell'")
 assert lua.eval("function(ns) return ns.PickDream().id end")(ns) == "moonwell"
+
+# the lifetime tally (ShandoHeard, ShandoHeardLog) counts every line said, and the log keeps only the newest
+lua.execute("ShandoHeard, ShandoHeardLog = {}, {}")
+heard = lua.eval("function(ns) now = now + 5 ns.Heard('a') now = now + 5 ns.Heard('a') ns.Heard('b') "
+                 "local h = ShandoHeard.a return h[1], h[3] - h[2], ShandoHeard.b[1], #ShandoHeardLog, ShandoHeardLog[3] end")(ns)
+assert tuple(heard)[:4] == (2, 5, 1, 3) and tuple(heard)[4].startswith("b "), tuple(heard)
+lua.eval("function(ns) for i = 1, 2100 do ns.Heard('x') end end")(ns)
+assert lua.eval("#ShandoHeardLog") == 2000 and lua.eval("ShandoHeard.x[1]") == 2100
 print("emerald dream checks pass")

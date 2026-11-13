@@ -60,6 +60,19 @@ local function Mark(k)
     ShandoSaid[k] = s
 end
 
+-- A lifetime tally of every line she speaks, for auditing which lines come up too often (the backoff tables above
+-- forget after a day): ShandoHeard[key] = { times said, first unix time, last unix time }, and ShandoHeardLog, the
+-- last HEARD_LOG lines said, oldest first, as "key unixtime". Per character; nothing is sent anywhere.
+local HEARD_LOG = 2000
+ShandoHeard, ShandoHeardLog = {}, {}  -- replaced by the saved tables when they load
+function ns.Heard(k)
+    local now, h = time(), ShandoHeard[k]
+    if h then h[1], h[3] = h[1] + 1, now else ShandoHeard[k] = { 1, now, now } end
+    local log = ShandoHeardLog
+    log[#log + 1] = k .. " " .. now
+    if #log > HEARD_LOG then table.remove(log, 1) end
+end
+
 local function Pick(kind)
     if not bag[kind] or #bag[kind] == 0 then
         bag[kind] = {}
@@ -114,6 +127,7 @@ local function Say(kind, opts)
     if not l then return end
     AlbaLast, said[kind] = GetTime(), GetTime()
     Mark(l[1])
+    ns.Heard(l[1])
     local function Voice()
         PlaySoundFile(ns.VoicePath(l[1], DIR .. "sounds\\" .. l[1] .. ".mp3"), "Dialog")
         DEFAULT_CHAT_FRAME:AddMessage("|cffb8c8ff" .. l[2] .. "|r")
@@ -584,6 +598,7 @@ local function Emerald(d)
             else
                 AlbaLast = GetTime()   -- Herbalore keeps its distance
                 Mark(what)
+                ns.Heard(what)
                 -- keep the handle: moving fades this line out before she says you've come back (DreamStop)
                 r.voice = select(2, PlaySoundFile(ns.VoicePath(what, DIR .. "sounds\\" .. what .. ".mp3"), "Dialog"))
                 Caption(LineText(d.kind, what))
