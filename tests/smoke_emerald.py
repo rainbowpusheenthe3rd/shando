@@ -236,4 +236,27 @@ assert other(ns, "Chalice-Moonwater", None, False) is False               # your
 assert other(ns, "", None, False) is False and other(ns, None, None, False) is False
 assert other(ns, "Kobold Miner", "Kobold Miner", True) is False           # an enemy targeted: the buff went to you
 assert lua.eval("#ShandoKindLog") == 6 and lua.eval("ShandoKindLog[1]").endswith("Thrall -> other")
+
+# which line (ns.PickLeast): nine inn lines, five visits a session for three sessions. Every line once before any
+# twice, so after 15 visits all nine are heard and exactly six twice; never the same line twice in a row; and
+# lifetime counts carry over, so a new line is said first
+lua.execute("ShandoHeard, ShandoHeardLog = {}, {}")
+picks = lua.eval("""function(ns)
+  local list, out = {}, {}
+  for i = 1, 9 do list[i] = { "inn" .. i, "" } end
+  for _ = 1, 15 do local l = ns.PickLeast(list, "inn") ns.Heard(l[1]) out[#out + 1] = l[1] end
+  list[10] = { "inn10", "" }
+  out[#out + 1] = ns.PickLeast(list, "inn")[1]
+  return table.concat(out, ",")
+end""")(ns).split(",")
+counts = sorted(picks[:15].count(f"inn{i}") for i in range(1, 10))
+assert counts == [1, 1, 1, 2, 2, 2, 2, 2, 2], counts
+assert len(set(picks[:9])) == 9, "the first nine visits are nine different lines"
+assert all(a != b for a, b in zip(picks[:15], picks[1:15])), "never twice in a row"
+assert picks[15] == "inn10", picks[15]
+assert lua.eval("function(ns) return ns.PickLeast({}, 'none') end")(ns) is None
+
+# ambient lines get quieter over a cycle of three sessions, then start again: gaps 1x, 2x, 4x, 1x
+backoff = lua.eval("function(ns, s) ShandoSession = s return ns.Backoff() end")
+assert [backoff(ns, s) for s in (0, 1, 2, 3, 4, 7)] == [1, 1, 2, 4, 1, 1]
 print("emerald dream checks pass")

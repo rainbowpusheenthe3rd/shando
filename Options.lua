@@ -70,7 +70,7 @@ local PACE = { 4, 2, 1, 0.5, 0.25 }  -- ShandoPace multiplies every rest: higher
 local PACE_NAME = { "rarely", "less often", "as usual", "more often", "often" }
 local function PaceIndex() for i, p in ipairs(PACE) do if math.abs(p - (ShandoPace or 1)) < 0.01 then return i end end return 3 end
 
-local HERB_PACE = { 3, 2, 1, 0.5 }  -- ShandoHerbPace multiplies every herb line's rest: higher is quieter
+local HERB_PACE = { 3, 2, 1, 0.5 }  -- ShandoHerbPace multiplies how long each herb rests after speaking: higher is quieter
 local HERB_PACE_NAME = { "rarely", "less often", "as usual", "more often" }
 local function HerbPaceIndex()
     for i, p in ipairs(HERB_PACE) do if math.abs(p - (ShandoHerbPace or 1)) < 0.01 then return i end end

@@ -16,13 +16,9 @@ local MAX_PICKS = 400      -- per herb, oldest dropped first
 local lastCalm, skinned = GetTime(), false  -- AlbaLast is shared with the rest of Shan'do: one voice at a time
 ShandoHerbSaid = {}  -- replaced by the saved table when it loads
 
--- Backoff, per line: once a line is said it rests BASE seconds, then twice that, then twice again, so a line you've
--- heard a few times drops out of the evening. Kept per character across /reload; forgotten after FORGET (a new day).
-local BASE, FORGET = 1200, 12 * 3600
-local function Ready(k)
-    local s = ShandoHerbSaid[k]
-    return not s or time() - s[2] > FORGET or time() - s[2] >= BASE * (ShandoHerbPace or 1) * 2 ^ (s[1] - 1)
-end
+-- Today's count per line and per herb (ShandoHerbSaid: key -> { count, unix time }, forgotten after FORGET, a new
+-- day). Which line is said is ns.PickLeast's choice (Shando.lua), from the lifetime tally.
+local FORGET = 12 * 3600
 local function Mark(k)
     local s = ShandoHerbSaid[k]
     if not s or time() - s[2] > FORGET then s = { 0, 0 } end
@@ -30,10 +26,10 @@ local function Mark(k)
     ShandoHerbSaid[k] = s
 end
 
-local HERB_REST = 300  -- seconds a herb rests after one of its lines, doubling each time
+local HERB_REST = 300  -- seconds a herb rests after one of its lines, doubling each time, times ShandoHerbPace
 local function HerbReady(g)
     local s = ShandoHerbSaid[g]
-    return not s or time() - s[2] > FORGET or time() - s[2] >= HERB_REST * 2 ^ (s[1] - 1)
+    return not s or time() - s[2] > FORGET or time() - s[2] >= HERB_REST * (ShandoHerbPace or 1) * 2 ^ (s[1] - 1)
 end
 
 local function Say(k, text)
@@ -44,23 +40,12 @@ local function Say(k, text)
     DEFAULT_CHAT_FRAME:AddMessage("|cff9fd3a8" .. text .. "|r")
 end
 
-local function Heard(k)  -- times this line has been said today
-    local s = ShandoHerbSaid[k]
-    return (s and time() - s[2] <= FORGET) and s[1] or 0
-end
 
--- Say the least-heard line in the list that isn't resting (ties at random), so unheard lines come first.
--- False if every line is resting.
+-- Say the list's least-heard line in your lifetime (ns.PickLeast in Shando.lua: ties at random, unheard lines first,
+-- every line once before any twice). False for an empty list.
 local function SayOne(list)
-    local best, fewest = {}, math.huge
-    for _, c in ipairs(list) do
-        if Ready(c[1]) then
-            local n = Heard(c[1])
-            if n < fewest then best, fewest = { c }, n elseif n == fewest then best[#best + 1] = c end
-        end
-    end
-    if #best == 0 then return false end
-    local c = best[math.random(#best)]
+    local c = ns.PickLeast(list, list)
+    if not c then return false end
     Say(c[1], c[2])
     return true
 end
@@ -162,7 +147,7 @@ f:SetScript("OnEvent", function(_, event, unit, target)
         local gate = "herb:" .. herb
         if HerbReady(gate) and SayOne(ns.HERBS[herb]) then
             Mark(gate)
-        elseif GetTime() - lastCalm > CALM and math.random() < 0.3 and SayOne(ns.HERB_CALM) then
+        elseif GetTime() - lastCalm > CALM * ns.Backoff() and math.random() < 0.3 and SayOne(ns.HERB_CALM) then
             lastCalm = GetTime()
         end
     elseif skin and not ShandoNoSkins and ns.SKIN and #ns.SKIN > 0 then

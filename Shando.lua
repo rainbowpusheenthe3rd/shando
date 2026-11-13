@@ -51,7 +51,6 @@ end
 local SKILL_MILESTONES ={ [75] = true, [150] = true, [225] = true, [300] = true }
 
 local said, zones, still = {}, {}, 0
-local bag = {}  -- per kind, the lines not yet said, so none repeats until all have been
 local started = GetTime()
 local deaths, quietDeathUntil = {}, 0
 local pending  -- a place line that couldn't be said yet (another line too recent); retried while you're there
@@ -62,13 +61,9 @@ local owed = {}  -- once-in-a-life lines (forms, skills) that couldn't be said y
 ShandoSaid = {}  -- replaced by the saved tables when they load
 ShandoOnce = {}
 
--- Backoff, per line: once a line is said it rests BASE seconds, then twice that, then twice again, so a line you've
--- heard a few times drops out of the evening. Kept per character across /reload; forgotten after FORGET (a new day).
-local BASE, FORGET = 1800, 12 * 3600
-local function Ready(k)
-    local s = ShandoSaid[k]
-    return not s or time() - s[2] > FORGET or time() - s[2] >= BASE * 2 ^ (s[1] - 1)
-end
+-- Today's count per line (ShandoSaid: key -> { count, unix time }, forgotten after FORGET), kept for the dream
+-- ritual and the audit. Which line is said is ns.PickLeast's choice, from the lifetime tally below.
+local FORGET = 12 * 3600
 local function Mark(k)
     local s = ShandoSaid[k]
     if not s or time() - s[2] > FORGET then s = { 0, 0 } end
@@ -89,22 +84,34 @@ function ns.Heard(k)
     if #log > HEARD_LOG then table.remove(log, 1) end
 end
 
-local function Pick(kind)
-    if not bag[kind] or #bag[kind] == 0 then
-        bag[kind] = {}
-        for _, l in ipairs(ns.LINES[kind] or {}) do bag[kind][#bag[kind] + 1] = l end
+-- 13 Nov 2026: which line. Of a list, a line heard the fewest times in your whole life with Shan'do (ShandoHeard,
+-- across sessions), dice for ties; so every line is heard once before any is heard twice, all twice before any
+-- three times, and new lines come first. The line said last time from this list isn't said again straight away.
+-- Shared with Herbs.lua. Returns the line, or nil for an empty list.
+local lastOf = {}
+function ns.PickLeast(list, id)
+    local best, fewest = {}, math.huge
+    for _, l in ipairs(list or {}) do
+        local h = ShandoHeard[l[1]]
+        local n = h and h[1] or 0
+        if n < fewest then best, fewest = { l }, n elseif n == fewest then best[#best + 1] = l end
     end
-    local ready, fewest = {}, math.huge  -- of the lines not resting, the least heard today (survives /reload)
-    for i, l in ipairs(bag[kind]) do
-        if Ready(l[1]) then
-            local s = ShandoSaid[l[1]]
-            local n = (s and time() - s[2] <= FORGET) and s[1] or 0
-            if n < fewest then ready, fewest = { i }, n elseif n == fewest then ready[#ready + 1] = i end
-        end
+    if #best > 1 then  -- not the one just said, when there's a choice
+        for i, l in ipairs(best) do if l[1] == lastOf[id] then table.remove(best, i) break end end
     end
-    if #ready == 0 then return end
-    return table.remove(bag[kind], ready[math.random(#ready)])
+    if #best == 0 then return end
+    local l = best[math.random(#best)]
+    lastOf[id] = l[1]
+    return l
 end
+local function Pick(kind) return ns.PickLeast(ns.LINES[kind], kind) end
+
+-- Ambient lines (spoken unprompted, not on an event) get quieter over a cycle of sessions: their gaps are 1x in the
+-- first session, 2x in the second, 4x in the third, then back to 1x. A session is a login; /reload carries it on.
+local AMBIENT = { breath = true, water = true, night = true }
+local CYCLE = 3
+ShandoSession = 0  -- replaced by the saved value when it loads
+function ns.Backoff() return 2 ^ ((math.max(ShandoSession or 1, 1) - 1) % CYCLE) end
 
 local function Quiet()  -- times she never speaks
     return ShandoOff or InCombatLockdown() or IsInInstance() or GetTime() - (AlbaLast or -(ShandoGap or GAP)) < (ShandoGap or GAP)
@@ -138,7 +145,8 @@ end
 -- Say a line of `kind`. opts.sfx plays first and the voice follows opts.delay seconds later.
 local function Say(kind, opts)
     if Quiet() then return end
-    if EVERY[kind] and said[kind] and GetTime() - said[kind] < EVERY[kind] * (ShandoPace or 1) then return end
+    local gap = EVERY[kind] and EVERY[kind] * (ShandoPace or 1) * (AMBIENT[kind] and ns.Backoff() or 1)
+    if gap and said[kind] and GetTime() - said[kind] < gap then return end
     local l = Pick(kind)
     if not l then return end
     AlbaLast, said[kind] = GetTime(), GetTime()
@@ -825,6 +833,7 @@ f:SetScript("OnEvent", function(_, event, a1, a2, a3, a4)
         end
         if a1 then  -- login
             started = GetTime()
+            ShandoSession = (ShandoSession or 0) + 1  -- the ambient lines' cycle (ns.Backoff)
             Music(false)  -- if the game closed mid-meld, put the music back
             C_Timer.After(8, function() Say("login") end)
             C_Timer.After(75, function() LookBack() end)
