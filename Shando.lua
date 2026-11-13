@@ -90,7 +90,7 @@ end
 -- WINDOW sessions (ShandoRepeat = { from = session it began, n = { key = count } }). It drives which line is said and
 -- the backoff below, and starts again from nothing every WINDOW sessions. A session is a login; /reload carries on.
 local WINDOW = 3
-ShandoSession, ShandoRepeat = 0, { from = 0, n = {} }  -- replaced by the saved values when they load
+ShandoSession, ShandoRepeat = 0, nil  -- replaced by the saved values when they load; made at the first login
 function ns.NewSession()
     ShandoSession = (ShandoSession or 0) + 1
     if type(ShandoRepeat) ~= "table" or ShandoSession - (ShandoRepeat.from or 0) >= WINDOW then

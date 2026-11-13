@@ -1,5 +1,24 @@
 # Changelog
 
+## 1.2.0 (13 Nov 2026)
+
+- **Twice as much to say.** 574 new lines, all in her night elf voice: more for breathing, night, Shadowmeld,
+  quests, levelling, flights, new zones, logging in and out, Darnassus, Felwood, inns, swimming, groups,
+  trainers, death, the Dream and vigils, plus new quiet lines for herbalism and skinning. About 1,100 lines in all.
+- **Botany as you gather.** Each herb belongs to a real plant family it's named after or looks like: kelp, moss,
+  lichen, mushrooms, grasses, lilies, lotuses, the daisy family, roots, thorns, or flowering plants in general.
+  Gather a family's herbs and Shan'do teaches a little about it, in three levels that open at 1, 10 and 30
+  gathers: what you can see, how it lives, and where it sits in the long history of plants.
+- **Less repetition.** She now says the line you've heard least, so you hear every line of a kind before any
+  repeats. The count runs across three play sessions, then starts again.
+- **Quieter as lines repeat.** Once you've heard every line of a kind, the wait before that kind speaks again
+  grows 1.6 times with each round of repeats. Kinds with many lines rarely get there.
+- **Kindness, properly.** Buffing yourself no longer counts as a kindness to a stranger, including when an enemy
+  is targeted or your name carries a realm.
+- "Elune-adore" is now said "Elune ador-ey", as night elves say it (seven lines re-recorded).
+- In /emerald dream, moving fades the current line out before she says you've come back.
+- The herbalism pace setting now sets how long each herb rests before it speaks again.
+
 ## 1.1.0 (10 Nov 2026)
 
 - **/emerald dream**: two guided meditations, each about ten minutes of gentle guidance and then about ten of
