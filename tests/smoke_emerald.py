@@ -79,6 +79,7 @@ DEFAULT_CHAT_FRAME = stub({})
 SlashCmdList = {}
 UISpecialFrames = {}
 function print() end
+function GetNumLootItems() return 0 end  -- Herbs.lua: no loot window in these checks
 function hooksecurefunc() end
 frames = {}
 local function region()
@@ -102,7 +103,7 @@ function tick() for _, f in ipairs(frames) do if f.scripts.OnUpdate then f.scrip
 """)
 ns = lua.eval("{}")
 load = lua.eval("function(code, name, ns) return assert(loadstring(code, '@' .. name))('Shando', ns) end")
-for name in ("Lines.lua", "Mine.lua", "Ambience.lua", "Shando.lua"):   # the UI panels aren't needed here
+for name in ("Lines.lua", "Mine.lua", "HerbLines.lua", "Ambience.lua", "Shando.lua", "Herbs.lua"):   # the UI panels aren't needed here
     load((ROOT / name).read_text(encoding="utf-8"), name, ns)
 
 G = lua.globals()
@@ -259,4 +260,40 @@ assert lua.eval("function(ns) return ns.PickLeast({}, 'none') end")(ns) is None
 # ambient lines get quieter over a cycle of three sessions, then start again: gaps 1x, 2x, 4x, 1x
 backoff = lua.eval("function(ns, s) ShandoSession = s return ns.Backoff() end")
 assert [backoff(ns, s) for s in (0, 1, 2, 3, 4, 7)] == [1, 1, 2, 4, 1, 1]
+
+# botany: a herb's group opens level 1 at the first gather, level 2 at 10, level 3 at 30; unknown herbs have none
+pool = lua.eval("""function(ns, herb, n)
+  ShandoBotany = { root = n }
+  local levels = {}
+  for _, l in ipairs(ns.BotanyPool(herb)) do levels[#levels + 1] = l[1]:match("^botany_root(%d)_") end
+  table.sort(levels)
+  return table.concat(levels, "")
+end""")
+assert pool(ns, "Earthroot", 0) == "" and pool(ns, "Earthroot", 1) == "1"
+assert pool(ns, "Liferoot", 9) == "1" and pool(ns, "Liferoot", 10) == "12" and pool(ns, "Golden Sansam", 30) == "123"
+assert pool(ns, "Linen Cloth", 99) == ""
+
+# a whole gather: Earthroot from a node counts towards its group, says the herb's own line first, then, with the
+# herb resting, a root botany line from Shan'do's own sounds folder
+gather = lua.eval("""function(ns)
+  ShandoBotany, ShandoHerbSaid, ShandoOff, AlbaLast = {}, {}, nil, nil
+  function GetNumLootItems() return 1 end
+  function GetLootSlotInfo() return nil, "Earthroot" end
+  function GetLootSourceInfo() return "GameObject-0-1-2-3-4-5" end
+  local herbs
+  for _, fr in ipairs(frames) do local h = fr.scripts.OnEvent if h and debug.getinfo(h, "S").source == "@Herbs.lua" then herbs = fr end end
+  local out = {}
+  for i = 1, 2 do
+    now = now + (i == 1 and 1000 or 100)  -- the second gather inside the herb's 300 s rest
+    local n = #played
+    herbs.scripts.OnEvent(herbs, "LOOT_OPENED")
+    out[i] = n < #played and played[#played].path or "-"
+  end
+  function GetNumLootItems() return 0 end
+  return ShandoBotany.root, out[1], out[2]
+end""")
+n, first, second = gather(ns)
+assert n == 2, n
+assert "sounds\\herbs\\earthroot" in first, first
+assert "sounds\\botany_root1_" in second, second
 print("emerald dream checks pass")

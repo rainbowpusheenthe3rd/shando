@@ -1,5 +1,5 @@
 -- Herbs and skinning (Herbalore, folded into Shan'do 7 Nov 2026). When you gather a herb, the same voice says one of
--- that herb's lines, the least heard first; each line, and each herb, then rests longer every time (Ready, HerbReady).
+-- that herb's lines, the least heard first (ns.PickLeast); each herb then rests longer every time (HerbReady).
 -- Now and then, while you're gathering, a quiet line instead. Skinning has its own few lines: the first skin each
 -- session, then now and then. Never in combat. Each part has its own switch in the settings:
 --   ShandoNoHerbs   herb voices off        ShandoNoSkins   skinning lines off      ShandoHerbPace  how often herbs speak
@@ -11,8 +11,43 @@
 --   ShandoHerbUnknown[name]  anything picked from a node that has no line yet, with a count, so it can get one.
 local _, ns = ...
 local DIR = "Interface\\AddOns\\Shando\\sounds\\herbs\\"
+local SOUNDS = "Interface\\AddOns\\Shando\\sounds\\"  -- Shan'do's own lines, botany among them
 local GAP, CALM = 45, 600  -- seconds: at least GAP between lines (ShandoGap overrides); a quiet line at most every CALM
 local MAX_PICKS = 400      -- per herb, oldest dropped first
+
+-- Botany (13 Nov 2026, docs/lines/BOTANY.md in the studio): each herb sits in the real group it's named for or looks
+-- like, and each group has lines at three levels (ns.LINES["botany:<group>:<level>"]). Gathering a group's herbs
+-- unlocks its levels at BOTANY_UNLOCK gathers (ShandoBotany[group], per character); a new level's lines come first,
+-- since they're the least heard. A botany line takes the place of a herb's own line while that herb rests.
+local BOTANY = {
+    ["Stranglekelp"] = "kelp", ["Grave Moss"] = "moss", ["Frilled Lichen"] = "lichen", ["Ghost Mushroom"] = "fungus",
+    ["Sungrass"] = "grass", ["Khadgar's Whisker"] = "grass", ["Fadeleaf"] = "grass",
+    ["Arthas' Tears"] = "lily", ["Firebloom"] = "lily",
+    ["Purple Lotus"] = "lotus", ["Black Lotus"] = "lotus", ["Death Lotus"] = "lotus",
+    ["Swiftthistle"] = "daisy", ["Mountain Silversage"] = "daisy", ["Gromsblood"] = "daisy", ["Blindweed"] = "daisy",
+    ["Earthroot"] = "root", ["Liferoot"] = "root", ["Golden Sansam"] = "root",
+    ["Briarthorn"] = "thorn", ["Goldthorn"] = "thorn",
+    ["Peacebloom"] = "flower", ["Silverleaf"] = "flower", ["Mageroyal"] = "flower", ["Bruiseweed"] = "flower",
+    ["Wild Steelbloom"] = "flower", ["Kingsblood"] = "flower", ["Wintersbite"] = "flower", ["Dreamfoil"] = "flower",
+    ["Plaguebloom"] = "flower", ["Icecap"] = "flower", ["Marefoil"] = "flower", ["Demonsage"] = "flower",
+    ["Rosecap"] = "flower", ["Stranglevine"] = "flower",
+}
+local BOTANY_UNLOCK = { 1, 10, 30 }  -- gathers of a group's herbs before its level 1, 2, 3 lines can be said
+local BOTANY_EVERY = 900             -- seconds between botany lines
+local lastBotany = -BOTANY_EVERY
+ShandoBotany = {}  -- replaced by the saved table when it loads
+
+-- The botany lines open to you for a herb's group: every level its gathers have reached. Empty if none.
+function ns.BotanyPool(herb)
+    local group, pool = BOTANY[herb], {}
+    if not group then return pool end
+    for level, need in ipairs(BOTANY_UNLOCK) do
+        if (ShandoBotany[group] or 0) >= need then
+            for _, l in ipairs(ns.LINES["botany:" .. group .. ":" .. level] or {}) do pool[#pool + 1] = l end
+        end
+    end
+    return pool
+end
 local lastCalm, skinned = GetTime(), false  -- AlbaLast is shared with the rest of Shan'do: one voice at a time
 ShandoHerbSaid = {}  -- replaced by the saved table when it loads
 
@@ -47,6 +82,20 @@ local function SayOne(list)
     local c = ns.PickLeast(list, list)
     if not c then return false end
     Say(c[1], c[2])
+    return true
+end
+
+-- Say a botany line for the herb's group, if it's time and one is open to you. Its sound is with Shan'do's own
+-- lines (sounds\<key>.mp3), not the herbs'. True if said.
+local function SayBotany(herb)
+    if GetTime() - lastBotany <= BOTANY_EVERY then return false end
+    local l = ns.PickLeast(ns.BotanyPool(herb), "botany")
+    if not l then return false end
+    AlbaLast = GetTime()
+    Mark(l[1])
+    ns.Heard(l[1])
+    PlaySoundFile(ns.VoicePath(l[1], SOUNDS .. l[1] .. ".mp3"), "Dialog")
+    DEFAULT_CHAT_FRAME:AddMessage("|cff9fd3a8" .. l[2] .. "|r")
     return true
 end
 
@@ -138,6 +187,10 @@ f:SetScript("OnEvent", function(_, event, unit, target)
     end
     herb = herb or rare  -- the node's own herb goes in the notebook; a rare find alongside it is what she speaks of
     if herb then Note(herb) HerbaloreSession = (HerbaloreSession or 0) + 1 end  -- read by the look-back
+    for _, h in ipairs({ herb, rare ~= herb and rare or nil }) do
+        local g = BOTANY[h]
+        if g then ShandoBotany[g] = (ShandoBotany[g] or 0) + 1 end
+    end
     if skin then SkinSession = (SkinSession or 0) + 1 end
     if ShandoOff or InCombatLockdown() or GetTime() - (AlbaLast or -(ShandoGap or GAP)) < (ShandoGap or GAP) then return end
     local spoken = rare or herb
@@ -147,6 +200,8 @@ f:SetScript("OnEvent", function(_, event, unit, target)
         local gate = "herb:" .. herb
         if HerbReady(gate) and SayOne(ns.HERBS[herb]) then
             Mark(gate)
+        elseif SayBotany(herb) then
+            lastBotany = GetTime()
         elseif GetTime() - lastCalm > CALM * ns.Backoff() and math.random() < 0.3 and SayOne(ns.HERB_CALM) then
             lastCalm = GetTime()
         end
