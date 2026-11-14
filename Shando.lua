@@ -91,7 +91,7 @@ function ns.Heard(k)
     r[k] = (r[k] or 0) + 1
 end
 
--- The repeat counter (13 Nov 2026, Luke): how many times each line has been heard in the last WINDOW sessions,
+-- The repeat counter (13 Nov 2026): how many times each line has been heard in the last WINDOW sessions,
 -- this one included. It drives which line is said and the backoff below. A session is a login; /reload carries on.
 -- 14 Nov 2026: a rolling window, ShandoRepeat = { s = { [session] = { key = count } } }, oldest session dropped at
 -- each login. The first version wiped every count at once each third login (and, from a save that began at
@@ -144,7 +144,7 @@ function ns.PickLeast(list, id)
 end
 local function Pick(kind) return ns.PickLeast(ns.LINES[kind], kind) end
 
--- Backoff by repeat round (13 Nov 2026, Luke): a list's round is the fewest times any of its lines has been heard in
+-- Backoff by repeat round (13 Nov 2026): a list's round is the fewest times any of its lines has been heard in
 -- this window (the repeat counter). The first time through, a kind's gap is as set; once every line of that kind has
 -- been heard, each round of repeats waits REPEAT_BACKOFF times longer (1, 1.6, 2.56, 4.1...). Resets with the window.
 local REPEAT_BACKOFF = 1.6
