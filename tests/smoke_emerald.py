@@ -236,7 +236,11 @@ assert other(ns, "Chalice", None, False) is False                         # your
 assert other(ns, "Chalice-Moonwater", None, False) is False               # yourself, with a realm
 assert other(ns, "", None, False) is False and other(ns, None, None, False) is False
 assert other(ns, "Kobold Miner", "Kobold Miner", True) is False           # an enemy targeted: the buff went to you
-assert lua.eval("#ShandoKindLog") == 6 and lua.eval("ShandoKindLog[1]").endswith("Thrall -> other")
+assert other(ns, "Chalice Moonwater", None, False) is False               # yourself, by your full Forever name
+assert other(ns, "Chalice Moonwater", "Chalice", False) is False          # yourself, targeted
+assert other(ns, "Chalicea Brook", "Chalicea", False) is True             # a friend whose name only starts like yours
+assert other(ns, "Duvet Aurumstar", "Duvet", False) is True               # a friend, by full name
+assert lua.eval("#ShandoKindLog") == 10 and lua.eval("ShandoKindLog[1]").endswith("Thrall -> other")
 
 # which line (ns.PickLeast): nine inn lines, five visits a session for three sessions. Every line once before any
 # twice, so after 15 visits all nine are heard and exactly six twice; never the same line twice in a row; and

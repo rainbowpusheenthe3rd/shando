@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+- **Healing yourself is not a kindness to a stranger.** Forever names your spell's target in full ("First Last")
+  while the game gives your own name as the first name only, so heals on yourself counted as help for someone
+  else and set off the kindness lines. A name now matches its first word too.
+
 ## 1.2.0 (13 Nov 2026)
 
 - **Twice as much to say.** 574 new lines, all in her night elf voice: more for breathing, night, Shadowmeld,

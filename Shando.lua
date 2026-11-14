@@ -36,11 +36,16 @@ local KIND_SPELLS = {  -- cast on someone else: a kindness
 -- `target` is UNIT_SPELLCAST_SENT's target name. It can carry a realm ("Name-Realm"), so names are compared without
 -- one; and with a hostile target selected, a buff goes to the caster though the event may still name the target, so
 -- a hostile or attackable target never counts. Each decision is kept in ShandoKindLog (the last 30) to check in game.
+-- On Forever the event names a character in full ("Chalice Moonwater") while UnitName gives the first name only
+-- ("Chalice"); 14 Nov 2026 the log showed self-heals counted as kindness. So a name matches its first word too.
+local function SameName(full, first)
+    return full and first and (full == first or full:sub(1, #first + 1) == first .. " ") or false
+end
 function ns.CastOnOther(target)
     local me = UnitName("player")
     local short = target and target ~= "" and (Ambiguate and Ambiguate(target, "short") or target:match("^[^-]+"))
-    local hostile = short and UnitExists("target") and UnitName("target") == short and UnitCanAttack("player", "target")
-    local other = short and short ~= me and not hostile or false
+    local hostile = short and UnitExists("target") and SameName(short, UnitName("target")) and UnitCanAttack("player", "target")
+    local other = short and not SameName(short, me) and not hostile or false
     ShandoKindLog = ShandoKindLog or {}
     local log = ShandoKindLog
     log[#log + 1] = ("%d %s -> %s"):format(time(), tostring(target), other and "other" or "self")
