@@ -91,24 +91,37 @@ function ns.Heard(k)
     r[k] = (r[k] or 0) + 1
 end
 
--- The repeat counter (13 Nov 2026, Luke): how many times each line has been heard in the current window of
--- WINDOW sessions (ShandoRepeat = { from = session it began, n = { key = count } }). It drives which line is said and
--- the backoff below, and starts again from nothing every WINDOW sessions. A session is a login; /reload carries on.
+-- The repeat counter (13 Nov 2026, Luke): how many times each line has been heard in the last WINDOW sessions,
+-- this one included. It drives which line is said and the backoff below. A session is a login; /reload carries on.
+-- 14 Nov 2026: a rolling window, ShandoRepeat = { s = { [session] = { key = count } } }, oldest session dropped at
+-- each login. The first version wiped every count at once each third login (and, from a save that began at
+-- session 0, after only two), so a line heard the session before came round again as if new ("Rain, river, sea").
 local WINDOW = 3
 ShandoSession, ShandoRepeat = 0, nil  -- replaced by the saved values when they load; made at the first login
+local function Window()  -- the per-session counts; a 13 Nov save ({ from, n }) becomes the latest session's
+    local r = ShandoRepeat
+    if type(r) ~= "table" or type(r.s) ~= "table" then
+        ShandoRepeat = { s = {} }
+        if type(r) == "table" and type(r.n) == "table" then ShandoRepeat.s[ShandoSession or 0] = r.n end
+    end
+    return ShandoRepeat.s
+end
 function ns.NewSession()
     ShandoSession = (ShandoSession or 0) + 1
-    if type(ShandoRepeat) ~= "table" or ShandoSession - (ShandoRepeat.from or 0) >= WINDOW then
-        ShandoRepeat = { from = ShandoSession, n = {} }
-    end
+    local s = Window()
+    for n in pairs(s) do if n <= ShandoSession - WINDOW then s[n] = nil end end
 end
-function ns.Repeats()  -- the window's counts, made if a save from before 13 Nov has none
-    if type(ShandoRepeat) ~= "table" or type(ShandoRepeat.n) ~= "table" then
-        ShandoRepeat = { from = ShandoSession or 0, n = {} }
-    end
-    return ShandoRepeat.n
+function ns.Repeats()  -- this session's counts, where a line heard now is added
+    local s = Window()
+    s[ShandoSession or 0] = s[ShandoSession or 0] or {}
+    return s[ShandoSession or 0]
 end
-local function Count(k) return ns.Repeats()[k] or 0 end
+function ns.Count(k)
+    local n = 0
+    for _, c in pairs(Window()) do n = n + (c[k] or 0) end
+    return n
+end
+local Count = ns.Count
 
 -- 13 Nov 2026: which line. Of a list, a line heard the fewest times in this window of sessions (the repeat counter),
 -- dice for ties; so every line is heard once before any is heard twice, all twice before any three times, and new
@@ -865,7 +878,8 @@ f:SetScript("OnEvent", function(_, event, a1, a2, a3, a4)
         end
         if a1 then  -- login
             started = GetTime()
-            ns.NewSession()  -- the repeat counter's window            Music(false)  -- if the game closed mid-meld, put the music back
+            ns.NewSession()  -- the repeat counter's window
+            Music(false)  -- if the game closed mid-meld, put the music back
             C_Timer.After(8, function() Say("login") end)
             C_Timer.After(75, function() LookBack() end)
             C_Timer.After(40, function()

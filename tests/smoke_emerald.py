@@ -266,18 +266,35 @@ assert lua.eval("function(ns) return ns.PickLeast({}, 'none') end")(ns) is None
 inn = lua.eval("function() local l = {} for i = 1, 9 do l[i] = { 'inn' .. i, '' } end return l end")()
 assert lua.eval("function(ns, l) return ns.Round(l), ns.Backoff(l) end")(ns, inn) == (1, 1.6)
 assert lua.eval("function(ns) return ns.Backoff({ { 'never', '' } }), ns.Backoff({}) end")(ns) == (1, 1)
-lua.execute("for i = 1, 9 do ShandoRepeat.n['inn' .. i] = 3 end")
+lua.execute("for i = 1, 9 do ns_r = ShandoRepeat.s[ShandoSession] ns_r['inn' .. i] = 3 end")
 assert abs(lua.eval("function(ns, l) return ns.Backoff(l) end")(ns, inn) - 1.6 ** 3) < 1e-9
 
-# the repeat counter starts again every three sessions: logins 1-3 share a window, the 4th begins a new one
+# the repeat counter is a rolling window of three sessions: one hearing per login counts 1, 2, 3, then stays at 3
+# as the oldest session drops out; nothing is wiped at once
 win = lua.eval("""function(ns)
   ShandoSession, ShandoRepeat = 0, nil
   local out = {}
-  for s = 1, 7 do ns.NewSession() ns.Heard("w") out[s] = ShandoRepeat.n.w end
+  for s = 1, 7 do ns.NewSession() ns.Heard("w") out[s] = ns.Count("w") end
   return table.concat(out, ",")
 end""")(ns)
-assert win == "1,2,3,1,2,3,1", win
+assert win == "1,2,3,3,3,3,3", win
 assert lua.eval("ShandoHeard.w[1]") == 7, "the lifetime tally keeps counting"
+# heard in session 1 only: still counted in sessions 2 and 3, gone at 4
+gone = lua.eval("""function(ns)
+  ShandoSession, ShandoRepeat = 0, nil
+  local out = {}
+  ns.NewSession() ns.Heard("rain")
+  for s = 1, 3 do ns.NewSession() out[s] = ns.Count("rain") end
+  return table.concat(out, ",")
+end""")(ns)
+assert gone == "1,1,0", gone
+# a 13 Nov save ({ from = 0, n = ... } at session 2) keeps its counts as session 2's, through the next login
+mig = lua.eval("""function(ns)
+  ShandoSession, ShandoRepeat = 2, { from = 0, n = { water15 = 1 } }
+  ns.NewSession()
+  return ns.Count("water15"), ShandoSession
+end""")(ns)
+assert mig == (1, 3), mig
 
 # botany: a herb's group opens level 1 at the first gather, level 2 at 10, level 3 at 30; unknown herbs have none
 pool = lua.eval("""function(ns, herb, n)

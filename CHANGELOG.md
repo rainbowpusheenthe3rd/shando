@@ -5,6 +5,11 @@
 - **Healing yourself is not a kindness to a stranger.** Forever names your spell's target in full ("First Last")
   while the game gives your own name as the first name only, so heals on yourself counted as help for someone
   else and set off the kindness lines. A name now matches its first word too.
+- **A line you heard last session stays heard.** The repeat counter forgot everything at once every third login
+  (sometimes the second), so a line from the session before could come straight back. It now remembers the last
+  three sessions on a rolling basis: each login drops only the oldest.
+- **The meld music comes back after a crash.** A line that restores the game's music if it closed mid-Shadowmeld
+  had been folded into a comment in 1.2.0 and never ran.
 
 ## 1.2.0 (13 Nov 2026)
 
