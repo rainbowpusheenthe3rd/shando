@@ -10,6 +10,8 @@
   three sessions on a rolling basis: each login drops only the oldest.
 - **The meld music comes back after a crash.** A line that restores the game's music if it closed mid-Shadowmeld
   had been folded into a comment in 1.2.0 and never ran.
+- **Skinning lines only when you skin.** Leather gear or scraps looted off a killed cultist set off a line about the
+  animal's warmth leaving the hide. Skinning lines now need your own Skinning cast just before the loot.
 
 ## 1.2.0 (13 Nov 2026)
 

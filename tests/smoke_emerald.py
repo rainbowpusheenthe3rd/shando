@@ -332,3 +332,31 @@ assert n == 2, n
 assert "sounds\\herbs\\earthroot" in first, first
 assert "sounds\\botany_root1_" in second, second
 print("emerald dream checks pass")
+
+# skinning lines need your own Skinning cast just before the loot: leather boots off a cultist's corpse stay quiet
+# (15 Nov 2026, a Twilight Thug), the same leather after a Skinning cast speaks and counts
+skin = lua.eval("""function(ns)
+  ShandoOff, AlbaLast, SkinSession = nil, nil, 0
+  C_Spell = C_Spell or {}
+  C_Spell.GetSpellName = function(id) return ({ [8613] = "Skinning", [5176] = "Wrath" })[id] end
+  function GetNumLootItems() return 1 end
+  function GetLootSlotInfo() return nil, "Patchwork Leather Boots" end
+  function GetLootSourceInfo() return "Creature-0-1-2-3-4-5" end
+  local herbs
+  for _, fr in ipairs(frames) do local h = fr.scripts.OnEvent if h and debug.getinfo(h, "S").source == "@Herbs.lua" then herbs = fr end end
+  now = now + 1000
+  herbs.scripts.OnEvent(herbs, "UNIT_SPELLCAST_SENT", "player", "Twilight Thug", "cast-1", 5176)
+  local n = #played
+  herbs.scripts.OnEvent(herbs, "LOOT_OPENED")
+  local quiet, counted = #played == n, SkinSession
+  now = now + 1000
+  herbs.scripts.OnEvent(herbs, "UNIT_SPELLCAST_SENT", "player", "Nightsaber", "cast-2", 8613)
+  now = now + 2
+  herbs.scripts.OnEvent(herbs, "LOOT_OPENED")
+  function GetNumLootItems() return 0 end
+  return quiet, counted, #played > n and played[#played].path or "-", SkinSession
+end""")
+quiet, counted, said, skins = skin(ns)
+assert quiet and counted == 0, (quiet, counted)
+assert r"sounds\herbs\skin" in said and skins == 1, (said, skins)
+print("skinning checks pass")

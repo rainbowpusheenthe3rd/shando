@@ -104,6 +104,12 @@ local function IsSkin(name)
     return name:find("Leather") or name:find("Hide$") or name:find(" Scale$")
 end
 
+-- Skinning lines need your own Skinning cast just before the loot (15 Nov 2026: a Twilight Thug's corpse loot, most
+-- likely leather gear or scraps, had her speak of the animal's warmth leaving the hide). The cast's spell is named
+-- "Skinning" whatever the rank; its loot comes from the same corpse as the kill's, so the loot alone can't tell them.
+local SKIN_WINDOW = 15            -- seconds from the Skinning cast to its loot
+local skinnedAt
+
 local function Where()
     local map = C_Map and C_Map.GetBestMapForUnit("player")
     local pos = map and C_Map.GetPlayerMapPosition(map, "player")
@@ -151,9 +157,12 @@ local f = CreateFrame("Frame")
 f:RegisterEvent("LOOT_OPENED")
 f:RegisterEvent("PLAYER_LOGIN")
 f:RegisterEvent("UNIT_SPELLCAST_SENT")
-f:SetScript("OnEvent", function(_, event, unit, target)
+f:SetScript("OnEvent", function(_, event, unit, target, _, spellID)
     if event == "UNIT_SPELLCAST_SENT" then
         if unit == "player" and type(target) == "string" and Mineral(target) then mined, minedAt = target, GetTime() end
+        local spell = unit == "player" and spellID and not (issecretvalue and issecretvalue(spellID))
+            and ((C_Spell and C_Spell.GetSpellName and C_Spell.GetSpellName(spellID)) or (GetSpellInfo and GetSpellInfo(spellID)))
+        if spell == "Skinning" then skinnedAt = GetTime() end
         return
     end
     if event == "LOOT_OPENED" and mined and GetTime() - minedAt < 15 and FromNode() then
@@ -181,7 +190,7 @@ f:SetScript("OnEvent", function(_, event, unit, target)
             elseif node then
                 ShandoHerbUnknown = ShandoHerbUnknown or {}
                 ShandoHerbUnknown[name] = (ShandoHerbUnknown[name] or 0) + 1
-            elseif IsSkin(name) then
+            elseif IsSkin(name) and skinnedAt and GetTime() - skinnedAt < SKIN_WINDOW then
                 skin = true
             end
         end
