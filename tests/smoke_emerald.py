@@ -239,7 +239,7 @@ assert other(ns, "Kobold Miner", "Kobold Miner", True) is False           # an e
 assert other(ns, "Chalice Moonwater", None, False) is False               # yourself, by your full Forever name
 assert other(ns, "Chalice Moonwater", "Chalice", False) is False          # yourself, targeted
 assert other(ns, "Chalicea Brook", "Chalicea", False) is True             # a friend whose name only starts like yours
-assert other(ns, "Duvet Aurumstar", "Duvet", False) is True               # a friend, by full name
+assert other(ns, "Rowan Ashgrove", "Rowan", False) is True               # a friend, by full name
 assert lua.eval("#ShandoKindLog") == 10 and lua.eval("ShandoKindLog[1]").endswith("Thrall -> other")
 
 # which line (ns.PickLeast): nine inn lines, five visits a session for three sessions. Every line once before any
@@ -295,6 +295,16 @@ mig = lua.eval("""function(ns)
   return ns.Count("water15"), ShandoSession
 end""")(ns)
 assert mig == (1, 3), mig
+# the line chosen counts her whole life, not the window: a line heard five logins ago is not said again while
+# any of its list is unheard (15 Nov 2026: meld lines came back after three logins with 23 of 30 never said)
+old = lua.eval("""function(ns)
+  ShandoSession, ShandoRepeat, ShandoHeard = 0, nil, {}
+  local list, out = {}, {}
+  for i = 1, 12 do list[i] = { "m" .. i, "" } end
+  for s = 1, 12 do ns.NewSession() for _ = 1, 3 do ns.NewSession() end local l = ns.PickLeast(list, "meld") ns.Heard(l[1]) out[s] = l[1] end
+  return table.concat(out, ",")
+end""")(ns).split(",")
+assert len(set(old)) == 12, old
 
 # botany: a herb's group opens level 1 at the first gather, level 2 at 10, level 3 at 30; unknown herbs have none
 pool = lua.eval("""function(ns, herb, n)

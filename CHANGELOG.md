@@ -2,16 +2,22 @@
 
 ## Unreleased
 
-- **Healing yourself is not a kindness to a stranger.** Forever names your spell's target in full ("First Last")
-  while the game gives your own name as the first name only, so heals on yourself counted as help for someone
-  else and set off the kindness lines. A name now matches its first word too.
-- **A line you heard last session stays heard.** The repeat counter forgot everything at once every third login
-  (sometimes the second), so a line from the session before could come straight back. It now remembers the last
-  three sessions on a rolling basis: each login drops only the oldest.
-- **The meld music comes back after a crash.** A line that restores the game's music if it closed mid-Shadowmeld
-  had been folded into a comment in 1.2.0 and never ran.
-- **Skinning lines only when you skin.** Leather gear or scraps looted off a killed cultist set off a line about the
-  animal's warmth leaving the hide. Skinning lines now need your own Skinning cast just before the loot.
+### Bug fixes
+
+- Fixed an issue where Shan'do would kneel over a freshly defeated Twilight cultist and speak softly of the animal's
+  warmth leaving the hide. It was his trousers. Skinning lines now wait for your own Skinning cast just before the
+  loot.
+- Fixed an issue where healing yourself counted as a kindness to a stranger. Shan'do was very moved that you had
+  helped someone, and that someone was you. Forever names your spell's target in full while the game gives your own
+  name as the first name only; a name now matches on its first word too.
+- Shan'do's memory has been improved. She forgot everything she'd said every third login (sometimes the second),
+  and once that was fixed she still forgot any line older than three logins, so she'd mention the night birds again
+  with 36 night lines she had never said still waiting their turn. She now picks the line you've heard fewest times
+  across all your play, so every line is heard once before any comes round twice. The three-session count now only
+  sets how long she waits between repeats once a kind's lines have all been heard.
+- Fixed an issue where the game's music didn't come back if the game closed mid-Shadowmeld. The line that restores
+  it was folded into a comment in 1.2.0, where it stayed perfectly still and unseen, as Shadowmeld intends.
+- Mageroyal is now said "Mage royal", as the game says it. The flower has been informed.
 
 ## 1.2.0 (13 Nov 2026)
 

@@ -123,15 +123,21 @@ function ns.Count(k)
 end
 local Count = ns.Count
 
--- 13 Nov 2026: which line. Of a list, a line heard the fewest times in this window of sessions (the repeat counter),
--- dice for ties; so every line is heard once before any is heard twice, all twice before any three times, and new
--- lines come first. The line said last time from this list isn't said again straight away.
--- Shared with Herbs.lua. Returns the line, or nil for an empty list.
+-- 13 Nov 2026: which line. Of a list, a line heard the fewest times, dice for ties; so every line is heard once
+-- before any is heard twice, all twice before any three times, and new lines come first. The line said last time
+-- from this list isn't said again straight away. Shared with Herbs.lua. Returns the line, or nil for an empty list.
+-- 15 Nov 2026: counted over her whole life (ShandoHeard), not the three-session window. The window forgot a line
+-- three logins on, a day or so of play, so lines came back while most of their list was still unheard (13 of 127
+-- in Chalice's log: meld 7 of 30 heard, two of them twice). The window now only paces the backoff below.
+local function Lifetime(k)
+    local h = ShandoHeard[k]
+    return h and h[1] or 0
+end
 local lastOf = {}
 function ns.PickLeast(list, id)
     local best, fewest = {}, math.huge
     for _, l in ipairs(list or {}) do
-        local n = Count(l[1])
+        local n = Lifetime(l[1])
         if n < fewest then best, fewest = { l }, n elseif n == fewest then best[#best + 1] = l end
     end
     if #best > 1 then  -- not the one just said, when there's a choice
