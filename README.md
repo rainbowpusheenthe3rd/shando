@@ -74,7 +74,7 @@ Every line is in `Shando/Lines.lua` and `Shando/HerbLines.lua`. If you'd like to
 
 ## Also
 
-**Herbalore**, the herb voices, is now part of Shan'do (switch it off in the settings). Its own repo stays up for anyone who wants herbs alone: [github.com/rainbowpusheenthe3rd/herbalore](https://github.com/rainbowpusheenthe3rd/herbalore)
+**Herbalore**, the herb voices, is now part of Shan'do (switch it off in the settings). The old Herbalore addon is retired; if you still have it installed, remove it, or Shan'do's herb voices stay quiet so lines never double.
 
 ## Credits
 
