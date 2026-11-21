@@ -26,7 +26,7 @@ voiced night elf voice. Open source, no adverts.
 - **The places that matter.** The first visit to each of 25 sacred or storied places, from Shadowglen to
   Winterspring, gets a soft swell and one line. Felwood is *wounded, not wicked*.
 - **Rituals you choose.** Shadowmeld meditation, /sleep in a barrow den, /kneel or /pray under the moon, and
-  **/emerald dream**: two guided meditations of about ten minutes each that end beside a pond of frogs.
+  **/emerald dream**: three guided meditations, of ten to twenty-two minutes, that end beside a pond of frogs.
 - **The good you do, noticed.** Healing or blessing a stranger (not yourself) gets a bell and a word. Groups,
   trainers, levels, new forms and finished quests each have their own lines.
 - **Gentle on hard days.** One word when you fall, one about rest after several falls, then quiet. Late at night,

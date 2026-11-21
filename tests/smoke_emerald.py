@@ -188,6 +188,16 @@ assert len([c for c in G.captions.values() if c != HINT]) == 20
 beds = [p.path.split("\\")[-1] for p in G.played.values() if p.path.endswith(("vigil.mp3", "meld.mp3"))]
 assert beds and set(beds) == {"vigil.mp3"}, beds
 lua.execute("SlashCmdList.EMERALD('dream') advance(now + 10)")
+
+# The acorn: its own twenty-eight lines in order, captioned, then the swamp frogs (meld)
+lua.execute("played = {} captions = {} ShandoDream = 'acorn' SlashCmdList.EMERALD('dream')")
+lua.execute("for i = 1, 1400 do advance(now + 1) tick() end")
+spoken = [p.path.split("\\")[-1] for p in G.played.values() if "sounds" in p.path]
+assert spoken == [f"oak{i:02d}.mp3" for i in range(1, 29)], spoken
+assert len([c for c in G.captions.values() if c != HINT]) == 28
+beds = [p.path.split("\\")[-1] for p in G.played.values() if p.path.endswith(("vigil.mp3", "meld.mp3"))]
+assert beds and set(beds) == {"meld.mp3"}, beds
+lua.execute("SlashCmdList.EMERALD('dream') advance(now + 10)")
 lua.execute("ShandoDream = 'clearing'")
 
 # a second /emerald stops it, fading the sound back

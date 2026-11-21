@@ -479,7 +479,7 @@ local function TickRitual(now)  -- keep the bed looping; end it when you move, f
     if ritual.name == "emerald" and (moved or InCombatLockdown()) and ns.DreamStop then
         return ns.DreamStop(InCombatLockdown() and "combat" or "moved")
     end
-    local limit = ritual.name == "emerald" and 1300 or 600
+    local limit = ritual.limit or 600   -- a meditation sets its own: its last step plus a margin
     if ShandoOff or moved or InCombatLockdown() or now - ritual.t0 > limit then EndRitual(InCombatLockdown()) return end
 end
 
@@ -613,6 +613,20 @@ ns.DREAMS = {
         { 556, "well16" }, { 600, "well17" }, { 624, "well18" }, { 644, "bell" }, { 648, "well19" },
         { 666, "well20" }, { 670, "frogs" }, { 1150, "fade" }, { 1200, "end" },
     } },
+    -- An old oak: grounding through its roots, then acorn, bramble, oak and stag beetle, each sheltering the next
+    -- (jays, root before leaf, "the thorn is the mother of the oak", 40 years to its first acorns, larvae 3-7 years
+    -- in dead wood: Woodland Trust, RHS, PTES, NBN, Knepp), a wish for yourself and for someone beginning something.
+    -- About 22 minutes of guidance, twice the others, so moving still ends it at any point; then the summer-swamp
+    -- frogs for 3 minutes, not 8, to end by 26 minutes: idle-logout reports run from 15-20 to 30 (see above).
+    { id = "acorn", name = "The acorn", kind = "oak", frogs = "meld", steps = {
+        { 0, "bell" }, { 8, "oak01" }, { 52, "oak02" }, { 92, "oak03" }, { 140, "oak04" }, { 208, "oak05" },
+        { 280, "oak06" }, { 372, "oak07" }, { 412, "oak08" }, { 460, "oak09" }, { 510, "oak10" },
+        { 556, "oak11" }, { 590, "oak12" }, { 636, "oak13" }, { 690, "oak14" }, { 740, "oak15" },
+        { 790, "oak16" }, { 840, "oak17" }, { 892, "oak18" }, { 940, "oak19" }, { 988, "oak20" },
+        { 1040, "oak21" }, { 1090, "oak22" }, { 1140, "oak23" }, { 1190, "oak24" }, { 1250, "oak25" },
+        { 1280, "oak26" }, { 1310, "bell" }, { 1314, "oak27" }, { 1336, "oak28" }, { 1340, "frogs" },
+        { 1520, "fade" }, { 1570, "end" },
+    } },
 }
 local FADE = 45   -- seconds: the frogs fade out as the game's music comes back
 local function LineText(kind, key)   -- its own kind first; a line shared with another meditation is found anyway
@@ -639,6 +653,7 @@ local function Emerald(d)
     BeginRitual("emerald", nil, { 0.03, 0.14, 0.07, 0.45 })   -- the Dream's green at the edges
     local r = ritual
     r.base = 0.45
+    r.limit = d.steps[#d.steps][1] + 100   -- was a fixed 1300 s, which cut The acorn off before its farewell
     WorldHush(true, 6)
     caption.hint.fading = nil
     FadeTo(caption.hint, 0.55, 3)

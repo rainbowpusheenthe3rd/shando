@@ -1,5 +1,19 @@
 # Changelog
 
+## Unreleased
+
+### New
+
+- A third meditation, The acorn: about twenty-two minutes beneath an old oak. Jays forget where they buried their
+  acorns, brambles guard the seedlings from deer, an oak takes forty years to bear its first acorn, and when it falls
+  at last a stag beetle's young spend years inside it, turning it back into soil. Every great oak was once just an
+  acorn seed. Choose it in the options, or let Random find it.
+
+### Bug fixes
+
+- Meditations now end when their own script does. Every one used to stop at a fixed 21 minutes, which would have
+  left The acorn's farewell unsaid.
+
 ## 1.2.1 (15 Nov 2026)
 
 ### Bug fixes
