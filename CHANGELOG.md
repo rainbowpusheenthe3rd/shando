@@ -9,7 +9,8 @@
   at last a stag beetle's young spend years inside it, turning it back into soil. Every great oak was once just an
   acorn seed. Choose it in the options, or let Random find it.
 - With Homeland installed, a meditation can dress the minimap in its own wreath from the first bell until the frogs
-  fade, then give you back your own. Without Homeland nothing changes. The wreaths are still being painted.
+  fade, then give you back your own. Without Homeland nothing changes. The acorn has one already: oak, acorns,
+  bramble and stag beetles.
 
 ### Bug fixes
 
