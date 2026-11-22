@@ -15,38 +15,78 @@ local SOUNDS = "Interface\\AddOns\\Shando\\sounds\\"  -- Shan'do's own lines, bo
 local GAP, CALM = 45, 600  -- seconds: at least GAP between lines (ShandoGap overrides); a quiet line at most every CALM
 local MAX_PICKS = 400      -- per herb, oldest dropped first
 
--- Botany (13 Nov 2026, docs/lines/BOTANY.md in the studio): each herb sits in the real group it's named for or looks
--- like, and each group has lines at three levels (ns.LINES["botany:<group>:<level>"]). Gathering a group's herbs
--- unlocks its levels at BOTANY_UNLOCK gathers (ShandoBotany[group], per character); a new level's lines come first,
--- since they're the least heard. A botany line takes the place of a herb's own line while that herb rests.
-local BOTANY = {
-    ["Stranglekelp"] = "kelp", ["Grave Moss"] = "moss", ["Frilled Lichen"] = "lichen", ["Ghost Mushroom"] = "fungus",
-    ["Sungrass"] = "grass", ["Khadgar's Whisker"] = "grass", ["Fadeleaf"] = "grass",
-    ["Arthas' Tears"] = "lily", ["Firebloom"] = "lily",
-    ["Purple Lotus"] = "lotus", ["Black Lotus"] = "lotus", ["Death Lotus"] = "lotus",
-    ["Swiftthistle"] = "daisy", ["Mountain Silversage"] = "daisy", ["Gromsblood"] = "daisy", ["Blindweed"] = "daisy",
-    ["Earthroot"] = "root", ["Liferoot"] = "root", ["Golden Sansam"] = "root",
-    ["Briarthorn"] = "thorn", ["Goldthorn"] = "thorn",
-    ["Peacebloom"] = "flower", ["Silverleaf"] = "flower", ["Mageroyal"] = "flower", ["Bruiseweed"] = "flower",
-    ["Wild Steelbloom"] = "flower", ["Kingsblood"] = "flower", ["Wintersbite"] = "flower", ["Dreamfoil"] = "flower",
-    ["Plaguebloom"] = "flower", ["Icecap"] = "flower", ["Marefoil"] = "flower", ["Demonsage"] = "flower",
-    ["Rosecap"] = "flower", ["Stranglevine"] = "flower",
+-- Botany, a Linnaean tree (22 Nov 2026, Luke: "a more linnaean system"; docs/lines/BOTANY.md in the studio). Each
+-- herb sits at the narrowest real taxon its look or name supports (TAXON), and each taxon knows its parent (PARENT),
+-- so a herb's lineage runs from its family up to its kingdom: Peacebloom is daisy family, eudicots, flowering
+-- plants, seed plants, vascular plants, land plants. Every taxon has its own lines (ns.LINES["botany:<taxon>"]), so a
+-- line about flowering plants can come from any flower you pick. Gathering counts towards every taxon in the
+-- lineage (ShandoBotany[taxon], per character); the narrowest unlocks at once, the next at 10 gathers within it, the
+-- rest at 30 (UNLOCK, a spiral: what you see, how it lives, deep time). The herbs are fictional, so every placement
+-- is a resemblance, not a claim about Azeroth. A botany line takes the place of a herb's own line while it rests.
+local PARENT = {
+    mosses = "landplants", vascular = "landplants", seedplants = "vascular", angiosperms = "seedplants",
+    monocots = "angiosperms", eudicots = "angiosperms",
+    grasses = "monocots", lilies = "monocots", amaryllis = "monocots",
+    lotus = "eudicots", rose = "eudicots", daisy = "eudicots", mint = "eudicots", ginseng = "eudicots",
+    mushrooms = "fungi", lichens = "fungi",
+    -- landplants, fungi and kelp (brown algae, not plants at all) are roots of their own
 }
-local BOTANY_UNLOCK = { 1, 10, 30 }  -- gathers of a group's herbs before its level 1, 2, 3 lines can be said
-local BOTANY_EVERY = 900             -- seconds between botany lines
+local TAXON = {
+    ["Peacebloom"] = "daisy", ["Wilted Peacebloom"] = "daisy", ["Swiftthistle"] = "daisy",
+    ["Mageroyal"] = "rose", ["Briarthorn"] = "rose",
+    ["Dreamfoil"] = "mint", ["Mountain Silversage"] = "mint", ["Demonsage"] = "mint",
+    ["Golden Sansam"] = "ginseng",
+    ["Purple Lotus"] = "lotus", ["Black Lotus"] = "lotus", ["Death Lotus"] = "lotus",
+    ["Sungrass"] = "grasses", ["Firebloom"] = "lilies", ["Arthas' Tears"] = "lilies", ["Wintersbite"] = "amaryllis",
+    ["Silverleaf"] = "eudicots", ["Stunted Silverleaf"] = "eudicots", ["Bruiseweed"] = "eudicots",
+    ["Wild Steelbloom"] = "eudicots", ["Kingsblood"] = "eudicots", ["Goldthorn"] = "eudicots",
+    ["Khadgar's Whisker"] = "eudicots", ["Blindweed"] = "eudicots", ["Gromsblood"] = "eudicots",
+    ["Fadeleaf"] = "angiosperms", ["Icecap"] = "angiosperms", ["Plaguebloom"] = "angiosperms",
+    ["Marefoil"] = "angiosperms", ["Rosecap"] = "angiosperms", ["Stranglevine"] = "angiosperms",
+    ["Commonplace Herb Seeds"] = "seedplants", ["Uncommon Herb Seeds"] = "seedplants",
+    ["Unusual Herb Seeds"] = "seedplants", ["Scarce Herb Seeds"] = "seedplants", ["Timberling Sprout"] = "seedplants",
+    ["Earthroot"] = "vascular", ["Liferoot"] = "vascular",
+    ["Grave Moss"] = "mosses", ["Ghost Mushroom"] = "mushrooms", ["Frilled Lichen"] = "lichens",
+    ["Stranglekelp"] = "kelp",
+}
+local UNLOCK = { 1, 10, 30 }  -- gathers within a taxon before its lines open: the narrowest, the next, the rest
+local BOTANY_EVERY = 900      -- seconds between botany lines
 local lastBotany = -BOTANY_EVERY
 ShandoBotany = {}  -- replaced by the saved table when it loads
 
--- The botany lines open to you for a herb's group: every level its gathers have reached. Empty if none.
+-- A herb's lineage, narrowest taxon first; empty for a herb with no place yet.
+function ns.Lineage(herb)
+    local out, t = {}, TAXON[herb]
+    while t do out[#out + 1] = t; t = PARENT[t] end
+    return out
+end
+
+-- Count a gather towards every taxon in the herb's lineage.
+function ns.CountBotany(herb)
+    for _, t in ipairs(ns.Lineage(herb)) do ShandoBotany[t] = (ShandoBotany[t] or 0) + 1 end
+end
+
+-- The botany lines open to you for a herb: each taxon in its lineage whose gathers have reached its unlock.
 function ns.BotanyPool(herb)
-    local group, pool = BOTANY[herb], {}
-    if not group then return pool end
-    for level, need in ipairs(BOTANY_UNLOCK) do
-        if (ShandoBotany[group] or 0) >= need then
-            for _, l in ipairs(ns.LINES["botany:" .. group .. ":" .. level] or {}) do pool[#pool + 1] = l end
+    local pool = {}
+    for i, t in ipairs(ns.Lineage(herb)) do
+        if (ShandoBotany[t] or 0) >= UNLOCK[math.min(i, #UNLOCK)] then
+            for _, l in ipairs(ns.LINES["botany:" .. t] or {}) do pool[#pool + 1] = l end
         end
     end
     return pool
+end
+
+-- Saved counts from the old flat groups (kelp, flower, root...) mean nothing on the tree. On the first login with
+-- the tree, rebuild the counts from the herb notebook (ShandoHerbPicks, account-wide, up to 400 picks per herb), the
+-- closest record there is of what's been gathered, and mark the table as the tree's.
+function ns.MigrateBotany()
+    if ShandoBotany.tree then return end
+    local fresh = { tree = 1 }
+    ShandoBotany = fresh
+    for herb, picks in pairs(ShandoHerbPicks or {}) do
+        for _ = 1, #picks do ns.CountBotany(herb) end
+    end
 end
 local lastCalm, skinned = GetTime(), false  -- AlbaLast is shared with the rest of Shan'do: one voice at a time
 ShandoHerbSaid = {}  -- replaced by the saved table when it loads
@@ -183,6 +223,7 @@ f:SetScript("OnEvent", function(_, event, unit, target, _, spellID)
         mined = nil
     end
     if event == "PLAYER_LOGIN" then
+        ns.MigrateBotany()
         if HerbaloreToo() then
             -- In her voice (chat only, no recording): she steps back so the herbs' other voice can speak. The plain
             -- note after it, in grey, is the only out-of-world text.
@@ -210,10 +251,7 @@ f:SetScript("OnEvent", function(_, event, unit, target, _, spellID)
     end
     herb = herb or rare  -- the node's own herb goes in the notebook; a rare find alongside it is what she speaks of
     if herb then Note(herb) HerbaloreSession = (HerbaloreSession or 0) + 1 end  -- read by the look-back
-    for _, h in ipairs({ herb, rare ~= herb and rare or nil }) do
-        local g = BOTANY[h]
-        if g then ShandoBotany[g] = (ShandoBotany[g] or 0) + 1 end
-    end
+    for _, h in ipairs({ herb, rare ~= herb and rare or nil }) do ns.CountBotany(h) end
     if skin then SkinSession = (SkinSession or 0) + 1 end
     if ShandoOff or InCombatLockdown() or GetTime() - (AlbaLast or -(ShandoGap or GAP)) < (ShandoGap or GAP) then return end
     local spoken = rare or herb

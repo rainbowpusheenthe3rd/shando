@@ -883,94 +883,58 @@ ns.LINES = {
         { "well19", "Ishnu-alah, thero'shan. The well will keep your light. Come back to it whenever you like." },
         { "well20", "And now, the pond. Frogs at the water's edge, singing the evening in. Stay with them as long as you like." },
     },
-    ["botany:kelp:1"] = {
+    ["botany:kelp"] = {
         { "botany_kelp1_1", "The whole kelp feeds through its long blades. Those fingers at its base only hold on." },
-    },
-    ["botany:kelp:2"] = {
         { "botany_kelp2_1", "Kelp floats itself towards the light. Little bladders of gas along its blades keep it reaching up." },
-    },
-    ["botany:kelp:3"] = {
         { "botany_kelp3_1", "Kelp and the green plants found their size separately. Their last shared ancestor was a single cell." },
     },
-    ["botany:moss:1"] = {
+    ["botany:mosses"] = {
         { "botany_moss1_1", "Moss grows in cushions to hold water between its stems, like a sponge that keeps itself wet." },
-    },
-    ["botany:moss:2"] = {
         { "botany_moss2_1", "Moss's next generation swims. On a wet day, tiny cells cross the leaves in a film of water to find each other." },
-    },
-    ["botany:moss:3"] = {
         { "botany_moss3_1", "Moss is kin to the first green things that crept out of the water, long before any tree stood up." },
     },
-    ["botany:lichen:1"] = {
+    ["botany:lichens"] = {
         { "botany_lichen1_1", "Lichen can be frozen, dried out and baked by the sun, and still carry on. Few living things are tougher." },
-    },
-    ["botany:lichen:2"] = {
         { "botany_lichen2_1", "A lichen has no roots and can't choose what falls on it. It takes in whatever the rain brings." },
-    },
-    ["botany:lichen:3"] = {
         { "botany_lichen3_1", "Soil begins like this: lichen on bare stone, crumbling it a little each year." },
     },
-    ["botany:fungus:1"] = {
+    ["botany:mushrooms"] = {
         { "botany_fungus1_1", "Look under the cap. Those thin gills are where the spores are made, more than anyone could count." },
     },
-    ["botany:fungus:2"] = {
+    ["botany:fungi"] = {
         { "botany_fungus2_1", "Many mushrooms make no food from light. They feed on what has died, and turn it back into soil." },
-    },
-    ["botany:fungus:3"] = {
         { "botany_fungus3_1", "Fungi are closer kin to us, and to every beast, than to any plant." },
     },
-    ["botany:grass:2"] = {
+    ["botany:grasses"] = {
         { "botany_grass2_1", "A grass makes far more pollen than it needs. The wind loses almost all of it, and a little is enough." },
-    },
-    ["botany:grass:3"] = {
         { "botany_grass3_1", "Grass and grazing beasts grew up together. Grass learned to regrow from the base; the beasts grew taller teeth to grind it." },
     },
-    ["botany:lily:1"] = {
+    ["botany:monocots"] = {
         { "botany_lily1_1", "Count the petals on a flower like this. They often come in threes, or threes twice over." },
-    },
-    ["botany:lily:2"] = {
         { "botany_lily2_1", "Look at the leaf veins: they run side by side, all the way along, like grass." },
-    },
-    ["botany:lily:3"] = {
         { "botany_lily3_1", "Lilies and grasses are cousins. Both sprout with a single first leaf, where most flowers start with two." },
     },
-    ["botany:lotus:1"] = {
+    ["botany:lotus"] = {
         { "botany_lotus1_1", "Water rolls off a lotus leaf and takes the dust with it. The leaf cleans itself." },
-    },
-    ["botany:lotus:2"] = {
         { "botany_lotus2_1", "A lotus flower can warm itself, holding its heat steady through a cold night for the insects sleeping inside." },
-    },
-    ["botany:lotus:3"] = {
         { "botany_lotus3_1", "The lotus isn't a water lily. Its nearest living kin are tall trees and dry-country shrubs." },
     },
-    ["botany:daisy:1"] = {
+    ["botany:daisy"] = {
         { "botany_daisy1_1", "What looks like one flower here is really dozens of tiny ones, packed into a single head." },
-    },
-    ["botany:daisy:2"] = {
         { "botany_daisy2_1", "Thistle seeds fly on soft parachutes. A breeze can carry them across a valley." },
-    },
-    ["botany:daisy:3"] = {
         { "botany_daisy3_1", "This family is one of the largest in the green world. Thistles, sages and daisies, all one kin." },
     },
-    ["botany:root:1"] = {
+    ["botany:vascular"] = {
         { "botany_root1_1", "A root grows at its very tip, behind a little cap that wears away as it pushes through the soil." },
-    },
-    ["botany:root:2"] = {
         { "botany_root2_1", "A root like this is a larder. The plant stores the summer's sugar here, to start again next year." },
-    },
-    ["botany:root:3"] = {
         { "botany_root3_1", "Most plants don't feed alone. Fungi wrap their roots and trade water for sugar, a bargain far older than flowers." },
     },
-    ["botany:thorn:2"] = {
+    ["botany:eudicots"] = {
         { "botany_thorn2_1", "Thorns, spines and prickles aren't the same. Thorns were branches, spines were leaves, prickles are only skin." },
     },
-    ["botany:thorn:3"] = {
+    ["botany:angiosperms"] = {
         { "botany_thorn3_1", "Plants can't run, so many learned to defend themselves. Thorns arose again and again, on separate branches of the green family." },
-    },
-    ["botany:flower:2"] = {
         { "botany_flower2_1", "Some flowers change colour once they've been visited, telling the bees to try the next one." },
-    },
-    ["botany:flower:3"] = {
         { "botany_flower3_1", "Flowers are young, as the green world counts time. Moss and fern and pine were old before the first one opened." },
     },
     ["oak"] = {

@@ -434,36 +434,36 @@ vigil9	vigil	The kaldorei have kept vigil like this for thousands of years. This
 vigil10	vigil	The moon waxes and wanes, and always returns. Some things can be trusted.
 vigil11	vigil	Whatever you've carried today, you can rest it here in the moonlight.
 breath28	breath	Feel your heart and let the breath follow.
-botany_kelp1_1	botany:kelp:1	The whole kelp feeds through its long blades. Those fingers at its base only hold on.
-botany_kelp2_1	botany:kelp:2	Kelp floats itself towards the light. Little bladders of gas along its blades keep it reaching up.
-botany_kelp3_1	botany:kelp:3	Kelp and the green plants found their size separately. Their last shared ancestor was a single cell.
-botany_moss1_1	botany:moss:1	Moss grows in cushions to hold water between its stems, like a sponge that keeps itself wet.
-botany_moss2_1	botany:moss:2	Moss's next generation swims. On a wet day, tiny cells cross the leaves in a film of water to find each other.
-botany_moss3_1	botany:moss:3	Moss is kin to the first green things that crept out of the water, long before any tree stood up.
-botany_lichen1_1	botany:lichen:1	Lichen can be frozen, dried out and baked by the sun, and still carry on. Few living things are tougher.
-botany_lichen2_1	botany:lichen:2	A lichen has no roots and can't choose what falls on it. It takes in whatever the rain brings.
-botany_lichen3_1	botany:lichen:3	Soil begins like this: lichen on bare stone, crumbling it a little each year.
-botany_fungus1_1	botany:fungus:1	Look under the cap. Those thin gills are where the spores are made, more than anyone could count.
-botany_fungus2_1	botany:fungus:2	Many mushrooms make no food from light. They feed on what has died, and turn it back into soil.
-botany_fungus3_1	botany:fungus:3	Fungi are closer kin to us, and to every beast, than to any plant.
-botany_grass2_1	botany:grass:2	A grass makes far more pollen than it needs. The wind loses almost all of it, and a little is enough.
-botany_grass3_1	botany:grass:3	Grass and grazing beasts grew up together. Grass learned to regrow from the base; the beasts grew taller teeth to grind it.
-botany_lily1_1	botany:lily:1	Count the petals on a flower like this. They often come in threes, or threes twice over.
-botany_lily2_1	botany:lily:2	Look at the leaf veins: they run side by side, all the way along, like grass.
-botany_lily3_1	botany:lily:3	Lilies and grasses are cousins. Both sprout with a single first leaf, where most flowers start with two.
-botany_lotus1_1	botany:lotus:1	Water rolls off a lotus leaf and takes the dust with it. The leaf cleans itself.
-botany_lotus2_1	botany:lotus:2	A lotus flower can warm itself, holding its heat steady through a cold night for the insects sleeping inside.
-botany_lotus3_1	botany:lotus:3	The lotus isn't a water lily. Its nearest living kin are tall trees and dry-country shrubs.
-botany_daisy1_1	botany:daisy:1	What looks like one flower here is really dozens of tiny ones, packed into a single head.
-botany_daisy2_1	botany:daisy:2	Thistle seeds fly on soft parachutes. A breeze can carry them across a valley.
-botany_daisy3_1	botany:daisy:3	This family is one of the largest in the green world. Thistles, sages and daisies, all one kin.
-botany_root1_1	botany:root:1	A root grows at its very tip, behind a little cap that wears away as it pushes through the soil.
-botany_root2_1	botany:root:2	A root like this is a larder. The plant stores the summer's sugar here, to start again next year.
-botany_root3_1	botany:root:3	Most plants don't feed alone. Fungi wrap their roots and trade water for sugar, a bargain far older than flowers.
-botany_thorn2_1	botany:thorn:2	Thorns, spines and prickles aren't the same. Thorns were branches, spines were leaves, prickles are only skin.
-botany_thorn3_1	botany:thorn:3	Plants can't run, so many learned to defend themselves. Thorns arose again and again, on separate branches of the green family.
-botany_flower2_1	botany:flower:2	Some flowers change colour once they've been visited, telling the bees to try the next one.
-botany_flower3_1	botany:flower:3	Flowers are young, as the green world counts time. Moss and fern and pine were old before the first one opened.
+botany_kelp1_1	botany:kelp	The whole kelp feeds through its long blades. Those fingers at its base only hold on.
+botany_kelp2_1	botany:kelp	Kelp floats itself towards the light. Little bladders of gas along its blades keep it reaching up.
+botany_kelp3_1	botany:kelp	Kelp and the green plants found their size separately. Their last shared ancestor was a single cell.
+botany_moss1_1	botany:mosses	Moss grows in cushions to hold water between its stems, like a sponge that keeps itself wet.
+botany_moss2_1	botany:mosses	Moss's next generation swims. On a wet day, tiny cells cross the leaves in a film of water to find each other.
+botany_moss3_1	botany:mosses	Moss is kin to the first green things that crept out of the water, long before any tree stood up.
+botany_lichen1_1	botany:lichens	Lichen can be frozen, dried out and baked by the sun, and still carry on. Few living things are tougher.
+botany_lichen2_1	botany:lichens	A lichen has no roots and can't choose what falls on it. It takes in whatever the rain brings.
+botany_lichen3_1	botany:lichens	Soil begins like this: lichen on bare stone, crumbling it a little each year.
+botany_fungus1_1	botany:mushrooms	Look under the cap. Those thin gills are where the spores are made, more than anyone could count.
+botany_fungus2_1	botany:fungi	Many mushrooms make no food from light. They feed on what has died, and turn it back into soil.
+botany_fungus3_1	botany:fungi	Fungi are closer kin to us, and to every beast, than to any plant.
+botany_grass2_1	botany:grasses	A grass makes far more pollen than it needs. The wind loses almost all of it, and a little is enough.
+botany_grass3_1	botany:grasses	Grass and grazing beasts grew up together. Grass learned to regrow from the base; the beasts grew taller teeth to grind it.
+botany_lily1_1	botany:monocots	Count the petals on a flower like this. They often come in threes, or threes twice over.
+botany_lily2_1	botany:monocots	Look at the leaf veins: they run side by side, all the way along, like grass.
+botany_lily3_1	botany:monocots	Lilies and grasses are cousins. Both sprout with a single first leaf, where most flowers start with two.
+botany_lotus1_1	botany:lotus	Water rolls off a lotus leaf and takes the dust with it. The leaf cleans itself.
+botany_lotus2_1	botany:lotus	A lotus flower can warm itself, holding its heat steady through a cold night for the insects sleeping inside.
+botany_lotus3_1	botany:lotus	The lotus isn't a water lily. Its nearest living kin are tall trees and dry-country shrubs.
+botany_daisy1_1	botany:daisy	What looks like one flower here is really dozens of tiny ones, packed into a single head.
+botany_daisy2_1	botany:daisy	Thistle seeds fly on soft parachutes. A breeze can carry them across a valley.
+botany_daisy3_1	botany:daisy	This family is one of the largest in the green world. Thistles, sages and daisies, all one kin.
+botany_root1_1	botany:vascular	A root grows at its very tip, behind a little cap that wears away as it pushes through the soil.
+botany_root2_1	botany:vascular	A root like this is a larder. The plant stores the summer's sugar here, to start again next year.
+botany_root3_1	botany:vascular	Most plants don't feed alone. Fungi wrap their roots and trade water for sugar, a bargain far older than flowers.
+botany_thorn2_1	botany:eudicots	Thorns, spines and prickles aren't the same. Thorns were branches, spines were leaves, prickles are only skin.
+botany_thorn3_1	botany:angiosperms	Plants can't run, so many learned to defend themselves. Thorns arose again and again, on separate branches of the green family.
+botany_flower2_1	botany:angiosperms	Some flowers change colour once they've been visited, telling the bees to try the next one.
+botany_flower3_1	botany:angiosperms	Flowers are young, as the green world counts time. Moss and fern and pine were old before the first one opened.
 breath29	breath	The wind comes through the branches, and the branches let it pass. Let your breath pass through you the same way.
 breath30	breath	The grass bends, then stands again. It has done that a thousand times today. Breathe out, and stand easy.
 breath31	breath	A cloud is crossing the sun. The light dims, then returns. Breathe in as it comes back.
