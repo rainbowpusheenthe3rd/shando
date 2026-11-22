@@ -13,6 +13,8 @@
 
 - Meditations now end when their own script does. Every one used to stop at a fixed 21 minutes, which would have
   left The acorn's farewell unsaid.
+- While you gather, the little lessons about each plant family (the botany lines) no longer come round again and
+  again. Each one now rests three days once said. Flowers only had two, and they had come back nine times in a week.
 
 ## 1.2.1 (15 Nov 2026)
 

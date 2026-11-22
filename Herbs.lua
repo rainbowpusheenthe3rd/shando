@@ -85,10 +85,23 @@ local function SayOne(list)
     return true
 end
 
--- Say a botany line for the herb's group, if it's time and one is open to you. Its sound is with Shan'do's own
--- lines (sounds\<key>.mp3), not the herbs'. True if said.
+-- A botany line rests BOTANY_REST once said (22 Nov 2026: each group has one line per level, and the flower group,
+-- which most early herbs are in, only two, so they came back 9 times in 7 days; the backoff forgets after a few
+-- sessions). Rested() keeps the lines of a pool that have rested, from ShandoHeard's last-said time.
+local BOTANY_REST = 3 * 24 * 3600
+function ns.Rested(pool, now)
+    local out = {}
+    for _, l in ipairs(pool) do
+        local h = ShandoHeard and ShandoHeard[l[1]]
+        if not h or now - h[3] >= BOTANY_REST then out[#out + 1] = l end
+    end
+    return out
+end
+
+-- Say a botany line for the herb's group, if it's time and one is open to you and has rested. Its sound is with
+-- Shan'do's own lines (sounds\<key>.mp3), not the herbs'. True if said.
 local function SayBotany(herb)
-    local pool = ns.BotanyPool(herb)
+    local pool = ns.Rested(ns.BotanyPool(herb), time())
     if GetTime() - lastBotany <= BOTANY_EVERY * ns.Backoff(pool) then return false end
     local l = ns.PickLeast(pool, "botany")
     if not l then return false end
