@@ -848,14 +848,14 @@ botany_amaryllis_5	botany:amaryllis	Bees gather more pollen from a hanging snowd
 botany_amaryllis_6	botany:amaryllis	Snowdrops spread into clumps, from seed and from new bulbs budding off the old.
 botany_amaryllis_7	botany:amaryllis	After the flowers fade, the leaves keep working, feeding next year's bulb before they rest.
 botany_amaryllis_8	botany:amaryllis	Garlic and daffodils are kin to the snowdrop. One family, from the kitchen to the first flowers of spring.
-botany_monocots_1	botany:monocots	No plant of this branch makes true wood. Its pipes are scattered through the stem, not set in a ring.
+botany_monocots_1	botany:monocots	No plant of this branch makes true wood. Its veins run scattered through the stem, never gathered in a ring.
 botany_monocots_2	botany:monocots	Their first root dies early and gives way to a tuft of many roots, all much alike.
 botany_monocots_3	botany:monocots	Palms are kin to grass and lily, and their leaves are the largest of any plant.
 botany_monocots_4	botany:monocots	A banana plant's trunk isn't a stem at all. It's leaf bases, rolled tight around each other.
 botany_monocots_5	botany:monocots	Orchids belong to this branch too. Many of them live high on trees, rooted in the bark instead of the soil.
 botany_eudicots_1	botany:eudicots	Plants of this branch come up with two seed leaves, side by side.
 botany_eudicots_2	botany:eudicots	Hold a leaf like this to the light. Its veins branch into a net, not straight lines like grass.
-botany_eudicots_3	botany:eudicots	Cut across a young stem and the pipes sit in a neat ring. That ring is what lets a plant make wood.
+botany_eudicots_3	botany:eudicots	Cut across a young stem and its veins sit in a neat ring. That ring is what lets a plant make wood.
 botany_eudicots_4	botany:eudicots	Most pollen of this branch has three grooves, and botanists name the whole branch for it.
 botany_eudicots_5	botany:eudicots	Three-grooved pollen turns up in stone. The oldest found so far is about a hundred and twenty-three million years old.
 botany_eudicots_6	botany:eudicots	Most of these plants anchor on one main root, growing straight down from the seedling's first.
@@ -934,8 +934,8 @@ botany_mosses_7	botany:mosses	A moss spore first grows into a tangle of green th
 botany_mosses_8	botany:mosses	A young moss capsule wears a little hood and a lid. Both fall away when the spores inside are ready.
 botany_mosses_9	botany:mosses	In the coldest lands, moss is much of what grows. Its threads grip the ground without breaking into the frozen soil.
 botany_mosses_10	botany:mosses	Moss slows the rain from washing soil away, and keeps the small creatures underneath it sheltered.
-botany_vascular_6	botany:vascular	The walls of a plant's water pipes are stiffened with a tough stuff that water can't pass. It's what lets a plant stand tall.
-botany_vascular_7	botany:vascular	Roots came late. The first plants with water pipes seem to have had none at all.
+botany_vascular_6	botany:vascular	The veins that carry a plant's water are walled with a tough stuff water can't pass. It's what lets a plant stand tall.
+botany_vascular_7	botany:vascular	Roots came late. The first plants with veins seem to have had none at all.
 botany_vascular_8	botany:vascular	Leaves were found more than once. Different branches of the green family flattened their shoots into leaves on their own.
 botany_vascular_9	botany:vascular	Coal is old forest. Giant club mosses and horsetails once grew in great swamps, and their bodies became the black stone.
 botany_vascular_10	botany:vascular	A young fern leaf comes up rolled tight, like the head of a fiddle, and slowly unrolls as it grows.
@@ -974,7 +974,7 @@ botany_angiosperms_28	botany:angiosperms	The green cups beneath a flower are its
 botany_angiosperms_29	botany:angiosperms	Some fruits split open to let their seeds go, like a pea pod. Others, like a peach, wait to soften and fall apart.
 botany_eudicots_13	botany:eudicots	Just under a leaf's skin, cells stand packed in columns, like a fence of stakes, catching the light first.
 botany_eudicots_14	botany:eudicots	Beneath the columns, the leaf's cells sit loose with air between them, so the leaf can breathe.
-botany_eudicots_15	botany:eudicots	Cut across a young root of this branch and its water pipes make a cross, an X at the very centre.
+botany_eudicots_15	botany:eudicots	Cut across a young root of this branch and the strands that carry its water make a cross, an X at the very centre.
 botany_eudicots_16	botany:eudicots	Flax is of this branch. Linen is spun from the long fibres in its stem, cells stiffened with the stuff of wood.
 botany_eudicots_17	botany:eudicots	A potato is a swollen underground stem. Its eyes are buds, each ready to grow a new shoot.
 botany_eudicots_18	botany:eudicots	Inside a forming seed of this branch, the young plant is shaped like a tiny heart, its two seed leaves just beginning.
@@ -992,7 +992,7 @@ botany_rose_11	botany:rose	Bite a pear and feel the grit. Those are tiny stone c
 botany_rose_12	botany:rose	Strawberries send runners along the ground. Each one roots where it touches and starts a new plant.
 botany_rose_13	botany:rose	A rose leaf is small leaflets set along a stalk, in pairs, like the barbs of a feather.
 botany_rose_14	botany:rose	A raspberry is many tiny fruits from a single flower, all holding together as one.
-botany_rose_15	botany:rose	Garden roses are often grafted, one rose's stem set on another's roots. In time their pipes join and they grow as one.
+botany_rose_15	botany:rose	Garden roses are often grafted, one rose's stem set on another's roots. In time their veins join and they grow as one.
 botany_daisy_10	botany:daisy	Pull a dandelion and the long root usually snaps. What's left in the ground grows a fresh shoot.
 botany_landplants_13	botany:landplants	Every land plant stores its food as starch, the same way its green ancestors in the water did.
 botany_landplants_14	botany:landplants	The cells of a land plant are joined by tiny channels through their walls, so each can pass things to its neighbour.
