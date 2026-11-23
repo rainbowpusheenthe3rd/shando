@@ -316,20 +316,10 @@ old = lua.eval("""function(ns)
 end""")(ns).split(",")
 assert len(set(old)) == 12, old
 
-# botany: a herb's group opens level 1 at the first gather, level 2 at 10, level 3 at 30; unknown herbs have none
-pool = lua.eval("""function(ns, herb, n)
-  ShandoBotany = { root = n }
-  local levels = {}
-  for _, l in ipairs(ns.BotanyPool(herb)) do levels[#levels + 1] = l[1]:match("^botany_root(%d)_") end
-  table.sort(levels)
-  return table.concat(levels, "")
-end""")
-assert pool(ns, "Earthroot", 0) == "" and pool(ns, "Earthroot", 1) == "1"
-assert pool(ns, "Liferoot", 9) == "1" and pool(ns, "Liferoot", 10) == "12" and pool(ns, "Golden Sansam", 30) == "123"
-assert pool(ns, "Linen Cloth", 99) == ""
+# botany: the levels by gather count are the Linnaean tree's now (23 Nov 2026), tested in tests/test_botany_tree.py
 
 # a whole gather: Earthroot from a node counts towards its group, says the herb's own line first, then, with the
-# herb resting, a root botany line from Shan'do's own sounds folder
+# herb resting, a botany line of its narrowest taxon (vascular plants, the Linnaean tree) from Shan'do's own sounds folder
 gather = lua.eval("""function(ns)
   ShandoBotany, ShandoHerbSaid, ShandoOff, AlbaLast = {}, {}, nil, nil
   function GetNumLootItems() return 1 end
@@ -345,12 +335,13 @@ gather = lua.eval("""function(ns)
     out[i] = n < #played and played[#played].path or "-"
   end
   function GetNumLootItems() return 0 end
-  return ShandoBotany.root, out[1], out[2]
+  return ShandoBotany.vascular, out[1], out[2]
 end""")
 n, first, second = gather(ns)
 assert n == 2, n
 assert "sounds\\herbs\\earthroot" in first, first
-assert "sounds\\botany_root1_" in second, second
+vascular = [l[1] for l in ns.LINES["botany:vascular"].values()]  # moved old root lines keep their keys
+assert any(f"sounds\\{k}." in second for k in vascular), second
 print("emerald dream checks pass")
 
 # skinning lines need your own Skinning cast just before the loot: leather boots off a cultist's corpse stay quiet

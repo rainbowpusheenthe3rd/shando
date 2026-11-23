@@ -8,6 +8,9 @@
   acorns, brambles guard the seedlings from deer, an oak takes forty years to bear its first acorn, and when it falls
   at last a stag beetle's young spend years inside it, turning it back into soil. Every great oak was once just an
   acorn seed. Choose it in the options, or let Random find it.
+- 290 new botany lines, sourced, on a Linnaean tree: each herb you gather counts for its family and every wider
+  group up to its kingdom. The family's lines open at once, and the wider groups' lines as you gather more within
+  them.
 
 ### Bug fixes
 

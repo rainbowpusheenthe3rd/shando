@@ -778,3 +778,293 @@ oak25	oak	Slowly now, back towards the room. Feel your feet. Move your fingers, 
 oak26	oak	When you're ready, open your eyes, and find one thing nearby that grew once. Wood counts.
 oak27	oak	Ishnu-alah, thero'shan. Something was planted today. It doesn't need to show yet.
 oak28	oak	And now, the water below the oak. Frogs, singing the night in. Stay with them as long as you like.
+botany_daisy_1	botany:daisy	Watch a daisy head over a few days. The outer flowers open first, and the opening moves slowly inward.
+botany_daisy_2	botany:daisy	The white rays round a daisy's edge make no pollen at all. They're there to be seen.
+botany_daisy_3	botany:daisy	Turn the head over. That green cup of little leaves holds a whole crowd of flowers together.
+botany_daisy_4	botany:daisy	The down on a thistle seed was once the flower's sepals. Nothing is wasted; it just becomes something else.
+botany_daisy_5	botany:daisy	Each tiny floret hands out its pollen a little at a time, and keeps the rest tucked safely inside.
+botany_daisy_6	botany:daisy	Some daisies open at dawn and close at dusk. They keep the same hours as the light.
+botany_daisy_7	botany:daisy	A young sunflower follows the sun all day, then turns back east in the dark to wait for morning.
+botany_daisy_8	botany:daisy	Count the spirals of seed in a sunflower's face, if you like. It's nearly always one of a few numbers: twenty-one, thirty-four, fifty-five.
+botany_daisy_9	botany:daisy	In damp air a dandelion's parachutes fold shut. Its seeds wait for a dry day before they fly.
+botany_rose_1	botany:rose	Look at a wild rose: five petals on the rim of a little cup. Most of its family are built the same way.
+botany_rose_2	botany:rose	The little cup under the petals holds a ring that makes nectar. That's the gift the bees come for.
+botany_rose_3	botany:rose	Plums, cherries and peaches are all kin of the rose. A whole orchard, from one family.
+botany_rose_4	botany:rose	Apples and pears are rose kin too. Growers have named more than two thousand kinds of apple.
+botany_rose_5	botany:rose	Most of an apple's flesh grows from the flower's cup. Only the core comes from where the seeds were made.
+botany_rose_6	botany:rose	A raspberry comes away hollow; its core stays on the bush. A blackberry brings its core with it.
+botany_rose_7	botany:rose	A bramble's roots live for years, but each cane lives only two: leaves the first year, fruit the second.
+botany_rose_8	botany:rose	A wild rose climbs by hooking its curved prickles over its neighbours. It leans on others, and there's no shame in that.
+botany_rose_9	botany:rose	Birds eat the hips and carry the seeds away, then drop them somewhere new, with a little something to start them growing.
+botany_rose_10	botany:rose	One hawthorn, a thorny cousin of the rose, can feed more than three hundred kinds of insect.
+botany_mint_1	botany:mint	The leaves come in pairs, each pair facing the other across the stem.
+botany_mint_2	botany:mint	The scent lives in tiny oil glands on the leaf hairs. Brush the leaf and they open for you.
+botany_mint_3	botany:mint	The flowers grow in rings around the stem, tier above tier, where the leaves join it.
+botany_mint_4	botany:mint	This family counts more than seven thousand kinds. It's one of the largest in the green world.
+botany_mint_5	botany:mint	Basil, thyme, rosemary and sage are all kin of this one. A good part of a cook's garden is one family.
+botany_mint_6	botany:mint	Most of this family stay small and soft, but a few grow into great hardwood trees.
+botany_mint_7	botany:mint	The sages alone number about a thousand kinds.
+botany_mint_8	botany:mint	Some sages hide a lever inside the flower. A bee pushes in, and a stamen swings down onto the back of its head.
+botany_mint_9	botany:mint	The sage leaves its pollen just where a bee can't groom it off. Patient, and clever.
+botany_mint_10	botany:mint	Mint wanders under the ground on its own stems, and comes up far from where it began.
+botany_ginseng_1	botany:ginseng	Roots like this one spend their whole first year as a single leaf of three leaflets. A slow beginning.
+botany_ginseng_2	botany:ginseng	You can read a root like this by the scars on its neck, one for every year it has grown.
+botany_ginseng_3	botany:ginseng	Roots like this need the shade of trees overhead. In the forest's quiet they take ten years or more to grow.
+botany_ginseng_4	botany:ginseng	It makes no seed until it has at least two leaves. There's no rushing a plant like this.
+botany_ginseng_5	botany:ginseng	Its berries ripen slowly, six weeks or more, and they aren't ready until they're red all over. Then the birds come.
+botany_ginseng_6	botany:ginseng	Its small flowers come in a little umbrella, ten or twenty together, the way the carrot's kin carry theirs.
+botany_ginseng_7	botany:ginseng	Ivy is family to this herb. And ivy is no thief; it climbs the tree for light and makes its own food.
+botany_ginseng_8	botany:ginseng	Ivy, this herb's cousin, flowers late in the year, when the bees have little else left to visit.
+botany_lotus_1	botany:lotus	Lotus seeds have woken after more than a thousand years in dry mud. Some things know how to wait.
+botany_lotus_2	botany:lotus	A lotus seed's shell is waxed outside and lined against water. Nothing gets in.
+botany_lotus_3	botany:lotus	A lotus breathes like a bellows. Air goes in through the leaves, down to the stem in the mud, and back up again.
+botany_lotus_4	botany:lotus	A lotus leaf is a whole circle, with no slit cut into it. That's how you tell it from a water lily.
+botany_lotus_5	botany:lotus	The seed head looks like the rose of a watering can, each seed in its own little hole.
+botany_lotus_6	botany:lotus	Lotus leaves and seed heads look almost the same in stone a hundred million years old. It found its shape, and kept it.
+botany_lotus_7	botany:lotus	Its whole family is just two kinds of lotus. A small family, and a very old one.
+botany_grasses_1	botany:grasses	Run a fingertip up a grass stem. It's hollow between the joints, and solid at each one.
+botany_grasses_2	botany:grasses	Each grass leaf wraps the stem like a sleeve before it opens out.
+botany_grasses_3	botany:grasses	A grain is a whole fruit, its wall fused tight to the seed. Every loaf begins like that.
+botany_grasses_4	botany:grasses	Bamboo is a grass. One has been measured growing more than a metre in a single day.
+botany_grasses_5	botany:grasses	Some bamboos flower only once in decades, every plant of a kind at once, and then the parents die. One great giving.
+botany_grasses_6	botany:grasses	Grass roots hold the soil together. Without them the topsoil would wash or blow away.
+botany_grasses_7	botany:grasses	When fire sweeps a meadow, the grass comes back. Its growing tip waits at the ground, or just below it.
+botany_grasses_8	botany:grasses	Grass was already growing when the great reptiles walked. Tiny grains of it are in their fossil dung.
+botany_lilies_1	botany:lilies	A lily bulb is loose fleshy scales with no papery skin. Peel one back and it's like turning pages.
+botany_lilies_2	botany:lilies	Even one scale broken from a lily bulb can grow new little bulbs along its edge.
+botany_lilies_3	botany:lilies	Some lilies grow tiny bulbs where leaf meets stem. They drop, and each one can start again.
+botany_lilies_4	botany:lilies	Look closely: a lily's outer and inner rings look alike. Six matching tepals, not petals and sepals.
+botany_lilies_5	botany:lilies	Lilies hold their flowers as upright cups, open bowls or hanging bells, each kind in its own way.
+botany_lilies_6	botany:lilies	A lily's anther is balanced at its back on the tip of its stalk, free to swing.
+botany_lilies_7	botany:lilies	Mind the pollen. A lily's stains clothes and skin alike.
+botany_lilies_8	botany:lilies	Flowers of the lily family are often spotted, freckled like a fawn.
+botany_lilies_9	botany:lilies	A lily's seed pod splits in three when it's ripe, with a hundred or more seeds inside.
+botany_lilies_10	botany:lilies	Tulips are lily kin. They open in warmth because the inner side of each tepal grows faster than the outer.
+botany_amaryllis_1	botany:amaryllis	This herb's kin are the snowdrops, flowering in late winter while the cold still holds.
+botany_amaryllis_2	botany:amaryllis	A snowdrop hangs its head: three outer petals plain white, three inner ones notched and marked with green.
+botany_amaryllis_3	botany:amaryllis	A snowdrop's leaf tips are hardened like a fingernail, to shield the bud as it pushes up through cold ground.
+botany_amaryllis_4	botany:amaryllis	On a sunny winter day a snowdrop opens in about an hour. A little warmth is enough.
+botany_amaryllis_5	botany:amaryllis	Bees gather more pollen from a hanging snowdrop than from one turned up. Its bow is practical.
+botany_amaryllis_6	botany:amaryllis	Snowdrops spread into clumps, from seed and from new bulbs budding off the old.
+botany_amaryllis_7	botany:amaryllis	After the flowers fade, the leaves keep working, feeding next year's bulb before they rest.
+botany_amaryllis_8	botany:amaryllis	Garlic and daffodils are kin to the snowdrop. One family, from the kitchen to the first flowers of spring.
+botany_monocots_1	botany:monocots	No plant of this branch makes true wood. Its pipes are scattered through the stem, not set in a ring.
+botany_monocots_2	botany:monocots	Their first root dies early and gives way to a tuft of many roots, all much alike.
+botany_monocots_3	botany:monocots	Palms are kin to grass and lily, and their leaves are the largest of any plant.
+botany_monocots_4	botany:monocots	A banana plant's trunk isn't a stem at all. It's leaf bases, rolled tight around each other.
+botany_monocots_5	botany:monocots	Orchids belong to this branch too. Many of them live high on trees, rooted in the bark instead of the soil.
+botany_eudicots_1	botany:eudicots	Plants of this branch come up with two seed leaves, side by side.
+botany_eudicots_2	botany:eudicots	Hold a leaf like this to the light. Its veins branch into a net, not straight lines like grass.
+botany_eudicots_3	botany:eudicots	Cut across a young stem and the pipes sit in a neat ring. That ring is what lets a plant make wood.
+botany_eudicots_4	botany:eudicots	Most pollen of this branch has three grooves, and botanists name the whole branch for it.
+botany_eudicots_5	botany:eudicots	Three-grooved pollen turns up in stone. The oldest found so far is about a hundred and twenty-three million years old.
+botany_eudicots_6	botany:eudicots	Most of these plants anchor on one main root, growing straight down from the seedling's first.
+botany_eudicots_7	botany:eudicots	Nearly three in every four kinds of flowering plant belong to the heart of this branch.
+botany_eudicots_8	botany:eudicots	Long ago an ancestor of these plants copied its whole set of genes three times over. Many still carry the spare flower-building genes.
+botany_eudicots_9	botany:eudicots	The richest branch of this family builds nearly every flower on the same five-part plan.
+botany_eudicots_10	botany:eudicots	In most of these flowers the green sepals and the coloured petals are clearly two different things.
+botany_eudicots_11	botany:eudicots	Some flowers set their parts in a spiral, each one turned the same odd angle, a little over a third of a turn, from the last.
+botany_eudicots_12	botany:eudicots	These signs are rules of thumb. The green world always keeps a few exceptions.
+botany_angiosperms_1	botany:angiosperms	There are more than three hundred thousand kinds of flowering plant. Only the insects come in more.
+botany_angiosperms_2	botany:angiosperms	A flower is made of leaves, changed over long ages into petals and all the rest.
+botany_angiosperms_3	botany:angiosperms	A fruit is the wall of a flower's seed chamber, thickened round the growing seeds.
+botany_angiosperms_4	botany:angiosperms	To a botanist, beans and peppers are fruits. Anything that grows from a flower's seed chamber is.
+botany_angiosperms_5	botany:angiosperms	A fruit's work is to keep the seed safe, and then carry it away.
+botany_angiosperms_6	botany:angiosperms	A grain of pollen grows a tube down through the flower to reach the seed within. It carries two sperm cells, not one.
+botany_angiosperms_7	botany:angiosperms	Flowering plants fertilise twice: once for the seed, and once for the food packed round it. No other plants do.
+botany_angiosperms_8	botany:angiosperms	Nearly nine in ten kinds of flowering plant are pollinated by animals: bees, moths, birds and bats.
+botany_angiosperms_9	botany:angiosperms	Bees see colours we can't. Many petals carry marks near the centre that only a bee can see, guiding it in.
+botany_angiosperms_10	botany:angiosperms	Flowers for night moths and bats are often white or very pale. They're made to be found in the dark.
+botany_angiosperms_11	botany:angiosperms	Some plants make nectar away from their flowers, to pay ants to stand guard.
+botany_seedplants_1	botany:seedplants	A seed is a young plant packed with food and a coat, able to wait for years. Sometimes thousands.
+botany_seedplants_2	botany:seedplants	A seed stays asleep until the ground turns good for growing. It doesn't need to hurry.
+botany_seedplants_3	botany:seedplants	Seeds let a plant send its young away, across distance and across time, so they needn't crowd their parent.
+botany_seedplants_4	botany:seedplants	A pollen grain is a tiny plant of only a few cells, sealed against drying so it can travel through the air.
+botany_seedplants_5	botany:seedplants	Pines and their kin carry their seeds bare on the scales of a cone, not shut away in a fruit.
+botany_seedplants_6	botany:seedplants	In spring the pines let go clouds of yellow pollen for the wind to carry.
+botany_seedplants_7	botany:seedplants	The soil holds a hidden store of living seeds. Some have waited there for decades.
+botany_seedplants_8	botany:seedplants	Most seeds dry out as they ripen. That dryness is what lets them keep.
+botany_vascular_1	botany:vascular	Water rises in a plant because the leaves breathe it out, pulling a thread of water up behind it.
+botany_vascular_2	botany:vascular	Up to nine tenths of the water a root drinks goes back into the air from the leaves.
+botany_vascular_3	botany:vascular	Each root hair is a single cell. Together they give a root far more skin to drink through.
+botany_vascular_4	botany:vascular	Plants of dry country send their roots deep; plants of wet ground keep them shallow.
+botany_vascular_5	botany:vascular	On a still, damp night, roots push water up so hard that it beads at the edges of the leaves.
+botany_landplants_1	botany:landplants	A thin waxy skin covers leaves and stems, so they don't dry out in the open air.
+botany_landplants_2	botany:landplants	Leaves breathe through tiny pores that open and close, trading a little water for every breath of air.
+botany_landplants_3	botany:landplants	Every plant on land is descended from a green weed of fresh water.
+botany_landplants_4	botany:landplants	Plants first came onto land something like five hundred million years ago. Everything green since has followed.
+botany_mosses_1	botany:mosses	Moss has no true roots, only fine threads that hold on. It drinks through its whole surface instead.
+botany_mosses_2	botany:mosses	Most moss leaves are only a single cell thick.
+botany_mosses_3	botany:mosses	A ring of tiny teeth round a moss capsule closes in the wet and opens in the dry, letting spores out on a fine day.
+botany_mosses_4	botany:mosses	Bog moss can hold more than twenty times its own weight in water.
+botany_mosses_5	botany:mosses	Moss frozen under ice for fifteen hundred years has been woken and grown again.
+botany_mushrooms_1	botany:mushrooms	An inkcap melts from the rim inward, dripping black ink full of spores. It only begins once the spores are ready.
+botany_mushrooms_2	botany:mushrooms	That black drip from an inkcap really can be used as ink.
+botany_mushrooms_3	botany:mushrooms	An inkcap's stalk can stretch several fingers' breadth in a night, and the whole of it is gone in a few days.
+botany_mushrooms_4	botany:mushrooms	The mushroom is only the fruit. The fungus itself is a web of fine threads through the soil or wood.
+botany_mushrooms_5	botany:mushrooms	A single mushroom can let go more than a billion spores in a day, as fine as smoke.
+botany_mushrooms_6	botany:mushrooms	A mushroom makes its own breeze: water evaporating from the cap cools the air and lifts the spores away.
+botany_mushrooms_7	botany:mushrooms	Lay a cap gills-down on paper overnight, if you like. The spores will leave a print in their own colour.
+botany_mushrooms_8	botany:mushrooms	A fairy ring grows outward from one spore, and the grass on the ring grows darker, fed by what the fungus breaks down.
+botany_mushrooms_9	botany:mushrooms	A mushroom swells with water in a few hours, pushing hard enough to lift a paving stone.
+botany_lichens_1	botany:lichens	Lichens won't grow where the air is dirty. A rich crop of them means the air here is clean.
+botany_lichens_2	botany:lichens	Many lichens hold a third partner too: a yeast living in their outer skin. Three lives in one.
+botany_lichens_3	botany:lichens	Lichens come in three main shapes: flat crusts, leafy sheets and little bushes.
+botany_lichens_4	botany:lichens	Lichens feed creatures from the very smallest to great herds in the far north.
+botany_lichens_5	botany:lichens	In the hardest cold a lichen may grow a tenth of a millimetre in a year. It isn't in a hurry.
+botany_fungi_1	botany:fungi	A fungus's walls are made of chitin, the same tough stuff as a beetle's shell.
+botany_fungi_2	botany:fungi	A fungus grows only at the very tips of its threads, always reaching outward.
+botany_fungi_3	botany:fungi	More than a hundred kinds of fungus glow in the dark.
+botany_fungi_4	botany:fungi	One fungus can spread through the roots and soil of a forest over more than two thousand acres. It's among the largest living things.
+botany_kelp_1	botany:kelp	Kelp can grow up to a foot and a half in a single day.
+botany_kelp_2	botany:kelp	Kelp forests hold more kinds of life than almost anywhere else in the sea.
+botany_kelp_3	botany:kelp	Kelp is brown because a golden pigment hides the green beneath it.
+botany_kelp_4	botany:kelp	Every great kelp starts as a thread too small to see, which can wait out hard times like a seed in the soil.
+botany_kelp_5	botany:kelp	Kelp grows from partway along its body, not from the tip.
+botany_landplants_5	botany:landplants	When plants first came ashore there were no beasts to eat them. Thorns and bitter leaves came later, once the animals followed.
+botany_landplants_6	botany:landplants	Out of the water, sunlight is harsher. Leaves make their own shade, pigments that soak up the light that burns.
+botany_landplants_7	botany:landplants	Every spore and pollen grain wears a coat that almost nothing can break down. That's why they last in stone.
+botany_landplants_8	botany:landplants	At the tip of every shoot is a knot of cells that stays young for the plant's whole life, dividing and dividing.
+botany_landplants_9	botany:landplants	Every land plant lives two lives in turn: one that makes spores, and one that makes the cells that meet and begin again.
+botany_landplants_10	botany:landplants	The first plants on land stood only a few fingers high, low green mats all reaching for the same light.
+botany_landplants_11	botany:landplants	Life on land had its gifts. The sun was brighter, and the air carried a leaf's breath faster than water ever could.
+botany_landplants_12	botany:landplants	The first green forests filled the air with breath, and made the dry land kinder for the animals that came after.
+botany_mosses_6	botany:mosses	Moss can dry to a brittle brown mat and wait. When the rain comes, it drinks and turns green again.
+botany_mosses_7	botany:mosses	A moss spore first grows into a tangle of green threads along the ground. The little leafy stems rise from that later.
+botany_mosses_8	botany:mosses	A young moss capsule wears a little hood and a lid. Both fall away when the spores inside are ready.
+botany_mosses_9	botany:mosses	In the coldest lands, moss is much of what grows. Its threads grip the ground without breaking into the frozen soil.
+botany_mosses_10	botany:mosses	Moss slows the rain from washing soil away, and keeps the small creatures underneath it sheltered.
+botany_vascular_6	botany:vascular	The walls of a plant's water pipes are stiffened with a tough stuff that water can't pass. It's what lets a plant stand tall.
+botany_vascular_7	botany:vascular	Roots came late. The first plants with water pipes seem to have had none at all.
+botany_vascular_8	botany:vascular	Leaves were found more than once. Different branches of the green family flattened their shoots into leaves on their own.
+botany_vascular_9	botany:vascular	Coal is old forest. Giant club mosses and horsetails once grew in great swamps, and their bodies became the black stone.
+botany_vascular_10	botany:vascular	A young fern leaf comes up rolled tight, like the head of a fiddle, and slowly unrolls as it grows.
+botany_vascular_11	botany:vascular	The small club mosses on a forest floor had ancestors that grew into tall trees and made whole swamp forests.
+botany_seedplants_9	botany:seedplants	A pine seed can take two years to form after the pollen lands. Some things are worth the wait.
+botany_seedplants_10	botany:seedplants	Pine needles are narrow and waxed, so they lose little water. Snow slides off them before a branch can break.
+botany_seedplants_11	botany:seedplants	Evergreens keep working quietly through the cold months, so they're ready on the first bright days of spring.
+botany_seedplants_12	botany:seedplants	There's a fan-leaved tree that is the last of its whole line. Every close kin it had is gone.
+botany_seedplants_13	botany:seedplants	Some old cone-bearers are carried by beetles, not the wind. Their kind grew tall when the great reptiles walked.
+botany_seedplants_14	botany:seedplants	One desert plant grows just two leaves in its whole life. They never stop growing, for hundreds of years.
+botany_seedplants_15	botany:seedplants	A pine seed holds three generations at once: a coat from the parent tree, a store of food, and the young one itself.
+botany_seedplants_16	botany:seedplants	A tree's rings are wide in kind years and narrow in hard ones. Read them and you read the weather of its life.
+botany_seedplants_17	botany:seedplants	Tiny seeds often wait for light before they sprout, so they only start near the surface, where the sun can reach them in time.
+botany_seedplants_18	botany:seedplants	Many seeds need a winter's cold before they'll sprout. A warm spell in the dark months won't fool them.
+botany_seedplants_19	botany:seedplants	On a pine the seed cones sit high and the pollen cones low, so a tree's own pollen rarely drifts onto its own seeds.
+botany_seedplants_20	botany:seedplants	Some pines live more than four thousand years, and are still growing.
+botany_vascular_12	botany:vascular	Deep in every root is a waxed gate. Water must pass through living cells there, and most poisons are turned away.
+botany_vascular_13	botany:vascular	Lay a plant on its side and within hours it turns upward again. Grains of starch settle in its cells to show which way is down.
+botany_angiosperms_12	botany:angiosperms	Look where each leaf meets the stem. A small bud waits there, ready to become a branch or a flower.
+botany_angiosperms_13	botany:angiosperms	In poor, boggy ground some flowering plants catch insects, to get the goodness the soil can't give them.
+botany_angiosperms_14	botany:angiosperms	Feel the fine hairs on a leaf. They slow crawling insects, hold bitter juices, and keep the drying wind off.
+botany_angiosperms_15	botany:angiosperms	A tendril coils at the lightest touch. The side that meets the support shrinks, and the far side grows.
+botany_angiosperms_16	botany:angiosperms	Bees can't see red. The flowers that want bees mostly wear blues and yellows instead.
+botany_angiosperms_17	botany:angiosperms	Some flowers smell of rot on purpose, and wear dull browns and purples. They're calling the flies.
+botany_angiosperms_18	botany:angiosperms	Flowers that wait for birds are often bright and tube-shaped, and they hardly smell at all.
+botany_angiosperms_19	botany:angiosperms	Flowers that trust the wind are small and green, with no nectar or scent. Many open before the leaves, so nothing blocks the breeze.
+botany_angiosperms_20	botany:angiosperms	Many flowers can tell their own pollen from a stranger's, and quietly turn their own away.
+botany_angiosperms_21	botany:angiosperms	In some flowers the pollen and the seed-cup ripen at different times, so a flower can't pollinate itself.
+botany_angiosperms_22	botany:angiosperms	A pollen tube doesn't wander. It follows a scent laid by two small helper cells beside the egg.
+botany_angiosperms_23	botany:angiosperms	A squirrel's forgotten store can become a grove. Buried fruit, never found again, may sprout come spring.
+botany_angiosperms_24	botany:angiosperms	Many plants know the season by the length of the night. When the dark grows long, some of them choose to flower.
+botany_angiosperms_25	botany:angiosperms	A ripening fruit breathes out a gas that hurries its neighbours along. Lay an unripe one beside it and watch.
+botany_angiosperms_26	botany:angiosperms	When a caterpillar chews some leaves, the plant gives off a scent that calls in the caterpillar's hunters.
+botany_angiosperms_27	botany:angiosperms	Before a leaf falls, the plant takes back what it can. The yellow is the green being packed away for later.
+botany_angiosperms_28	botany:angiosperms	The green cups beneath a flower are its sepals. They wrapped the bud and kept it safe before it opened.
+botany_angiosperms_29	botany:angiosperms	Some fruits split open to let their seeds go, like a pea pod. Others, like a peach, wait to soften and fall apart.
+botany_eudicots_13	botany:eudicots	Just under a leaf's skin, cells stand packed in columns, like a fence of stakes, catching the light first.
+botany_eudicots_14	botany:eudicots	Beneath the columns, the leaf's cells sit loose with air between them, so the leaf can breathe.
+botany_eudicots_15	botany:eudicots	Cut across a young root of this branch and its water pipes make a cross, an X at the very centre.
+botany_eudicots_16	botany:eudicots	Flax is of this branch. Linen is spun from the long fibres in its stem, cells stiffened with the stuff of wood.
+botany_eudicots_17	botany:eudicots	A potato is a swollen underground stem. Its eyes are buds, each ready to grow a new shoot.
+botany_eudicots_18	botany:eudicots	Inside a forming seed of this branch, the young plant is shaped like a tiny heart, its two seed leaves just beginning.
+botany_eudicots_19	botany:eudicots	A seedling of this branch pushes up bent like a crook, guarding its tender tip. In the light it straightens.
+botany_eudicots_20	botany:eudicots	Split a pea in two. Each half is a seed leaf, packed with food for the seedling.
+botany_eudicots_21	botany:eudicots	In many seedlings of this branch the stem below the seed leaves stretches up, and lifts them into the light.
+botany_eudicots_22	botany:eudicots	A seed of this branch wears two coats, a tough outer one and a thin one within.
+botany_eudicots_23	botany:eudicots	Primroses grow in two forms, long-styled and short. A bee drinking from one carries pollen to the other.
+botany_monocots_6	botany:monocots	Some orchids offer bright colour and sweet scent, but no nectar at all. The bee leaves hungry, carrying pollen.
+botany_monocots_7	botany:monocots	Orchids alone count more than twenty-five thousand kinds, all of them kin to grass and lily.
+botany_monocots_8	botany:monocots	The yucca keeps a single moth for a partner. The moth carries its pollen, and the moth's young eat a few of its seeds.
+botany_grasses_9	botany:grasses	A grass shoot comes up inside a closed sheath that guards its first leaf. Once it meets the light, the sheath stops growing.
+botany_grasses_10	botany:grasses	Each strand of silk on an ear of corn is a flower's own pollen-catcher. Every kernel is a seed.
+botany_rose_11	botany:rose	Bite a pear and feel the grit. Those are tiny stone cells, their walls hardened like wood.
+botany_rose_12	botany:rose	Strawberries send runners along the ground. Each one roots where it touches and starts a new plant.
+botany_rose_13	botany:rose	A rose leaf is small leaflets set along a stalk, in pairs, like the barbs of a feather.
+botany_rose_14	botany:rose	A raspberry is many tiny fruits from a single flower, all holding together as one.
+botany_rose_15	botany:rose	Garden roses are often grafted, one rose's stem set on another's roots. In time their pipes join and they grow as one.
+botany_daisy_10	botany:daisy	Pull a dandelion and the long root usually snaps. What's left in the ground grows a fresh shoot.
+botany_landplants_13	botany:landplants	Every land plant stores its food as starch, the same way its green ancestors in the water did.
+botany_landplants_14	botany:landplants	The cells of a land plant are joined by tiny channels through their walls, so each can pass things to its neighbour.
+botany_landplants_15	botany:landplants	The green in this leaf is the same pair of pigments its far-off ancestors used in fresh water.
+botany_landplants_16	botany:landplants	Fungi reached the land before plants did. The first green things to come ashore already had fungi living inside them.
+botany_fungi_5	botany:fungi	A fungus eats the other way round from us. It pours its digestion out into the wood first, then drinks in what's left.
+botany_fungi_6	botany:fungi	A fungus stores its food the way animals do, not as starch the way plants do.
+botany_fungi_7	botany:fungi	Where the soil is poor, some fungi hunt. They set little rings in their threads that swell shut on passing worms.
+botany_fungi_8	botany:fungi	An orchid seed carries almost no food of its own. It won't sprout at all unless a fungus feeds it.
+botany_fungi_9	botany:fungi	Some ants keep gardens. They carry cut leaves underground for a fungus to eat, and then they eat the fungus.
+botany_lichens_6	botany:lichens	Look for powdery specks on a lichen. Each is a few green cells wrapped in fungus thread, waiting for wind or rain to carry it.
+botany_lichens_7	botany:lichens	Weavers once dyed their wool with lichens. The colours were waiting in the crust all along.
+botany_lichens_8	botany:lichens	Neither partner in a lichen can usually live alone. The fungus gives shelter, and the green cells give food.
+botany_lichens_9	botany:lichens	Cut a lichen through and you'd find layers: a tough skin of fungus on top, then a thin green band where the light is caught.
+botany_mushrooms_10	botany:mushrooms	Each gill is packed threads, lined with tiny clubs. Every club makes four spores, set out on four little stalks.
+botany_mushrooms_11	botany:mushrooms	In the threads of a mushroom, each cell carries two nuclei, one from each parent, side by side. They only join just before the spores are made.
+botany_mushrooms_12	botany:mushrooms	The brightest red caps, flecked with white, are poison. Here the beauty is a warning.
+botany_mushrooms_13	botany:mushrooms	Each spore is flung from the gill by a drop of water. It gathers at the spore's base, then snaps across it, and the spore is away.
+botany_mushrooms_14	botany:mushrooms	A spore is thrown only a hair's breadth, just far enough to clear its gill without striking the one facing it.
+botany_kelp_6	botany:kelp	Sea otters wrap themselves in kelp to sleep, so the tide can't carry them away.
+botany_kelp_7	botany:kelp	Kelp grows only in cool, rich water near the shore, and never deeper than the light can follow.
+botany_kelp_8	botany:kelp	Winter storms leave a kelp forest torn and ragged. Each spring it begins to grow again.
+botany_grasses_11	botany:grasses	Early in the morning, tiny swellings inside each grass flower push it open. Then the stamens slip out to dangle in the wind.
+botany_grasses_12	botany:grasses	Some grass seeds carry a twisted bristle. As the air dries and dampens, it turns and screws the seed down into the soil.
+botany_grasses_13	botany:grasses	Grass feeds most of the world. Bread, rice and corn are all its seeds, and the herds eat it too.
+botany_grasses_14	botany:grasses	Where a grass blade leaves its stem, look for a small flap. It keeps dirt and pests out of the sleeve.
+botany_monocots_9	botany:monocots	A leaf of this branch grows from its base, pushing its older tip ahead of it, longer but hardly wider.
+botany_monocots_10	botany:monocots	Many plants of this branch keep their growing tips underground, safe from frost, fire and hungry mouths.
+botany_monocots_11	botany:monocots	A palm trunk reaches its full thickness while it's young, right at the growing tip, and hardly widens after.
+botany_daisy_11	botany:daisy	This family grows on every land but the frozen far south. Few families have wandered so widely.
+botany_daisy_12	botany:daisy	What we call a sunflower seed is really a whole fruit. Crack the shell and the true seed is inside.
+botany_daisy_13	botany:daisy	An artichoke is a flower head of this family, picked and eaten as a bud before it can open.
+botany_daisy_14	botany:daisy	Goldenrod is daisy kin. Its pollen is rich enough to help the bees through the winter.
+botany_daisy_15	botany:daisy	Some chrysanthemums make their own poison against insects. Folk have long used it to keep pests away.
+botany_daisy_16	botany:daisy	Not every daisy kin calls the bees. Ragweed gives its pollen to the wind, and sets autumn noses running.
+botany_rose_16	botany:rose	Growers have named more than five thousand kinds of garden rose.
+botany_rose_17	botany:rose	Look at the base of a rose's leaf stalk. Two small wings of leaf usually hug the stem there.
+botany_rose_18	botany:rose	The pips and stones of rose-kin fruits carry a bitter defence. Better to spit them out than chew them.
+botany_mint_11	botany:mint	Catmint draws cats by its strong scent. Some grow sleepy on it, and others turn wild.
+botany_mint_12	botany:mint	Lavender is kin to this herb. In summer its flowers draw bees like lantern light draws moths.
+botany_mint_13	botany:mint	Lavender's scent isn't only in its flowers. Rub the grey leaves and you'll find the oil there too.
+botany_mint_14	botany:mint	Lamb's ear is mint kin too. Its leaves are so thick with fine hairs they feel like felt.
+botany_mint_15	botany:mint	Each flower of this family leaves behind four small hard nutlets, its seeds.
+botany_mint_16	botany:mint	Look inside one of these flowers: often four stamens, one pair longer than the other.
+botany_mint_17	botany:mint	Catmint's nectar sits deep in a narrow tube, so it's mostly the long-tongued bees that come to drink.
+botany_mint_18	botany:mint	Breathe in a crushed mint leaf. The cool you feel isn't cold at all; its oil wakes the nerves that sense cold.
+botany_ginseng_9	botany:ginseng	Ivy lives two lives. Young, it climbs and never flowers. Grown, it stops climbing and blooms.
+botany_ginseng_10	botany:ginseng	Ivy's berries ripen blue-black. They are poison to us, so leave them for the birds.
+botany_ginseng_11	botany:ginseng	Each red berry of a root like this holds only two or three pale seeds.
+botany_ginseng_12	botany:ginseng	Look at the leaves of a grown plant: a ring of three, each spread open like a hand.
+botany_ginseng_13	botany:ginseng	A seed of this root sleeps a year and a half before it will sprout. Patience is built into it.
+botany_amaryllis_9	botany:amaryllis	A daffodil's trumpet is a crown grown from the throat of the flower, ringed by six spreading petals.
+botany_amaryllis_10	botany:amaryllis	Daffodils turn their faces to follow the sun.
+botany_amaryllis_11	botany:amaryllis	Deer and rabbits leave daffodils alone. Every part is bitter with poison, the bulb most of all.
+botany_amaryllis_12	botany:amaryllis	Daffodil sap carries tiny crystals shaped like needles. Hands that pick many flowers can itch from them.
+botany_amaryllis_13	botany:amaryllis	Leave an onion to flower and it sends up a round cluster of small white stars.
+botany_lilies_11	botany:lilies	Tulips are lily kin, and they come in every colour but a true blue.
+botany_lilies_12	botany:lilies	Look inside a tulip. Its anthers are most often black.
+botany_lilies_13	botany:lilies	A tulip's seed pod holds flat seeds stacked in rows, like little coins.
+botany_lilies_14	botany:lilies	Tulip petals taste mild, a little like fresh peas. The bulb is another matter.
+botany_lilies_15	botany:lilies	Lily seeds pack their food as oil, not starch.
+botany_lilies_16	botany:lilies	Keep cats away from lilies. Every part is poison to them, even the pollen.
+botany_lotus_8	botany:lotus	A lotus flower lasts about three days. It opens each morning and closes again each night.
+botany_lotus_9	botany:lotus	When the seed head ripens it breaks off and floats away, dropping its seeds as it slowly comes apart.
+botany_lotus_10	botany:lotus	Beetles and bees carry a lotus's pollen from one great flower to the next.
+botany_lotus_11	botany:lotus	A lotus flower can open wider than two spread hands.
+botany_lotus_12	botany:lotus	A lotus spreads by thick stems creeping through the mud, until it can fill a whole pond.
+botany_lotus_13	botany:lotus	Nearly every part of a lotus can feed someone: the young leaves, the thick roots, the seeds.
+botany_eudicots_24	botany:eudicots	Roses, cabbages, sunflowers and mints all belong to this one great branch.
+botany_eudicots_25	botany:eudicots	Sugar comes from two plants: a tall grass, and a beet of this branch.
+botany_eudicots_26	botany:eudicots	This branch holds soft little herbs and great hardwood trees alike.
+botany_eudicots_27	botany:eudicots	Acorns are bitter on purpose. They're packed with things that put off hungry mouths.
+botany_eudicots_28	botany:eudicots	An early flower of this branch, pressed in stone more than a hundred million years ago, looks much like a buttercup.
+botany_eudicots_29	botany:eudicots	Buttercups and poppies sit near the root of this branch, sister to all the rest of it.
+botany_eudicots_30	botany:eudicots	In a tomato seed the food lies outside the seed leaves. When it wakes, the two leaves drink it in.
