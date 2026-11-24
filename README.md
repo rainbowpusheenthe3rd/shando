@@ -27,9 +27,10 @@ voiced night elf voice. Open source, no adverts.
 - **The places that matter.** The first visit to each of 25 sacred or storied places, from Shadowglen to
   Winterspring, gets a soft swell and one line. Felwood is *wounded, not wicked*.
 - **Rituals you choose.** Shadowmeld meditation, /sleep in a barrow den, /kneel or /pray under the moon, and
-  **/emerald dream**: three guided meditations, of ten to twenty-two minutes, that end beside a pond of frogs.
-  With [Homeland](https://github.com/rainbowpusheenthe3rd/homeland) installed, The acorn dresses your minimap in
-  its own wreath of oak, acorns, bramble and stag beetles until the frogs fade.
+  **/emerald dream**: four guided meditations, of ten to twenty-two minutes, that end beside a pond of frogs.
+  With [Homeland](https://github.com/rainbowpusheenthe3rd/homeland) installed, The acorn and The ember dress your
+  minimap in their own wreaths (oak, acorns, bramble and stag beetles; fire poppies and ember-red maple) until the
+  frogs fade.
 - **The good you do, noticed.** Healing or blessing a stranger (not yourself) gets a bell and a word. Groups,
   trainers, levels, new forms and finished quests each have their own lines.
 - **Gentle on hard days.** One word when you fall, one about rest after several falls, then quiet. Late at night,

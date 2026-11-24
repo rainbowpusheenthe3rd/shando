@@ -635,6 +635,20 @@ ns.DREAMS = {
         { 1280, "oak26" }, { 1310, "bell" }, { 1314, "oak27" }, { 1336, "oak28" }, { 1340, "frogs" },
         { 1520, "fade" }, { 1570, "end" },
     } },
+    -- A small autumn fire: warmth and the ground beneath, a leaf let go (the tree draws back what it can use and
+    -- seals the stem; fungi and worms turn the litter to soil), then poppy seed waiting in the soil (tens of
+    -- thousands per plant, months before it can wake, years or decades until the ground is turned; a poppy whose
+    -- seed waits for smoke: Garden Organic, Fareham BC, Agronomy 2007, USDA/USGS), a wish for yourself and for
+    -- someone met on the road. About 21 minutes of guidance, then the Dordogne pond for 3, to end by 25 minutes.
+    { id = "ember", name = "The ember", kind = "ember", frogs = "vigil", steps = {
+        { 0, "bell" }, { 8, "ember01" }, { 52, "ember02" }, { 92, "ember03" }, { 140, "ember04" },
+        { 208, "ember05" }, { 280, "ember06" }, { 360, "ember07" }, { 404, "ember08" }, { 452, "ember09" },
+        { 506, "ember10" }, { 556, "ember11" }, { 600, "ember12" }, { 646, "ember13" }, { 694, "ember14" },
+        { 744, "ember15" }, { 794, "ember16" }, { 846, "ember17" }, { 900, "ember18" }, { 950, "ember19" },
+        { 1000, "ember20" }, { 1050, "ember21" }, { 1104, "ember22" }, { 1160, "ember23" }, { 1190, "ember24" },
+        { 1220, "bell" }, { 1224, "ember25" }, { 1246, "ember26" }, { 1250, "frogs" },
+        { 1430, "fade" }, { 1480, "end" },
+    } },
 }
 local FADE = 45   -- seconds: the frogs fade out as the game's music comes back
 local function LineText(kind, key)   -- its own kind first; a line shared with another meditation is found anyway

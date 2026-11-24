@@ -1,5 +1,15 @@
 # Changelog
 
+## Unreleased
+
+### New
+
+- A fourth meditation, The ember: about twenty-one minutes by a small autumn fire. A leaf lets go, and the tree has
+  already drawn back what it can use and sealed the stem. Under the leaves, poppy seed waits in the soil, months
+  before it can wake and sometimes decades until the ground is turned and light reaches it, and one kind of poppy
+  waits for the smoke of a fire. Then the pond frogs. With Homeland installed, the minimap wears its wreath of fire
+  poppies and ember-red maple. Choose it in the options, or let Random find it.
+
 ## 1.3.0 (24 Nov 2026)
 
 ### New

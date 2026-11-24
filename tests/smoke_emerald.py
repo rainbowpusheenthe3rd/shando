@@ -212,8 +212,20 @@ beds = [p.path.split("\\")[-1] for p in G.played.values() if p.path.endswith(("v
 assert beds and set(beds) == {"meld.mp3"}, beds
 lua.execute("for i = 1, 250 do advance(now + 1) tick() end")   # past the frogs' fade (1520 s)
 assert list(G.wreath.values())[:2] == ["borrow acorn", "return"], list(G.wreath.values())
-lua.execute("HomelandDream = nil")
 assert lua.eval("ShandoEmerald.ended") == "finished"   # it ran to its end on its own: no /emerald to stop it
+
+# The ember: its own twenty-six lines in order, captioned, then the pond frogs (vigil), wearing its fire poppy wreath
+lua.execute("played = {} captions = {} wreath = {} ShandoDream = 'ember' SlashCmdList.EMERALD('dream')")
+lua.execute("for i = 1, 1300 do advance(now + 1) tick() end")
+spoken = [p.path.split("\\")[-1] for p in G.played.values() if "sounds" in p.path]
+assert spoken == [f"ember{i:02d}.mp3" for i in range(1, 27)], spoken
+assert len([c for c in G.captions.values() if c != HINT]) == 26
+beds = [p.path.split("\\")[-1] for p in G.played.values() if p.path.endswith(("vigil.mp3", "meld.mp3"))]
+assert beds and set(beds) == {"vigil.mp3"}, beds
+lua.execute("for i = 1, 200 do advance(now + 1) tick() end")   # past the frogs' fade (1430 s) and the end (1480 s)
+assert list(G.wreath.values())[:2] == ["borrow ember", "return"], list(G.wreath.values())
+assert lua.eval("ShandoEmerald.ended") == "finished"
+lua.execute("HomelandDream = nil")
 lua.execute("ShandoDream = 'clearing'")
 
 # a second /emerald stops it, fading the sound back
@@ -227,7 +239,8 @@ assert close(G.cvars.Sound_AmbienceVolume, 0.6) and G.ShandoHush is None, dict(G
 # picking: a chosen one; on random, unheard first; once all are heard, each in turn after the last
 lua.execute("ShandoDream = nil ShandoDreamHeard = {} ShandoDreamLast = nil")
 fake = lua.eval("function(ns) ns.DREAMS[2] = { id = 'moonwell', name = 'b', kind = 'emerald', steps = {} } "
-                "ns.DREAMS[3] = { id = 'vigil', name = 'c', kind = 'emerald', steps = {} } end")
+                "ns.DREAMS[3] = { id = 'vigil', name = 'c', kind = 'emerald', steps = {} } "
+                "for i = #ns.DREAMS, 4, -1 do ns.DREAMS[i] = nil end end")   # exactly three, however many ship
 fake(ns)
 picks = lua.eval("function(ns) local seen = {} for i = 1, 3 do local d = ns.PickDream() seen[#seen + 1] = d.id "
                  "ShandoDreamHeard[d.id] = true ShandoDreamLast = d.id end return table.concat(seen, ',') end")(ns)
