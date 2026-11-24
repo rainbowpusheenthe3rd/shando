@@ -11,6 +11,9 @@
 - 290 new botany lines, sourced, on a Linnaean tree: each herb you gather counts for its family and every wider
   group up to its kingdom. The family's lines open at once, and the wider groups' lines as you gather more within
   them.
+- With Homeland installed, a meditation can dress the minimap in its own wreath from the first bell until the frogs
+  fade, then give you back your own. Without Homeland nothing changes. The acorn has one already: oak, acorns,
+  bramble and stag beetles.
 
 ### Bug fixes
 

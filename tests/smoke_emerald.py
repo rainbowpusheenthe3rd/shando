@@ -189,6 +189,19 @@ beds = [p.path.split("\\")[-1] for p in G.played.values() if p.path.endswith(("v
 assert beds and set(beds) == {"vigil.mp3"}, beds
 lua.execute("SlashCmdList.EMERALD('dream') advance(now + 10)")
 
+# Homeland's dream wreath: borrowed at the start, given back as the frogs fade; given back too when you move;
+# a Homeland whose call fails doesn't stop the meditation
+lua.execute("wreath = {} HomelandDream = { Borrow = function(id) wreath[#wreath + 1] = 'borrow ' .. id end, "
+            "Return = function() wreath[#wreath + 1] = 'return' end }")
+lua.execute("ShandoDream = 'well' SlashCmdList.EMERALD('dream') advance(now + 5) tick()")
+lua.execute("speed = 1 tick() speed = 0 advance(now + 5)")
+assert list(G.wreath.values())[:2] == ["borrow well", "return"], list(G.wreath.values())
+lua.execute("wreath = {} HomelandDream.Borrow = function() error('Homeland broke') end")
+lua.execute("ShandoDream = 'well' SlashCmdList.EMERALD('dream') advance(now + 30) tick()")
+assert lua.eval("ShandoEmerald.reached") == "well02", lua.eval("ShandoEmerald.reached")
+lua.execute("SlashCmdList.EMERALD('dream') advance(now + 10)")
+lua.execute("wreath = {} HomelandDream.Borrow = function(id) wreath[#wreath + 1] = 'borrow ' .. id end")
+
 # The acorn: its own twenty-eight lines in order, captioned, then the swamp frogs (meld)
 lua.execute("played = {} captions = {} ShandoDream = 'acorn' SlashCmdList.EMERALD('dream')")
 lua.execute("for i = 1, 1400 do advance(now + 1) tick() end")
@@ -197,7 +210,10 @@ assert spoken == [f"oak{i:02d}.mp3" for i in range(1, 29)], spoken
 assert len([c for c in G.captions.values() if c != HINT]) == 28
 beds = [p.path.split("\\")[-1] for p in G.played.values() if p.path.endswith(("vigil.mp3", "meld.mp3"))]
 assert beds and set(beds) == {"meld.mp3"}, beds
-lua.execute("SlashCmdList.EMERALD('dream') advance(now + 10)")
+lua.execute("for i = 1, 250 do advance(now + 1) tick() end")   # past the frogs' fade (1520 s)
+assert list(G.wreath.values())[:2] == ["borrow acorn", "return"], list(G.wreath.values())
+lua.execute("HomelandDream = nil")
+assert lua.eval("ShandoEmerald.ended") == "finished"   # it ran to its end on its own: no /emerald to stop it
 lua.execute("ShandoDream = 'clearing'")
 
 # a second /emerald stops it, fading the sound back

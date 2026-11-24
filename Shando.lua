@@ -448,6 +448,14 @@ local function Caption(text)
     end)
 end
 
+-- Homeland's dream wreath: when Homeland is installed and ships a wreath for this meditation, the minimap wears it
+-- from the bell until the frogs fade, or until the meditation ends any other way. Without Homeland, nothing happens.
+local function Wreath(id)
+    local h = _G.HomelandDream
+    if not h then return end
+    pcall(id and h.Borrow or h.Return, id)
+end
+
 local function EndRitual(now)
     if not ritual then return end
     if ritual.bed then StopSound(ritual.bed, 4000) end
@@ -456,7 +464,7 @@ local function EndRitual(now)
         if ShandoEmerald and not ShandoEmerald.ended then
             ShandoEmerald.ended, ShandoEmerald.secs = now and "combat" or "stopped", math.floor(GetTime() - ritual.t0)
         end
-        StopBreath() Caption(nil) FadeTo(caption.hint, 0, OUT) WorldHush(false, now and 0 or 5)
+        StopBreath() Caption(nil) FadeTo(caption.hint, 0, OUT) WorldHush(false, now and 0 or 5) Wreath(nil)
     end
     if veil:IsShown() then Fade(0, 3) end
     ritual = nil
@@ -660,6 +668,7 @@ local function Emerald(d)
     print("|cffb8c8ffShan'do|r: " .. d.name .. ". Stay still to remain in the Dream; moving brings you back.")
     ShandoDreamLast = d.id
     ShandoEmerald = { at = time(), dream = d.id, reached = "start", t = 0 }   -- read back to learn the idle limit
+    Wreath(d.id)
     for _, step in ipairs(d.steps) do
         C_Timer.After(step[1], function()
             if ritual ~= r then return end   -- ended (moved, combat, /emerald again)
@@ -680,6 +689,7 @@ local function Emerald(d)
             elseif what == "fade" then   -- the last copy of the frogs fades out; the music rises to meet the world
                 r.file = nil
                 if r.bed then StopSound(r.bed, FADE * 1000) r.bed = nil end
+                Wreath(nil)
                 local h = ShandoHush
                 if h then Ramp(nil, tonumber(h.mus) or 0.4, FADE) end
             elseif what == "end" then
