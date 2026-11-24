@@ -19,14 +19,17 @@ voiced night elf voice. Open source, no adverts.
   before any repeats. If you do run through a kind, it waits longer before it speaks again.
 - **A breath when you stop.** Stand still outdoors for a minute and a half and she offers a breath, then a wind
   that breathes with you, the out-breath longer than the in-breath. Moving ends it.
-- **Botany as you gather.** Every herb belongs to a real plant family: kelp, moss, lichen, mushrooms, grasses,
-  lilies, lotuses, the daisy family, roots, thorns or flowering plants in general. Gather a family and she teaches
-  it in three levels, opening at 1, 10 and 30 gathers: what you can see, how it lives, and where it sits in the long
-  history of plants. Every herb, rare find and seed also has its own lines.
+- **Botany as you gather.** Every herb has its place on the real tree of life: Peacebloom sits in the daisy family,
+  among the eudicots, the flowering plants, the seed plants, the vascular plants and the land plants. Each gather
+  counts for every group up its line. Its family's lines open at once, the next group up at 10 gathers within it,
+  and the wider groups at 30: what you can see, how it lives, and where it sits in the long history of plants.
+  Over 300 sourced botany lines, and every herb, rare find and seed also has its own.
 - **The places that matter.** The first visit to each of 25 sacred or storied places, from Shadowglen to
   Winterspring, gets a soft swell and one line. Felwood is *wounded, not wicked*.
 - **Rituals you choose.** Shadowmeld meditation, /sleep in a barrow den, /kneel or /pray under the moon, and
   **/emerald dream**: three guided meditations, of ten to twenty-two minutes, that end beside a pond of frogs.
+  With [Homeland](https://github.com/rainbowpusheenthe3rd/homeland) installed, The acorn dresses your minimap in
+  its own wreath of oak, acorns, bramble and stag beetles until the frogs fade.
 - **The good you do, noticed.** Healing or blessing a stranger (not yourself) gets a bell and a word. Groups,
   trainers, levels, new forms and finished quests each have their own lines.
 - **Gentle on hard days.** One word when you fall, one about rest after several falls, then quiet. Late at night,
