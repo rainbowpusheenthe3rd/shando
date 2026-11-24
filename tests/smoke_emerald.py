@@ -332,7 +332,7 @@ old = lua.eval("""function(ns)
 end""")(ns).split(",")
 assert len(set(old)) == 12, old
 
-# botany: the levels by gather count are the Linnaean tree's now (23 Nov 2026), tested in tests/test_botany_tree.py
+# botany: the levels by gather count are the Linnaean tree's now (23 Nov 2026), tested in tests/smoke_botany_tree.py
 
 # a whole gather: Earthroot from a node counts towards its group, says the herb's own line first, then, with the
 # herb resting, a botany line of its narrowest taxon (vascular plants, the Linnaean tree) from Shan'do's own sounds folder

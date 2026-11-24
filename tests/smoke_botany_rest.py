@@ -1,7 +1,7 @@
 r"""Botany lines rest three days once said (Herbs.lua, ns.Rested): a line never said is open, one said an hour ago is
 not, one said four days ago is open again.
 
-    uv run --no-project --with lupa python tests/test_botany_rest.py
+    uv run --no-project --with lupa python tests/smoke_botany_rest.py
 """
 from pathlib import Path
 

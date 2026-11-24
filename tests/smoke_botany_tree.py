@@ -3,7 +3,7 @@ every taxon in it, the narrowest taxon opens at once and the wider ones at 10 an
 rebuilds the counts from the herb notebook. Every herb with lines has a place in the tree, and every taxon in the
 tree has at least one line in Lines.lua.
 
-    uv run --no-project --with lupa python tests/test_botany_tree.py
+    uv run --no-project --with lupa python tests/smoke_botany_tree.py
 """
 import re
 from pathlib import Path
