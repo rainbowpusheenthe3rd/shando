@@ -6,6 +6,8 @@
 
 <p align="center"><img src="docs/emerald/curseforge_main.jpg" alt="The moonwell meditation at Auberdine, in the rain, with its caption" width="720"></p>
 
+<p align="center"><img src="docs/dream_wreaths.png" alt="With Homeland, the minimap wears each meditation's own wreath: The acorn and The ember" width="720"></p>
+
 ### A night elf spirit guide for the quiet moments: she breathes with you, greets the old places, and teaches you the plants you gather.
 
 A free addon for **World of Warcraft: Forever** (Classic+; interface 16001, also 120105), with around 1,100 lines in one
