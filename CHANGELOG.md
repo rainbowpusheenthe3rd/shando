@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 1.4.0 (25 Nov 2026)
 
 ### New
 
