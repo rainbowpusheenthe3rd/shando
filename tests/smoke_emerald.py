@@ -225,6 +225,23 @@ assert beds and set(beds) == {"vigil.mp3"}, beds
 lua.execute("for i = 1, 200 do advance(now + 1) tick() end")   # past the frogs' fade (1430 s) and the end (1480 s)
 assert list(G.wreath.values())[:2] == ["borrow ember", "return"], list(G.wreath.values())
 assert lua.eval("ShandoEmerald.ended") == "finished"
+# back to back (25 Nov 2026): The acorn stopped near its end, then The ember straight away. The acorn's own timers
+# (its frogs' fade at 1520 s, its end at 1570 s) must not hand back The ember's wreath or end The ember.
+lua.execute("wreath = {} ShandoDream = 'acorn' SlashCmdList.EMERALD('dream')")
+lua.execute("for i = 1, 1400 do advance(now + 1) tick() end")      # in the acorn's frogs
+lua.execute("SlashCmdList.EMERALD('dream') ShandoDream = 'ember' SlashCmdList.EMERALD('dream')")
+lua.execute("for i = 1, 300 do advance(now + 1) tick() end")       # past where the acorn's fade and end would be
+assert list(G.wreath.values()) == ["borrow acorn", "return", "borrow ember"], list(G.wreath.values())
+assert lua.eval("ShandoEmerald.reached") != "end" and lua.eval("ShandoEmerald.ended") is None, "the ember runs on"
+lua.execute("for i = 1, 1300 do advance(now + 1) tick() end")
+assert list(G.wreath.values()) == ["borrow acorn", "return", "borrow ember", "return"], list(G.wreath.values())
+assert lua.eval("ShandoEmerald.ended") == "finished"
+# and one that ran to its end, then the next at once: each borrows and returns once, in order
+lua.execute("wreath = {} ShandoDream = 'acorn' SlashCmdList.EMERALD('dream')")
+lua.execute("for i = 1, 1600 do advance(now + 1) tick() end")
+lua.execute("ShandoDream = 'ember' SlashCmdList.EMERALD('dream')")
+lua.execute("for i = 1, 1500 do advance(now + 1) tick() end")
+assert list(G.wreath.values()) == ["borrow acorn", "return", "borrow ember", "return"], list(G.wreath.values())
 lua.execute("HomelandDream = nil")
 lua.execute("ShandoDream = 'clearing'")
 

@@ -450,9 +450,11 @@ end
 
 -- Homeland's dream wreath: when Homeland is installed and ships a wreath for this meditation, the minimap wears it
 -- from the bell until the frogs fade, or until the meditation ends any other way. Without Homeland, nothing happens.
+local wreathWorn = false   -- gives back only a wreath it borrowed, and only once (25 Nov 2026)
 local function Wreath(id)
     local h = _G.HomelandDream
-    if not h then return end
+    if not h or (not id and not wreathWorn) then return end
+    wreathWorn = id ~= nil
     pcall(id and h.Borrow or h.Return, id)
 end
 

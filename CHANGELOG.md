@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+### Bug fixes
+
+- With Homeland, a meditation hands its wreath back once, and only if it borrowed one. It used to hand it back twice when it ran to its end.
+
 ## 1.4.0 (25 Nov 2026)
 
 ### New
