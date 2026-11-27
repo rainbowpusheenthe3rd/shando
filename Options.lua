@@ -79,7 +79,7 @@ end
 
 local f
 local function Build()
-    f = Window("ShandoOptionsFrame", COLOUR .. "Shan'do|r", 510)
+    f = Window("ShandoOptionsFrame", COLOUR .. "Shan'do|r", 570)
     local sub = f:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
     sub:SetPoint("TOPLEFT", 64, -38)
     sub:SetWidth(240)
@@ -96,20 +96,22 @@ local function Build()
             function(v) ShandoEdge = v / 100 end, function(v) return ("Ritual screen edges: %d%%"):format(v) end),
         Check(f, -252, "Soundscapes (inns, rituals, the wisp)", function() return not ShandoNoBeds end,
             function(on) ShandoNoBeds = not on or nil end),
-        Check(f, -282, "Herb voices (a line when you gather)", function() return not ShandoNoHerbs end,
+        Check(f, -282, "Drifting leaves, petals and embers (meditations, inns)", function() return not ShandoNoDrift end,
+            function(on) ShandoNoDrift = not on or nil end),
+        Check(f, -312, "Herb voices (a line when you gather)", function() return not ShandoNoHerbs end,
             function(on) ShandoNoHerbs = not on or nil end),
-        Check(f, -312, "Skinning (a word of thanks)", function() return not ShandoNoSkins end,
+        Check(f, -342, "Skinning (a word of thanks)", function() return not ShandoNoSkins end,
             function(on) ShandoNoSkins = not on or nil end),
-        Slider(f, -346, 1, #HERB_PACE, 1, HerbPaceIndex, function(i) ShandoHerbPace = HERB_PACE[i] end,
+        Slider(f, -376, 1, #HERB_PACE, 1, HerbPaceIndex, function(i) ShandoHerbPace = HERB_PACE[i] end,
             function(i) return "How often herbs speak: " .. HERB_PACE_NAME[i] end),
     }
     -- The meditation (/emerald dream): click the name to step through Random and each one; Begin starts it now.
     local label = f:CreateFontString(nil, "OVERLAY", "GameFontNormal")
-    label:SetPoint("TOPLEFT", 22, -392)
+    label:SetPoint("TOPLEFT", 22, -422)
     label:SetText("Meditation (/emerald dream)")
     local pick = CreateFrame("Button", nil, f, "UIPanelButtonTemplate")
     pick:SetSize(180, 22)
-    pick:SetPoint("TOPLEFT", 20, -412)
+    pick:SetPoint("TOPLEFT", 20, -442)
     local function Name()
         for _, d in ipairs(ns.DREAMS or {}) do if d.id == ShandoDream then return d.name end end
         return "Random, then in turn"
@@ -132,9 +134,9 @@ local function Build()
     begin:SetScript("OnClick", function() f:Hide() ns.StartDream() end)
     -- The player's own recordings, only when there are some (none ship with the addon)
     if next(ns.MINE or {}) then
-        items[#items + 1] = Check(f, -446, "My own voice (where recorded)", function() return ShandoMyVoice end,
+        items[#items + 1] = Check(f, -476, "My own voice (where recorded)", function() return ShandoMyVoice end,
             function(on) ShandoMyVoice = on or nil end)
-        items[#items + 1] = Check(f, -472, "...with the night-elf treatment", function() return ShandoMyVoice == "elf" end,
+        items[#items + 1] = Check(f, -502, "...with the night-elf treatment", function() return ShandoMyVoice == "elf" end,
             function(on) ShandoMyVoice = on and "elf" or (ShandoMyVoice and true) or nil end)
         f:SetHeight(560)
     end

@@ -22,6 +22,7 @@ local EVERY = {  -- seconds between lines of a kind
     mend = 20 * 3600,  -- healing lines: only inside a ritual you chose, at most once a day
 }
 local STILL, BED_STILL, BED_LEN, BED_EVERY = 90, 60, 300, 1800  -- seconds
+local INN_MOMENT = 60   -- seconds into an inn's sound before its petals or embers
 -- Beds are 62 s files: a seamless 60 s loop plus a 2 s crossfade tail (tools/spirit_beds.py). The next copy starts
 -- exactly BED_PERIOD after the last, checked every frame, so the copies overlap by their matching fades.
 local BED_PERIOD = 60
@@ -323,6 +324,11 @@ local function TickBed(now)
         lastBed, bedUntil, bedNext = now, now + BED_LEN, now + BED_PERIOD
         innName = Night() and "inn_night" or "inn_day"
         bed = Sfx(innName, "Ambience")
+        -- a minute into the inn's sound, once per stay: blossom petals by day, embers rising from the hearth by night
+        local mine, kind = bed, innName == "inn_night" and "ember" or "blossom"
+        C_Timer.After(INN_MOMENT, function()
+            if bed == mine and mine and IsResting() and ns.Drift then ns.Drift(kind, kind == "ember" and 5 or 4, 16) end
+        end)
     end
 end
 
@@ -467,6 +473,7 @@ local function EndRitual(now)
             ShandoEmerald.ended, ShandoEmerald.secs = now and "combat" or "stopped", math.floor(GetTime() - ritual.t0)
         end
         StopBreath() Caption(nil) FadeTo(caption.hint, 0, OUT) WorldHush(false, now and 0 or 5) Wreath(nil)
+        if ns.DriftClear then ns.DriftClear() end
     end
     if veil:IsShown() then Fade(0, 3) end
     ritual = nil
@@ -672,6 +679,19 @@ function ns.PickDream()
     return list[last % #list + 1]
 end
 
+-- Brief moments in the Dream (Drift.lua), each on the line it belongs to: { seconds, kind, how many, over seconds }.
+-- A few seconds each, then gone; never a fixture. Moving or combat takes them away with the meditation.
+local MOMENTS = {
+    clearing = { { 374, "green", 2, 6 } },                          -- "the way leaves settle on still water"
+    well = { { 201, "green", 1 }, { 410, "mote", 6, 12 } },         -- leaves on the water; the moonlight gathering
+    acorn = { { 100, "oak", 1 } },                                  -- "the wind moves through the leaves"
+    ember = { { 366, "maple", 1 },                                  -- "One lets go, and drifts down past the firelight"
+              { 510, "spark", 3, 4 },                               -- "Thoughts drift like sparks"
+              { 854, "poppy", 2, 8 },                               -- "The poppies bloom where the old growth stood"
+              { 1055, "ember", 5, 12 } },                           -- "a bed of red embers"
+}
+ns.DREAM_MOMENTS = MOMENTS
+
 local function Emerald(d)
     d = d or ns.PickDream()
     BeginRitual("emerald", nil, { 0.03, 0.14, 0.07, 0.45 })   -- the Dream's green at the edges
@@ -685,6 +705,9 @@ local function Emerald(d)
     ShandoDreamLast = d.id
     ShandoEmerald = { at = time(), dream = d.id, reached = "start", t = 0 }   -- read back to learn the idle limit
     Wreath(d.id)
+    for _, m in ipairs(MOMENTS[d.id] or {}) do
+        C_Timer.After(m[1], function() if ritual == r and ns.Drift then ns.Drift(m[2], m[3], m[4]) end end)
+    end
     for _, step in ipairs(d.steps) do
         C_Timer.After(step[1], function()
             if ritual ~= r then return end   -- ended (moved, combat, /emerald again)
@@ -1057,6 +1080,19 @@ SlashCmdList.SHANDO = function(msg)
     msg = (msg or ""):lower()
     if msg == "help" then ns.ShowReadme() return end
     if msg == "options" then ns.ShowOptions() return end
+    local kind = msg:match("^drift%s*(%a*)$")
+    if kind then  -- see one of the drifting moments now: /shando drift maple
+        local kinds = {}
+        for k in pairs(ns.DRIFT_KINDS or {}) do kinds[#kinds + 1] = k end
+        table.sort(kinds)
+        if ShandoNoDrift then print("|cffb8c8ffShan'do|r: drifting moments are off in the options.") return end
+        if not (ns.DRIFT_KINDS or {})[kind] then
+            print("|cffb8c8ffShan'do|r: /shando drift " .. table.concat(kinds, " | ")) return
+        end
+        local rise = ns.DRIFT_KINDS[kind].move == "rise"
+        ns.Drift(kind, rise and 5 or 3, rise and 6 or 8)
+        return
+    end
     if msg == "moonwell" then  -- mark the moonwell you're standing in, so she knows it
         local x, y = Spot()
         if not x then print("|cffb8c8ffShan'do|r: I can't tell where we are just here.") return end

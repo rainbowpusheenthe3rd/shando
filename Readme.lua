@@ -18,7 +18,7 @@ local TEXT = [[
 
 |cffffd100Rituals you can choose|r
   - |cffb8c8ffShadowmeld|r out of combat: the music softens, the night rises around you, and the wind breathes. Move to return.
-  - |cffb8c8ff/emerald dream|r (or /dreamemerald): ten to twenty-two minutes of guided meditation into the Emerald Dream, then frogs at the water's edge, fading slowly back to the game's own sound. The world's sounds and music fade while it lasts. Eyes open or closed; move, fight, or type it again to come back. Choose which meditation in the options (Random plays each one you haven't heard before repeating, then each in turn), or press Begin there. If it ever leaves you feeling worse rather than better, stop: that happens to some people with meditation, and it's fine to leave it.
+  - |cffb8c8ff/emerald dream|r (or /dreamemerald): ten to twenty-two minutes of guided meditation into the Emerald Dream, then frogs at the water's edge, fading slowly back to the game's own sound. The world's sounds and music fade while it lasts. Eyes open or closed; move, fight, or type it again to come back. Here and there a leaf, a petal or a few embers drift past on the line they belong to, and fade. Choose which meditation in the options (Random plays each one you haven't heard before repeating, then each in turn), or press Begin there. If it ever leaves you feeling worse rather than better, stop: that happens to some people with meditation, and it's fine to leave it.
   - |cffb8c8ff/sleep|r in a barrow den: the edges of the world turn green, and the Dream plays until you stand.
   - |cffb8c8ff/kneel|r or |cffb8c8ff/pray|r outdoors at night, or in the Temple of the Moon: moonlight, a bell, and a word.
   - If you fall and walk back as a wisp, the quiet crickets of a night meadow walk with you.
@@ -33,12 +33,13 @@ local TEXT = [[
 She invites, never instructs. She speaks about the world and what you did, not about what you are. She never speaks in combat or in dungeons, and leaves at least 45 seconds between any two words, herbs included. Each line rests longer every time you hear it, so nothing repeats through an evening.
 
 |cffffd100Settings|r
-Left-click the moon by the minimap (or |cffb8c8ff/shando options|r): on or off, how often she speaks, the quiet gap between any two lines, how strong the ritual screen edges are, soundscapes on or off, herb voices and skinning on or off, and how often herbs speak. Right-click it to rest her; drag it to move it.
+Left-click the moon by the minimap (or |cffb8c8ff/shando options|r): on or off, how often she speaks, the quiet gap between any two lines, how strong the ritual screen edges are, soundscapes on or off, drifting leaves, petals and embers on or off, herb voices and skinning on or off, and how often herbs speak. Right-click it to rest her; drag it to move it.
 
 |cffffd100Commands|r
   |cffb8c8ff/shando|r  rest her, or call her back
   |cffb8c8ff/shando quieter|r  /  |cffb8c8ff/shando nearer|r  speak less or more often
   |cffb8c8ff/shando options|r  settings
+  |cffb8c8ff/shando drift maple|r  see a drifting moment now (maple, oak, green, poppy, blossom, spark, ember, mote)
   |cffb8c8ff/shando voice|r  her voice, your own recordings, or yours with a night-elf treatment, in turn
   |cffb8c8ff/shando listen|r  play your own recordings, one after another
   |cffb8c8ff/shando moonwell|r  mark the moonwell you're standing in, so she knows it

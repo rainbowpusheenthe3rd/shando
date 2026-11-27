@@ -32,13 +32,13 @@ voiced night elf voice. Open source, no adverts.
   **/emerald dream**: four guided meditations, of ten to twenty-two minutes, that end beside a pond of frogs.
   With [Homeland](https://github.com/rainbowpusheenthe3rd/homeland) installed, The acorn and The ember dress your
   minimap in their own wreaths (oak, acorns, bramble and stag beetles; fire poppies and ember-red maple) until the
-  frogs fade.
+  frogs fade. Here and there a leaf, a petal or a few embers drift past on their line, then fade.
 - **The good you do, noticed.** Healing or blessing a stranger (not yourself) gets a bell and a word. Groups,
   trainers, levels, new forms and finished quests each have their own lines.
 - **Gentle on hard days.** One word when you fall, one about rest after several falls, then quiet. Late at night,
   and after a long day's road, a word of care.
 - **Real places to rest.** Inns play a Japanese garden by day and a hearth fire by night, built from real field
-  recordings that never loop the same way twice.
+  recordings that never loop the same way twice. Stay a while, and blossom petals drift by day, embers rise by night.
 
 ## Why
 

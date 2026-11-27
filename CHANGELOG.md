@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### New
+
+- Brief moments in the meditations: on the line they belong to, a leaf lets go, a poppy petal drifts down, sparks or silver motes rise, then fade within seconds. In The ember, the maple leaf falls as she says one lets go. At an inn, a minute into its sound, blossom petals drift by day and embers rise from the hearth by night, once per stay. Switch them off in the options; `/shando drift maple` shows one now.
+
 ### Bug fixes
 
 - With Homeland, a meditation hands its wreath back once, and only if it borrowed one. It used to hand it back twice when it ran to its end.
