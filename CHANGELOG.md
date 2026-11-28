@@ -5,6 +5,7 @@
 ### Bug fixes
 
 - With Homeland, a meditation hands its wreath back once, and only if it borrowed one. It used to hand it back twice when it ran to its end.
+- A /reload no longer makes her lines new again. Past midnight her late-night word of care came after every reload; what she's said now carries across a reload with the rest of the session.
 
 ## 1.4.0 (25 Nov 2026)
 

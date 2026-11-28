@@ -903,9 +903,13 @@ f:SetScript("OnEvent", function(_, event, a1, a2, a3, a4)
         WorldHush(false, 0)   -- never leave the game's sound faded
         -- Saved every time, /reload included (live = true), so the session carries across reloads; the look-back
         -- at the next login skips sessions shorter than 10 minutes (elapsed).
+        -- what she said and how long ago, so a /reload doesn't make every line new again (28 Nov: past midnight
+        -- the late-night word of care came after every reload, its once-a-day wait forgotten)
+        local ago = {}
+        for k, at in pairs(said) do ago[k] = GetTime() - at end
         ShandoLast = { zones = session.order, kind = session.kind, quests = session.quests,
             levels = session.levels, herbs = HerbaloreSession, skins = SkinSession, melds = meldCount, at = time(),
-            elapsed = GetTime() - started, live = true }
+            elapsed = GetTime() - started, live = true, saidAgo = ago }
         return
     elseif event == "CALENDAR_UPDATE_EVENT_LIST" then
         if GetTime() - started > 30 then Holidays() end
@@ -919,6 +923,7 @@ f:SetScript("OnEvent", function(_, event, a1, a2, a3, a4)
             for _, z in ipairs(session.order) do session.zones[z] = true end
             HerbaloreSession, SkinSession, session.live, meldCount = l.herbs, l.skins, true, l.melds or 0
             started = GetTime() - (l.elapsed or 0)
+            for k, ago in pairs(l.saidAgo or {}) do said[k] = GetTime() - ago end
             ShandoLast = nil
         elseif l and l.live then  -- a real login: the saved session is now the one to look back on
             l.live = nil
